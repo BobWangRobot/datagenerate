@@ -1,5 +1,21 @@
-import math
+from __future__ import division
 import iotbx.pdb
+import iotbx.cif
+from libtbx import group_args
+import mmtbx.model
+from libtbx.utils import null_out
+
+
+
+def is_bonded(atom_1, atom_2, bond_proxies_simple):
+    result = False
+    for proxy in bond_proxies_simple:
+        i_seq, j_seq = proxy.i_seqs
+        if (atom_1.i_seq in proxy.i_seqs and atom_2.i_seq in proxy.i_seqs):
+            result = True
+            break
+    return result
+
 
 def get_model(pdb_file_name, cif_file_name):
     pdb_inp = iotbx.pdb.input(file_name=pdb_file_name)
@@ -14,31 +30,19 @@ def get_model(pdb_file_name, cif_file_name):
         log=null_out())
     return model
 
-def generate(a,e):
-    Rs = []
-    zeta = []
-    for a1 in a:
-        e1 = a1.element.upper()
-        if (e1 == e):
-            for a2 in a:
-                R = a1.distance(a2)
-                Rs.append(R)
-                for a3 in a:
-                    A = a1.angle(a2, a3, degree = True)
-                    zeta.append(A)
-    return e, Rs, zeta
 
 def find_FA(model):
+    i = 0
     geometry = model.get_restraints_manager()
     bond_proxies_simple, asu = geometry.geometry.get_all_bond_proxies(
         sites_cart=model.get_sites_cart())
     hierarchy = model.get_hierarchy()
     for a1 in hierarchy.atoms():
         e1 = a1.element.upper()
-        if (e1 == "C"):
+        if (e1 == "O"):
             for a2 in hierarchy.atoms():
                 e2 = a2.element.upper()
-                if (e2 == "H"):
+                if (e2 == "C"):
                     if (is_bonded(a1, a2, bond_proxies_simple)):
                         for a3 in hierarchy.atoms():
                             e3 = a3.element.upper()
@@ -46,44 +50,25 @@ def find_FA(model):
                                 if (is_bonded(a1, a3, bond_proxies_simple)):
                                     for a4 in hierarchy.atoms():
                                         e4 = a4.element.upper()
-                                        if (e4 == "O"):
+                                        if (e4 == "H"):
                                             if (is_bonded(a1, a4, bond_proxies_simple)):
                                                 for a5 in hierarchy.atoms():
                                                     e5 = a5.element.upper()
                                                     if (e5 == "H"):
-                                                        if (is_bonded(a4, a5, bond_proxies_simple)):
+                                                        if (is_bonded(a2, a5, bond_proxies_simple)):
                                                             print("find formic acid")
-                                                            Inf = [a1.id_strc, a2.id_strc, a3.id_strc, a4.id_strc, a5.id_strc]
-    return Inf
+        else:
+            i = i + 1
+            print("None", i)
 
-def cutf(Rij,Rc):
-    if Rc >= Rij:
-       Fc = 0.5*math.cos(math.pi*Rij/Rc)+0.5
-    else:
-       Fc = 0
-    return Fc
 
-def Rpart(j, Rc, Rj, Rs, n):
-    GmRs = []
-    for b in range(8):
-        GmR = 0
-        for a in range(0,j-1):
-            f = cutf(Rj[a], Rc)
-            GmR = GmR + math.exp(n * ((Rj[a] - Rs[b]) ** 2))*f
-            GmRs.append(GmR)
-    return GmRs
+def exercise():
+    files = [["1qwm.pdb", None]]
+    for (pdb_file_name, cif_file_name) in files:
+        print(pdb_file_name, "-" * 50)
+        model = get_model(pdb_file_name=pdb_file_name, cif_file_name=cif_file_name)
+        result = find_FA(model=model)
+        
 
-def Apart(j, k, l, zeta, zetas, n, Rj, Rk, Rs, Rc):
-    GmAs = []
-    fj = cutf(Rj, Rc)
-    fk = cutf(Rk, Rc)
-    for d in range(2):
-        for c in range(4):
-            GmA = 0
-            for a in range(0,j-1):
-                for b in range(0, k-1):
-                    GmA = GmA + (((1+math.cos(zeta[a][b] - zetas[c])) )** l[d]) * \
-                          math.exp(-n *( ((Rj + Rk) / 2 - Rs) ** 2)) * fj * fk
-            GmA = GmA + 2 ** (1-l[d])
-            GmAs.append(GmA)
-    return GmAs
+if __name__ == '__main__':
+    exercise()
