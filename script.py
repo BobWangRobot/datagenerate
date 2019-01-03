@@ -1,6 +1,22 @@
+from __future__ import division
 import math
 import iotbx.pdb
+import iotbx.cif
+from libtbx import group_args
+import mmtbx.model
+from libtbx.utils import null_out
 
+# AEVs value
+rs_values = [0.900000, 1.437500, 1.975000, 2.512500, 3.050000, 3.587500, 4.125000, 4.662500]
+ts_values = [0.392699, 1.178097, 1.963495, 2.748894]
+angular_rs_values = [0.900000, 2.200000]
+radial_cutoff = 5.2
+angular_cutoff = 3.5
+radial_nu = 8
+radial_angular_nu = 8
+angular_zeta = 8
+
+##get model of pdb file
 def get_model(pdb_file_name, cif_file_name):
     pdb_inp = iotbx.pdb.input(file_name=pdb_file_name)
     restraint_objects = None
@@ -14,43 +30,28 @@ def get_model(pdb_file_name, cif_file_name):
         log=null_out())
     return model
 
-def read(model):
+##read model and get information of distance and angle
+def read(model, ele_name):
     Rs = []
-    R = 0
+    zeta = []
     hierarchy = model.get_hierarchy()
-    for a1 in hierarchy.atoms():
-        for a2 in hierarchy.atoms():
-            R = a1.distance(a2)
-            Rs.append(R)
-            R = 0
-    return Rs
-
-def find_FA(model):
-    geometry = model.get_restraints_manager()
-    bond_proxies_simple, asu = geometry.geometry.get_all_bond_proxies(
-        sites_cart=model.get_sites_cart())
-    hierarchy = model.get_hierarchy()
-    for a1 in hierarchy.atoms():
-
-        e1 = a1.element.upper()
-        if (e1 == "C"):
-            for a2 in hierarchy.atoms():
-                e2 = a2.element.upper()
-                if (e2 == "H"):
-                    if (is_bonded(a1, a2, bond_proxies_simple)):
+    for e in ele_name:
+        for a1 in hierarchy.atoms():
+            e1 = a1.element.upper()
+            if e1 == e:
+                for a2 in hierarchy.atoms():
+                    e2 = a2.element.upper
+                    while a2 != a1:
+                        Rj = a1.distance(a2)
+                        Ris.append(R)
                         for a3 in hierarchy.atoms():
-                            e3 = a3.element.upper()
-                            if (e3 == "O"):
-                                if (is_bonded(a1, a3, bond_proxies_simple)):
-                                    for a4 in hierarchy.atoms():
-                                        e4 = a4.element.upper()
-                                        if (e4 == "O"):
-                                            if (is_bonded(a1, a4, bond_proxies_simple)):
-                                                for a5 in hierarchy.atoms():
-                                                    e5 = a5.element.upper()
-                                                    if (e5 == "H"):
-                                                        if (is_bonded(a4, a5, bond_proxies_simple)):
-                                                            print("find formic acid")
+                            while a3 != a2:
+                                A = a1.angle(a2, a3, deg = True)
+                                if A == None:continue
+                                zeta.append(A)
+
+    return e, Rs, zeta
+
 
 def cutf(Rij,Rc):
     if Rc >= Rij:
@@ -59,27 +60,47 @@ def cutf(Rij,Rc):
        Fc = 0
     return Fc
 
-def Rpart(j, Rc, Rj, Rs, n):
+def Rpart(Rc, Rj, Rs, n):
     GmRs = []
-    for b in range(8):
+    for b in Rs:
         GmR = 0
-        for a in range(0,j-1):
-            f = cutf(Rj[a], Rc)
-            GmR = GmR + math.exp(n * ((Rj[a] - Rs[b]) ** 2))*f
+        for a in Rj:
+            f = cutf(a, Rc)
+            GmR = GmR + math.exp(n * ((a - b) ** 2))*f
             GmRs.append(GmR)
     return GmRs
 
-def Apart(j, k, l, zeta, zetas, n, Rj, Rk, Rs, Rc):
+def Apart(l, zeta, zetas, n, Rj, Rk, Rs, Rc):
     GmAs = []
     fj = cutf(Rj, Rc)
     fk = cutf(Rk, Rc)
-    for d in range(2):
-        for c in range(4):
+    for d in Rs:
+        for c in zetas:
             GmA = 0
-            for a in range(0,j-1):
-                for b in range(0, k-1):
-                    GmA = GmA + (((1+math.cos(zeta[a][b] - zetas[c])) )** l[d]) * \
-                          math.exp(-n *( ((Rj + Rk) / 2 - Rs) ** 2)) * fj * fk
-            GmA = GmA + 2 ** (1-l[d])
+            for a in zeta:
+                GmA = GmA + (((1+math.cos(a - c)) )** l) * \
+                          math.exp(-n *( ((Rj + Rk) / 2 - d) ** 2)) * fj * fk
+            GmA = GmA + 2 ** (1-l)
             GmAs.append(GmA)
     return GmAs
+
+
+def exercise():
+    files = [["1qwm.pdb", None]]
+    for (pdb_file_name, cif_file_name) in files:
+        print(pdb_file_name, "-" * 50)
+        model = get_model(pdb_file_name=pdb_file_name, cif_file_name=cif_file_name)
+        Inf = read(model=model)
+        Element_namr = Inf[0]
+        Dis = Inf[1]
+        Ang = Inf[2]
+        Rnum = Rpart(radial_cutoff, Dis, rs_values, 4.0)
+        Rv = Rpart(radial_cutoff, Rs, rs_values, 4.0)
+        Av = Apart(l, zeta, ts_values, 4.0, Rjs, Rks, rs_values)
+
+        Anum =
+        print(result)
+
+
+if __name__ == '__main__':
+    exercise()
