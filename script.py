@@ -95,11 +95,8 @@ def exercise():
         Dis = Inf[1]
         Ang = Inf[2]
         Rnum = Rpart(radial_cutoff, Dis, rs_values, 4.0)
-        Rv = Rpart(radial_cutoff, Rs, rs_values, 4.0)
-        Av = Apart(l, zeta, ts_values, 4.0, Rjs, Rks, rs_values)
-
-        Anum =
-        print(result)
+        Rn = Rpart(radial_cutoff, Rs, rs_values, 4.0)
+        An = Apart(l, zeta, ts_values, 4.0, Rjs, Rks, rs_values)
 
 
 if __name__ == '__main__':
