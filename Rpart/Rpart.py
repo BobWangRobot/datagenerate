@@ -12,8 +12,6 @@ radial_nu = 8
 radial_angular_nu = 8
 angular_zeta = 8
 
-#def ditance():
-
 pdb_inp = iotbx.pdb.input(file_name="acid300.pdb")
 hierarchy = pdb_inp.construct_hierarchy()
 
@@ -24,23 +22,22 @@ def cutf(R):
        Fc = 0
     return Fc
 
-def Rpart(Rj, Rs):
+def Rpart(Rj):
     GmRs = []
     n = 4.0
+    Rs = rs_values
     for b in Rs:
         GmR = 0
         for a in Rj:
             f = cutf(a)
             if a > 0:
                 GmR = math.exp(- n * ((a - b) ** 2)) * f
-                print(GmR,f)
         GmRs.append(GmR)
-        print (GmRs)
     return GmRs
 
 def Read(atom_types):
     GmRs = []
-    target = open('data1.txt', 'w')
+    target = open('text1.txt', 'w')
     for a1 in hierarchy.atoms():
         e1 = a1.element.upper()
         if e1 in atom_types:
@@ -48,22 +45,19 @@ def Read(atom_types):
             GmRs.append(X)
             target.write(str(X))
             target.write('\n')
-            for a2 in hierarchy.atoms():
-                e2 = a2.element.upper()
-                if e2 in atom_types:
-                    F = e2
-                    Rj = []
-                    for a2 in hierarchy.atoms():
-                        e2 = a2.element.upper()
-                        if e2 == F:
-                            R = a1.distance(a2)
-                            Rj.append(R)
-                    GmR = Rpart(Rj,rs_values)
-                    target.write(str(F))
-                    target.write(str(GmR))
-                    target.write('\n')
-                    GmRs.append(F)
-                    GmRs.append(GmR)
+            for F in atom_types:
+                Rj = []
+                for a2 in hierarchy.atoms():
+                    e2 = a2.element.upper()
+                    if e2 == F:
+                        R = a1.distance(a2)
+                        Rj.append(R)
+                GmR = Rpart(Rj)
+                target.write(str(F))
+                target.write(str(GmR))
+                target.write('\n')
+                GmRs.append(F)
+                GmRs.append(GmR)
     target.close()
     print("Bingo", "*" * 50 )
     return GmRs
