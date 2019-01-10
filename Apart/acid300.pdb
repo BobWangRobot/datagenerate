@@ -1,0 +1,19 @@
+REMARK  99 electronic Ligand Builder and Optimisation Workbench (eLBOW)
+REMARK  99   - a module of PHENIX version dev-svn-
+REMARK  99   - file written: Sun Dec  9 10:27:24 2018
+REMARK  99
+FORMUL   1  LIG    C H2 O2 
+HETATM    1  O01 LIG A   1      -1.388   0.153  -0.291  1.00 20.00      A    O  
+HETATM    2  C02 LIG A   1      -0.208   0.025  -0.199  1.00 20.00      A    C  
+HETATM    3  O03 LIG A   1       0.400  -0.056   1.081  1.00 20.00      A    O  
+HETATM    4 H021 LIG A   1       0.319  -0.023  -0.973  1.00 20.00      A    H  
+HETATM    5 H031 LIG A   1       0.878  -0.099   0.382  1.00 20.00      A    H  
+CONECT    1    2
+CONECT    1    2
+CONECT    2    3    4
+CONECT    2    1
+CONECT    2    1
+CONECT    3    2    5
+CONECT    4    2
+CONECT    5    3
+END
