@@ -1,6 +1,6 @@
 import iotbx.pdb
 import numpy
-import math
+import mathA
 
 rs_values = [ 0.900000,1.437500, 1.975000, 2.512500, 3.050000, 3.587500, 4.125000, 4.662500]
 ts_values = [0.392699, 1.178097, 1.963495, 2.748894]

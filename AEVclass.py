@@ -11,6 +11,7 @@ class AEV(object):
         self.radial_angular_nu = 8
         self.eta = 4.0
 
+#generate a set about all atom types
     def Atome_type(self):
         atom_elements = list()
         for a in self.hierarchy.atoms():
@@ -19,6 +20,7 @@ class AEV(object):
         atom_elements = set(atom_elements)
         return atom_elements
 
+#generate a dictionary about all atomes
     def Atome_classify(self):
         atom_elements = {}
         for a in self.hierarchy.atoms():
@@ -27,6 +29,33 @@ class AEV(object):
             atom_elements[e].append(a)
         return atom_elements
 
+#generate a dictionary include {element_name:distance}
+    def All_dis(self):
+        All_distance = {}
+        for a in self.Atome_type():
+            for a1, atom1 in self.Atome_classify().items():
+                if a1 == a:
+                    for a2, atom2 in self.Atome_classify():
+                        if a1 != a2:
+                            R = atom1.distace(atom2)
+                            All_distance.setdefault(a1, [])
+                            All_distance[a1].append(R)
+        return All_distance
+
+#generate a dictionary about all angels {element_name: angel}
+    def All_angel(self):
+        All_angels = {}
+        for a in self.Atome_type():
+            for a1, atom1 in self.Atome_classify():
+                if a1 == a:
+                    for b, batom in self.Atome_classify():
+                        f = self.Atome_classify()
+                        for c, catom in f:
+                            angel = atom1.angel(batom, catom)
+                            All_angels.setdefault(a1+b+c, [])
+                            All_angels[a1+b+c].append(angel)
+                        f.pop(b)
+        return All_angels
 
 class Rpart(AEV):
     def __init__(self, pdb_file_name):
@@ -54,50 +83,24 @@ class Rpart(AEV):
             GmRs.append(GmR)
         return GmRs
 
-    def Rpart(self):
-        assert 0
-        atom_types = get_atom_elements(self.hierarchy)
-        Fake = Atome_classify(hierarchy)
-        for a1 in hierarchy.atoms():
-            GmRs = []
-            e1 = a1.element.upper().strip()
-            assert e1 in atom_types, '%s not in %s' % (e1, atom_types)
-            for e2, atoms2 in Fake.items():
-                Rj = []
-                for a2 in atoms2:
-                    R = a1.distance(a2)
-                    Rj.append(R)
-                GmR = Req(Rj)
-                GmRs.append(GmR)
-            assert 0
-            Rj = []
-            for a3 in C:
-                R = a1.distance(a3)
-                Rj.append(R)
-            GmR = Req(Rj)
-            GmRs.append(GmR)
-            Rj = []
-            for a4 in O:
-                R = a1.distance(a4)
-                Rj.append(R)
-            GmR = Req(Rj)
-            GmRs.append(GmR)
-        print("Bingo", "*" * 50)
-        return GmRs
 
-class Apart():
-    def __init__(self,ts_values, angular_rs_values, angular_cutoff, angular_zeta):
-        super().__init__()
-        self.ts_values = ts_values
-        self.angular_rs_values = angular_rs_values
-        self.angular_cutoff = angular_cutoff
-        self.angular_zeta = angular_zeta
-    def Aeq(zeta, Rj, Rk):
+
+
+
+class Apart(AEV):
+    def __init__(self, pdb_file_name):
+        super(Rpart, self).__init__(pdb_file_name)
+        self.ts_values = [0.392699, 1.178097, 1.963495, 2.748894]
+        self.angular_rs_values = [0.900000, 2.200000]
+        self.angular_cutoff = 3.5
+        self.angular_zeta = 8
+
+    def Aeq(self, Rj, Rk):
         l = 8.00
         n = 4.0
         GmAs = []
-        for a in angular_rs_values:
-            for b in ts_values:
+        for a in self.angular_rs_values:
+            for b in self.ts_values:
                 GmA = 0
                 i = 0
                 for e in zeta:
@@ -110,19 +113,15 @@ class Apart():
                 GmAs.append(GmA)
         return GmAs
 
-    def Apart(atom_types, file_name):
+    def Apart(self):
         Fake = Atome_classify()
         C = Fake[0]
         H = Fake[1]
         O = Fake[2]
-        target = open(file_name, 'w')
         for a1 in hierarchy.atoms():
             GmRs = []
             e1 = a1.element.upper()
             if e1 in atom_types:
-                X = e1
-                target.write(str(X))
-                target.write('\n')
                 # fnid angle HH
                 Rj = []
                 Rk = []
@@ -141,9 +140,6 @@ class Apart():
                                 zeta.append(ts)
                 print(zeta, Rj, Rk)
                 GmR = Aeq(zeta, Rj, Rk)
-                target.write('HH')
-                target.write(str(GmR))
-                target.write('\n')
                 GmRs.append(GmR)
                 # find angle HC
                 Rj = []
@@ -162,9 +158,6 @@ class Apart():
                             zeta.append(ts)
                 print(zeta, Rj, Rk)
                 GmR = Aeq(zeta, Rj, Rk)
-                target.write('HC')
-                target.write(str(GmR))
-                target.write('\n')
                 GmRs.append(GmR)
                 # find angle HO
                 Rj = []
@@ -183,9 +176,6 @@ class Apart():
                             zeta.append(ts)
                 print(zeta, Rj, Rk)
                 GmR = Aeq(zeta, Rj, Rk)
-                target.write('HO')
-                target.write(str(GmR))
-                target.write('\n')
                 GmRs.append(GmR)
                 # find angle CC
                 Rj = []
@@ -204,9 +194,6 @@ class Apart():
                             zeta.append(ts)
                 print(zeta, Rj, Rk)
                 GmR = Aeq(zeta, Rj, Rk)
-                target.write('CC')
-                target.write(str(GmR))
-                target.write('\n')
                 GmRs.append(GmR)
                 # find angle CO
                 Rj = []
@@ -225,9 +212,6 @@ class Apart():
                             zeta.append(ts)
                 print(zeta, Rj, Rk)
                 GmR = Aeq(zeta, Rj, Rk)
-                target.write('CO')
-                target.write(str(GmR))
-                target.write('\n')
                 GmRs.append(GmR)
                 # find angle OO
                 Rj = []
@@ -246,12 +230,7 @@ class Apart():
                             zeta.append(ts)
                 print(zeta, Rj, Rk)
                 GmR = Aeq(zeta, Rj, Rk)
-                target.write('OO')
-                target.write(str(GmR))
-                target.write('\n')
                 GmRs.append(GmR)
-        target.write(str(GmRs))
-        target.close()
         print("Bingo", "*" * 50)
         return GmRs
     pass
