@@ -35,20 +35,22 @@ class AEV(object):
         for a in self.Atome_type():
             for a1, atom1 in self.Atome_classify().items():
                 if a1 == a:
-                    for a2, atom2 in self.Atome_classify():
-                        if a1 != a2:
-                            R = atom1.distace(atom2)
-                            All_distance.setdefault(a1, [])
-                            All_distance[a1].append(R)
+                    All_distance.setdefault(a1, [])
+                    for b in self.Atome_type():
+                        for b1, batom1 in self.Atome_classify().items():
+                            if b1 == b:
+                                All_distance[a1].setdefault(b1, [])
+                                R = atom1.distace(atom2)
+                                All_distance[a1:b1].append(R)
         return All_distance
 
 #generate a dictionary about all angels {element_name: angel}
     def All_angel(self):
         All_angels = {}
         for a in self.Atome_type():
-            for a1, atom1 in self.Atome_classify():
+            for a1, atom1 in self.Atome_classify().items():
                 if a1 == a:
-                    for b, batom in self.Atome_classify():
+                    for b, batom in self.Atome_classify().items():
                         f = self.Atome_classify()
                         for c, catom in f:
                             angel = atom1.angel(batom, catom)
@@ -64,28 +66,25 @@ class Rpart(AEV):
         self.Rj =[2.1, 2.2, 2.5]
         self.radial_cutoff = 5.2
 
-    def cutf(R_distance, R_cutoff):
-        if R_distance >= R_cutoff:
-            Fc = 0.5 * math.cos(math.pi * R_distance / R_cutoff) + 0.5
+    def cutf(self,R_distance):
+        if R_distance >= self.radial_cutoff:
+            Fc = 0.5 * math.cos(math.pi * R_distance / self.radial_cutoff) + 0.5
         else:
             Fc = 0
         return Fc
 
-    def Req(self, Rj):
-        GmRs = []
+    def R_AEV(self, Rj):
+        AEVs = {}
         n = 4.0
-        for b in self.rs_values:
-            print(self.rs_values)
-            GmR = 0
-            for a in Rj:
-                f = a.cutf(b)
-                GmR += math.exp(- n * ((a - b) ** 2)) * f
-            GmRs.append(GmR)
-        return GmRs
-
-
-
-
+        for a, atom1 in self.All_dis().items():
+            AEVs.setdefaut(a, [])
+            for Rs in self.rs_values:
+                GmR = 0
+                for R in atom1:
+                    f = R.cutf(self.radial_cutoff)
+                    GmR += math.exp(- n * ((R - Rs) ** 2)) * f
+                AEVs[a].append(GmR)
+        return AEVs
 
 class Apart(AEV):
     def __init__(self, pdb_file_name):
@@ -113,125 +112,6 @@ class Apart(AEV):
                 GmAs.append(GmA)
         return GmAs
 
-    def Apart(self):
-        Fake = Atome_classify()
-        C = Fake[0]
-        H = Fake[1]
-        O = Fake[2]
-        for a1 in hierarchy.atoms():
-            GmRs = []
-            e1 = a1.element.upper()
-            if e1 in atom_types:
-                # fnid angle HH
-                Rj = []
-                Rk = []
-                zeta = []
-                for a2 in H:
-                    if a1 != a2:
-                        for a21 in H:
-                            if a2 != a21 and a21 != a1:
-                                R = a1.distance(a2)
-                                Rj.append(R)
-                                R = a1.distance(a21)
-                                Rk.append(R)
-                                ts = a1.angle(a2, a21, deg=False)
-                                if ts == None:
-                                    ts = 0
-                                zeta.append(ts)
-                print(zeta, Rj, Rk)
-                GmR = Aeq(zeta, Rj, Rk)
-                GmRs.append(GmR)
-                # find angle HC
-                Rj = []
-                Rk = []
-                zeta = []
-                for a2 in H:
-                    for a21 in C:
-                        if a1 != a2 and a1 != a21 and a2 != a21:
-                            R = a1.distance(a2)
-                            Rj.append(R)
-                            R = a1.distance(a21)
-                            Rk.append(R)
-                            ts = a1.angle(a2, a21, deg=False)
-                            if ts == None:
-                                ts = 0
-                            zeta.append(ts)
-                print(zeta, Rj, Rk)
-                GmR = Aeq(zeta, Rj, Rk)
-                GmRs.append(GmR)
-                # find angle HO
-                Rj = []
-                Rk = []
-                zeta = []
-                for a2 in H:
-                    for a21 in O:
-                        if a2 != a21 and a21 != a1 and a1 != a2:
-                            R = a1.distance(a2)
-                            Rj.append(R)
-                            R = a1.distance(a21)
-                            Rk.append(R)
-                            ts = a1.angle(a2, a21, deg=False)
-                            if ts == None:
-                                ts = 0
-                            zeta.append(ts)
-                print(zeta, Rj, Rk)
-                GmR = Aeq(zeta, Rj, Rk)
-                GmRs.append(GmR)
-                # find angle CC
-                Rj = []
-                Rk = []
-                zeta = []
-                for a2 in C:
-                    for a21 in C:
-                        if a2 != a21 and a21 != a1 and a1 != a2:
-                            R = a1.distance(a2)
-                            Rj.append(R)
-                            R = a1.distance(a21)
-                            Rk.append(R)
-                            ts = a1.angle(a2, a21, deg=False)
-                            if ts == None:
-                                ts = 0
-                            zeta.append(ts)
-                print(zeta, Rj, Rk)
-                GmR = Aeq(zeta, Rj, Rk)
-                GmRs.append(GmR)
-                # find angle CO
-                Rj = []
-                Rk = []
-                zeta = []
-                for a2 in C:
-                    for a21 in O:
-                        if a2 != a21 and a21 != a1 and a1 != a2:
-                            R = a1.distance(a2)
-                            Rj.append(R)
-                            R = a1.distance(a21)
-                            Rk.append(R)
-                            ts = a1.angle(a2, a21, deg=False)
-                            if ts == None:
-                                ts = 0
-                            zeta.append(ts)
-                print(zeta, Rj, Rk)
-                GmR = Aeq(zeta, Rj, Rk)
-                GmRs.append(GmR)
-                # find angle OO
-                Rj = []
-                Rk = []
-                zeta = []
-                for a2 in O:
-                    for a21 in O:
-                        if a2 != a21 and a21 != a1 and a1 != a2:
-                            R = a1.distance(a2)
-                            Rj.append(R)
-                            R = a1.distance(a21)
-                            Rk.append(R)
-                            ts = a1.angle(a2, a21, deg=False)
-                            if ts == None:
-                                ts = 0
-                            zeta.append(ts)
-                print(zeta, Rj, Rk)
-                GmR = Aeq(zeta, Rj, Rk)
-                GmRs.append(GmR)
-        print("Bingo", "*" * 50)
-        return GmRs
+
     pass
 
