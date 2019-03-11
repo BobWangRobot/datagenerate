@@ -32,15 +32,15 @@ class AEV(object):
 #generate a dictionary include {element_name:distance}
     def All_dis(self):
         All_distance = {}
-        for a in self.Atome_type():
-            for a1, atom1 in self.Atome_classify().items():
+        for a in self.Atome_type():#choose atom type
+            for a1, atom1 in self.Atome_classify().items():#choose first atom
                 if a1 == a:
                     All_distance.setdefault(a1, [])
-                    for b in self.Atome_type():
-                        for b1, batom1 in self.Atome_classify().items():
+                    for b in self.Atome_type():#choose second atom type
+                        for b1, batom1 in self.Atome_classify().items():#second atom
                             if b1 == b:
                                 All_distance[a1].setdefault(b1, [])
-                                R = atom1.distace(atom2)
+                                R = atom1.distace(atom2)#distance between sencond atom and third atom
                                 All_distance[a1:b1].append(R)
         return All_distance
 
@@ -50,13 +50,16 @@ class AEV(object):
         for a in self.Atome_type():
             for a1, atom1 in self.Atome_classify().items():
                 if a1 == a:
-                    for b, batom in self.Atome_classify().items():
-                        f = self.Atome_classify()
-                        for c, catom in f:
-                            angel = atom1.angel(batom, catom)
-                            All_angels.setdefault(a1+b+c, [])
-                            All_angels[a1+b+c].append(angel)
-                        f.pop(b)
+                    All_angels.setdefault(a, [])
+                    for b in self.Atome_type():
+                        for b1, batom in self.Atome_classify().items():
+                            All_angels[a].setdefault(b, [])
+                            f = self.Atome_classify()
+                            for c, catom in f:
+                                angel = atom1.angel(batom, catom)
+                                All_angels.setdefault(a1+b+c, [])
+                                All_angels[a1+b+c].append(angel)
+                            f.pop(b)
         return All_angels
 
 class Rpart(AEV):
@@ -74,16 +77,18 @@ class Rpart(AEV):
         return Fc
 
     def R_AEV(self, Rj):
-        AEVs = {}
+        AEVs = {}#It is a multiple dictionary
         n = 4.0
         for a, atom1 in self.All_dis().items():
             AEVs.setdefaut(a, [])
-            for Rs in self.rs_values:
-                GmR = 0
-                for R in atom1:
-                    f = R.cutf(self.radial_cutoff)
-                    GmR += math.exp(- n * ((R - Rs) ** 2)) * f
-                AEVs[a].append(GmR)
+            for b, batom in atom1.items():
+                AEVs[a].setdefault(b, [])
+                for Rs in self.rs_values:
+                    GmR = 0
+                    for R in batom:
+                        f = R.cutf(self.radial_cutoff)
+                        GmR += math.exp(- n * ((R - Rs) ** 2)) * f
+                    AEVs[a:b].append(GmR)
         return AEVs
 
 class Apart(AEV):
