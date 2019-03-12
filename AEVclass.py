@@ -32,7 +32,7 @@ class AEV(object):
 #generate a dictionary include {element_name:distance}
     def All_dis(self):
         All_distance = {}
-        for a in self.Atome_type():#choose atom type
+        for a in self.Atome_type():#choose right atom type
             for a1, atom1 in self.Atome_classify().items():#choose first atom
                 if a1 == a:
                     All_distance.setdefault(a1, [])
@@ -69,7 +69,7 @@ class Rpart(AEV):
         self.Rj =[2.1, 2.2, 2.5]
         self.radial_cutoff = 5.2
 
-    def cutf(self,R_distance):
+    def cutf(self, R_distance):
         if R_distance >= self.radial_cutoff:
             Fc = 0.5 * math.cos(math.pi * R_distance / self.radial_cutoff) + 0.5
         else:
@@ -98,8 +98,10 @@ class Apart(AEV):
         self.angular_rs_values = [0.900000, 2.200000]
         self.angular_cutoff = 3.5
         self.angular_zeta = 8
+        self.radial_cutoff = 5.2
+        self.cutf = cutf()
 
-    def Aeq(self, Rj, Rk):
+    def Aeq(self):
         l = 8.00
         n = 4.0
         GmAs = []
@@ -108,15 +110,11 @@ class Apart(AEV):
                 GmA = 0
                 i = 0
                 for e in zeta:
-                    fk = cutf(Rj[i])
-                    fj = cutf(Rk[i])
+                    fk = self.angular_cutoff.cutf()
+                    fj = self.radial_cutoff.cutf()
                     GmA = GmA + (((1 + math.cos(e - b))) ** l) * \
                           math.exp(- n * ((((Rj[i] + Rk[i]) / 2) - a) ** 2)) * fj * fk
                     i = i + 1
                 GmA = GmA * (2 ** (1 - l))
                 GmAs.append(GmA)
         return GmAs
-
-
-    pass
-
