@@ -1,94 +1,64 @@
 from iotbx import pdb
+import numpy
 import iotbx
 import math
 
 class AEV(object):
 
-    def __init__(self, pdb_file_name):
-        self.pdb_inp = iotbx.pdb.input(file_name=pdb_file_name)
-        self.hierarchy = self.pdb_inp.construct_hierarchy()
-        self.radial_nu = 8
-        self.radial_angular_nu = 8
-        self.eta = 4.0
-
-#generate a set about all atom types
-    def Atome_type(self):
-        atom_elements = list()
-        for a in self.hierarchy.atoms():
-            e = a.element.upper().strip()
-            atom_elements.append(e)
-        atom_elements = set(atom_elements)
-        return atom_elements
+  def __init__(self, pdb_file_name):
+    self.pdb_inp = iotbx.pdb.input(file_name=pdb_file_name)
+    self.hierarchy = self.pdb_inp.construct_hierarchy()
+    self.radial_nu = 8
+    self.radial_angular_nu = 8
+    self.eta = 4.0
+#cutoff function
+  def cutf(self, distance):
+      if distance <= self.cutoff:
+        Fc = 0.5 * math.cos(math.pi * distance / self.cutoff) + 0.5
+      else:
+        Fc = 0
+      return Fc
 
 #generate a dictionary about all atomes
-    def Atome_classify(self):
-        atom_elements = {}
-        for a in self.hierarchy.atoms():
-            e = a.element.upper().strip()
-            atom_elements.setdefault(e, [])
-            atom_elements[e].append(a)
-        return atom_elements
+  def Atome_classify(self):
+      atom_elements = {}
+      list1 = list()
+      for a in self.hierarchy.atoms():
+          e = a.element.upper().strip()
+          list1.append(e)
+      list1 = set(list1)
+      for b in self.hierarchy.atoms():
+        e = b.element.upper().strip()
+        atom_elements.setdefault(e, [])
+        atom_elements[e].append(b)
+      return atom_elements
 
-#generate a dictionary include {element_name:distance}
-    def All_dis(self):
-        All_distance = {}
-        for a in self.Atome_type():#choose right atom type
-            for a1, atom1 in self.Atome_classify().items():#choose first atom
-                if a1 == a:
-                    All_distance.setdefault(a1, [])
-                    for b in self.Atome_type():#choose second atom type
-                        for b1, batom1 in self.Atome_classify().items():#second atom
-                            if b1 == b:
-                                All_distance[a1].setdefault(b1, [])
-                                R = atom1.distace(atom2)#distance between sencond atom and third atom
-                                All_distance[a1:b1].append(R)
-        return All_distance
 
-#generate a dictionary about all angels {element_name: angel}
-    def All_angel(self):
-        All_angels = {}
-        for a in self.Atome_type():
-            for a1, atom1 in self.Atome_classify().items():
-                if a1 == a:
-                    All_angels.setdefault(a, [])
-                    for b in self.Atome_type():
-                        for b1, batom in self.Atome_classify().items():
-                            All_angels[a].setdefault(b, [])
-                            f = self.Atome_classify()
-                            for c, catom in f:
-                                angel = atom1.angel(batom, catom)
-                                All_angels.setdefault(a1+b+c, [])
-                                All_angels[a1+b+c].append(angel)
-                            f.pop(b)
-        return All_angels
+
 
 class Rpart(AEV):
     def __init__(self, pdb_file_name):
         super(Rpart, self).__init__(pdb_file_name)
-        self.rs_values = [ 0.900000,1.437500, 1.975000, 2.512500, 3.050000, 3.587500, 4.125000, 4.662500]
+        self.rs_values = [0.900000, 1.437500, 1.975000, 2.512500, 3.050000, 3.587500, 4.125000, 4.662500]
         self.Rj =[2.1, 2.2, 2.5]
-        self.radial_cutoff = 5.2
+        self.cutoff = 3.5
 
-    def cutf(self, R_distance):
-        if R_distance >= self.radial_cutoff:
-            Fc = 0.5 * math.cos(math.pi * R_distance / self.radial_cutoff) + 0.5
-        else:
-            Fc = 0
-        return Fc
 
-    def R_AEV(self, Rj):
+    def R_AEV(self):
         AEVs = {}#It is a multiple dictionary
         n = 4.0
-        for a, atom1 in self.All_dis().items():
-            AEVs.setdefaut(a, [])
-            for b, batom in atom1.items():
-                AEVs[a].setdefault(b, [])
-                for Rs in self.rs_values:
-                    GmR = 0
-                    for R in batom:
-                        f = R.cutf(self.radial_cutoff)
-                        GmR += math.exp(- n * ((R - Rs) ** 2)) * f
-                    AEVs[a:b].append(GmR)
+        for a, atom_list1 in self.Atome_classify().items():
+            AEVs.setdefault(a, {})
+            for Rs in self.rs_values:
+                for atom1 in atom_list1:
+                    for b, atom_list2 in self.Atome_classify().items():
+                        AEVs[a].setdefault(b, [])
+                        GmR = 0
+                        for atom2 in atom_list2:
+                            R = atom1.distance(atom2)
+                            f = self.cutf(R)
+                            GmR += math.exp(- n * ((R - Rs) ** 2)) * f
+                        AEVs[a][b].append(GmR)
         return AEVs
 
 class Apart(AEV):
@@ -99,7 +69,6 @@ class Apart(AEV):
         self.angular_cutoff = 3.5
         self.angular_zeta = 8
         self.radial_cutoff = 5.2
-        self.cutf = cutf()
 
     def Aeq(self):
         l = 8.00
