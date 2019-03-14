@@ -6,8 +6,10 @@ from AEVclass import Apart
 def main(pdb_file_name):
     #a = AEV(pdb_file_name)
     #print(a.Atome_classify())
-    b = Rpart(pdb_file_name)
-    print(b.R_AEV())
+    #b = Rpart(pdb_file_name)
+    #print(b.R_AEV())
+    c = Apart(pdb_file_name)
+    print(c.A_AEV())
 
 if __name__ == '__main__':
     import os, sys
