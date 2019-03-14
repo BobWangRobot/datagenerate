@@ -51,7 +51,7 @@ class Rpart(AEV):
         self.cutoff = 3.5
 
     def R_AEV(self):
-        AEVs = radial_aev_class() 
+        AEVs = radial_aev_class() #It is a multiple dictionary
         n = 4.0
         for atom1 in self.hierarchy.atoms():
             x = str(atom1.i_seq)
@@ -87,15 +87,16 @@ class Apart(AEV):
             x = str(atom1.i_seq)
             a = atom1.element.upper().strip()
             AEVs.setdefault(a+x, {})
-            for b, atom2list in self.Atome_classify().items():
-                for c, atom3list in self.Atome_classify().items():
+            f = self.Atome_classify()
+            for b, atom2list in f.items():
+                for c, atom3list in f.items():
                     for Rs in self.angular_rs_values:
                         for zetas in self.ts_values:
                             AEVs[a+x].setdefault(b+c, [])
                             GmA = 0
                             for atom2 in atom2list:
                                 for atom3 in atom3list:
-                                    if atom2 != atom1 and atom3 != atom1 and atom2 != atom3:
+                                    if atom2 != atom1 and atom3 != atom1:
                                         Rij = atom1.distance(atom2)
                                         Rik = atom1.distance(atom2)
                                         ZETAijk = atom1.angle(atom2, atom3)
@@ -105,4 +106,5 @@ class Apart(AEV):
                                               math.exp(- n * ((((Rij + Rik) / 2) - Rs) ** 2)) * fj * fk
                             GmA = GmA * (2 ** (1 - l))
                             AEVs[a+x][b+c].append(GmA)
+                f.pop(b)#delecte repeated atomes
         return AEVs
