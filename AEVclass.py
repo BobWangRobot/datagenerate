@@ -31,7 +31,7 @@ class AEV(object):
         Fc = 0
       return Fc
 
-#generate a dictionary about all atomes
+#generate a dictionary about all atome
   def Atome_classify(self):
       atom_elements = {}
       for b in self.hierarchy.atoms():
