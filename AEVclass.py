@@ -15,6 +15,16 @@ class radial_aev_class(dict):
         outl += '\n'
     return outl
 
+class aev_class(dict):
+  def __repr__(self):
+      outl = 'AEV ...\n'
+      for key, item in self.items():
+          outl += '  %s :\n' % (key)
+          for v in item:
+              outl += '%0.3f,' % v
+          outl += '\n'
+      return outl
+
 class AEV_base(object):
 
   def __init__(self, pdb_file_name):
@@ -103,4 +113,17 @@ class AEV(AEV_base):
     def get_AEVS(self):
         R = self.Rpart()
         A = self.Apart()
-        test
+        all_AEV = aev_class()
+        for name, Rvc in R.items():
+            all_AEV.setdefault(name,[])
+            for a, b in Rvc.items():
+                for c in b:
+                    all_AEV[name].append(c)
+        for name,at in A.items():
+            for a, b in at.items():
+                for c in b:
+                    all_AEV[name].append(c)
+        return all_AEV
+
+    def compare(self):
+
