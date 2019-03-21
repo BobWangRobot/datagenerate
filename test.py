@@ -21,4 +21,3 @@ from AEVclass import AEV
 a = AEV(pdb_file_name='acid060.pdb')
 b = AEV(pdb_file_name='acid300.pdb')
 def compare(dic1, dic2):
-    
