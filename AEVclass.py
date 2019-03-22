@@ -125,5 +125,5 @@ class AEV(AEV_base):
           all_AEV[name].append(c)
     return all_AEV
 
-  def compare(self):
+  #def compare(self):
 
