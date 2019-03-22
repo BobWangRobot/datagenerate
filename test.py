@@ -14,12 +14,14 @@ def compare(a,b):
 def main(pdb_file_name1,pdb_file_name2):
     a = AEV(pdb_file_name1)
     b = AEV(pdb_file_name2)
-    print(type(a,b))
+    a = a.get_AEVS()
+    b = b.get_AEVS()
+    # print(a.get_AEVS(), b.get_AEVS())
     f = compare(a, b)
     print(f)
-    #print(a.Rpart())
-    #print(a.Apart())
-    print(a.get_AEVS())
+    # print(a.Rpart())
+    # print(a.Apart())
+    # print(a.get_AEVS())
 
 
 
