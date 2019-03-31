@@ -2,6 +2,8 @@ from iotbx import pdb
 import numpy
 import iotbx
 import math
+from collections import OrderedDict
+dict = OrderedDict
 
 class radial_aev_class(dict):
   def __repr__(self):
@@ -111,19 +113,7 @@ class AEV(AEV_base):
     return AEVs
 
   def get_AEVS(self):
-    R = self.Rpart()
-    A = self.Apart()
-    all_AEV = aev_class()
-    for name, Rvc in R.items():
-      all_AEV.setdefault(name,[])
-      for a, b in Rvc.items():
-        for c in b:
-          all_AEV[name].append(c)
-    for name,at in A.items():
-      for a, b in at.items():
-        for c in b:
-          all_AEV[name].append(c)
+    all_AEV = self.Rpart()
+    for element, Rvc in all_AEV.items():
+      Rvc.update(self.Apart()[element])#question
     return all_AEV
-
-  #def compare(self):
-
