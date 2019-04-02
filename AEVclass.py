@@ -17,15 +17,6 @@ class radial_aev_class(dict):
         outl += '\n'
     return outl
 
-class aev_class(dict):
-  def __repr__(self):
-    outl = 'AEV ...\n'
-    for key, item in self.items():
-      outl += '  %s :\n' % (key)
-      for v in item:
-        outl += '%0.3f,' % v
-      outl += '\n'
-    return outl
 
 class AEV_base(object):
 
