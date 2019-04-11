@@ -3,57 +3,59 @@ from AEVclass import AEV
 import numpy as np
 import matplotlib.pyplot as plt
 
-def compare(a,b):
-  y1 = []
-  y2 = []
-  name = []
-  diff = {}
-  for atoms, values in a.get_AEVS().items():
-    for atom, value in values.items():
-      name.append(atom)
-      y1.append(value)
-  for atoms, values in b.get_AEVS().items():
-    for atom, value in values.items():
-      y2.append(value)
-  for i in range(len(y1)):
-    print(i,'\n',y1[i],y2[i])
-    diff.setdefault(name[i], [])
-    #print(name[i], np.corrcoef(y1[i], y2[i]))
-    a = np.corrcoef(y1[i], y2[i])
-    print(a[0])
-    diff[name[i]].append(a[0])
+def compare(aev1, aev2):
+  diff = aev2.get_AEVS()
+  for element, values in aev1.get_AEVS().items():
+    for r_or_a, value in values.items():
+      if 0 in value:
+        diff[element][r_or_a] = (0, 1)
+      else:
+        covalue = list(np.corrcoef(value, diff[element][r_or_a]))
+        diff[element][r_or_a] = covalue[1]
   return diff
 
-def plotvalue(a, b, atomname):
+def plotvalue(aev1, aev2, elename):
   y1 = []
   y2 = []
   name = []
-  for atoms, values in a.get_AEVS().items():
-    if atomname in atoms:
-      for atom, value in values.items():
-        for a in value:
-          y1.append(a)
-        name.append(atom)
-  for atoms, values in b.get_AEVS().items():
-    if atomname in atoms:
-      for atom, value in values.items():
-        for a in value:
-          y2.append(a)
+  for element, values in aev1.get_AEVS().items():
+    if elename in element:
+      for r_or_a, value in values.items():
+        for list1 in value:
+          y1.append(list1)
+        name.append(r_or_a)
+  for element, values in aev2.get_AEVS().items():
+    if elename in element:
+      for value in values.values():
+        for list2 in value:
+          y2.append(list2)
   x = range(len(y1))
-  plt.plot(x,y1,'r')
-  plt.plot(x,y2,'g')
+  plt.plot(x, y1, 'r')
+  plt.plot(x, y2, 'g')
   plt.xticks(x[::8], name)
   plt.show()
 
-def main(pdb_file_name1, pdb_file_name2):
+def plotcompare(diff):
+  name = []
+  y1 = []
+  y2 = []
+  for atoms, values in diff.items():
+      for r_or_a, value in values.items():
+        name.append(r_or_a)
+        y1.append(value[0])
+        y2.append(value[1])
+  x = range(len(y1))
+  plt.scatter(x, y1)
+  plt.plot(x, y2)
+  plt.xticks(x, name)
+  plt.show()
+
+def main(pdb_file_name1, pdb_file_name2, element):
   a = AEV(pdb_file_name1)
   b = AEV(pdb_file_name2)
-  print(compare(a,b))
-  plotvalue(a, b, 'C')
-  print(a.get_AEVS())
+  plotcompare(compare(a, b))
+  plotvalue(a, b, element)
 
-def plot(xvelue,yvelue):
-  x = []
 
 
 if __name__ == '__main__':
