@@ -14,7 +14,7 @@ def compare(aev1, aev2):
         diff[element][r_or_a] = covalue[1]
   return diff
 
-def plotvalue(aev1, aev2, elename):
+def plotvalue(aev1, aev2, elename,pdb_filename):
   y1 = []
   y2 = []
   name = []
@@ -36,9 +36,10 @@ def plotvalue(aev1, aev2, elename):
   plt.plot(x, y1, 'r')
   plt.plot(x, y2, 'g')
   plt.xticks(x[::8], name)
+  plt.savefig('./corrcoee/%s.jpg' % pdb_filename.replace('.pdb',''))
   plt.show()
 
-def plotcompare(diff,ele):
+def plotcompare(diff,ele,pdb_filename):
   name = []
   y1 = []
   y2 = []
@@ -55,14 +56,15 @@ def plotcompare(diff,ele):
   plt.plot(x, y1, 'ob')
   plt.plot(x, y2, 'r')
   plt.xticks(x, name)
+  plt.savefig('./difference/%s.jpg' % pdb_filename.replace('.pdb',''))
   plt.show()
 
 def main(pdb_file_name1, pdb_file_name2, element):
   a = AEV(pdb_file_name1)
   b = AEV(pdb_file_name2)
   print(a.get_AEVS(), b.get_AEVS())
-  plotcompare(compare(a, b), element)
-  plotvalue(a, b, element)
+  plotcompare(compare(a, b), element, pdb_file_name2)
+  plotvalue(a, b, element, pdb_file_name2)
 
 
 
