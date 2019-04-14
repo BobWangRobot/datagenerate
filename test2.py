@@ -70,7 +70,7 @@ def plotvalue(aev1, aev2, elename,pdb_filename):
   plt.plot(x, y1, 'r')
   plt.plot(x, y2, 'g')
   plt.xticks(x[::8], name)
-  plt.savefig('./corrcoee/%s.jpg' % pdb_filename.replace('.pdb',''))
+  plt.savefig('./difference/%s.jpg' % pdb_filename.replace('.pdb',''))
   plt.show()
 
 def plotcompare(diff,ele,pdb_filename):
@@ -85,7 +85,7 @@ def plotcompare(diff,ele,pdb_filename):
   plt.title("Correlation coefficient of %s atom"%ele)
   plt.xlabel("radial or angular to %s"%ele)
   plt.ylabel("value")
-  plt.savefig('./difference/%s.jpg' % pdb_filename.replace('.pdb',''))
+  plt.savefig('./corrcoee/%s.jpg' % pdb_filename.replace('.pdb',''))
   plt.show()
 
 def main(pdb_file_name1, pdb_file_name2, number, elename):
