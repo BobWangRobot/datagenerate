@@ -83,7 +83,7 @@ def plotcompare(diff,ele,pdb_filename):
         plt.plot(range(len(value)), value, label = '%r'%r_or_a, color = c)
         plt.legend()
   plt.title("Correlation coefficient of %s atom"%ele)
-  plt.xlabel("radial or angular to %s"%ele)
+  plt.xlabel("all files")
   plt.ylabel("value")
   plt.savefig('./corrcoee/%s.jpg' % pdb_filename.replace('.pdb',''))
   plt.show()
