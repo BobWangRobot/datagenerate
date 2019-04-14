@@ -2,6 +2,22 @@ import iotbx
 from AEVclass import AEV, radial_aev_class
 import numpy as np
 import matplotlib.pyplot as plt
+import random
+
+def _sort(k1, k2):
+  if len(k1)==1:
+    return 1
+  else:
+    return -1
+
+
+
+def randomcolor():
+    colorArr = ['1','2','3','4','5','6','7','8','9','A','B','C','D','E','F']
+    color = ""
+    for i in range(6):
+        color += colorArr[random.randint(0,14)]
+    return "#"+color
 
 def compare(aev1, aev2):
   diff = aev2.get_AEVS()
@@ -32,8 +48,12 @@ def plotvalue(aev1, aev2, elename,pdb_filename):
   y1 = []
   y2 = []
   name = []
-  for element, values in aev1.get_AEVS().items():
-    if elename in element:
+  d = aev1.get_AEVS()
+  keys = d.keys()
+  keys.sort(_sort)
+  for key in keys:
+    values = d[key]
+    if elename in key:
       for r_or_a, value in values.items():
         for list1 in value:
           y1.append(list1)
@@ -59,8 +79,9 @@ def plotcompare(diff,ele,pdb_filename):
   for element, values in diff.items():
     if ele in element:
       for r_or_a, value in values.items():
-        name.append(r_or_a)
-        plt.plot(range(len(value)), value, color = '#%s54E9F'%i)
+        c = randomcolor()
+        plt.plot(range(len(value)), value, label = '%r'%r_or_a, color = c)
+        plt.legend()
   plt.title("Correlation coefficient of %s atom"%ele)
   plt.xlabel("radial or angular to %s"%ele)
   plt.ylabel("value")
@@ -68,7 +89,11 @@ def plotcompare(diff,ele,pdb_filename):
   plt.show()
 
 def main(pdb_file_name1, pdb_file_name2, number, elename):
+  a = AEV(pdb_file_name1)
+  b = AEV(pdb_file_name2)
   total = compare_all(pdb_file_name1, pdb_file_name2, number)
+  print(total)
+  plotvalue(a, b, elename, 'ethane.pdb')
   plotcompare(total, elename, pdb_file_name2)
 
 
