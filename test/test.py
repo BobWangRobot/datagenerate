@@ -1,8 +1,11 @@
 import iotbx
-from AEVclass import AEV
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+sys.path.append("..")
+from AEVclass import AEV
 
+#test two same element pdb file
 def compare(aev1, aev2):
   diff = aev2.get_AEVS()
   for element, values in aev1.get_AEVS().items():
@@ -30,11 +33,12 @@ def plotvalue(aev1, aev2, elename,pdb_filename):
         for list2 in value:
           y2.append(list2)
   x = range(len(y1))
-  plt.title("AEV difference with two %s atom" % elename)
+  plt.title("%s AEV difference with two %s atom" %(pdb_filename, elename))
   plt.xlabel("radial or angular of %s atom" % elename)
   plt.ylabel("value")
-  plt.plot(x, y1, 'r')
-  plt.plot(x, y2, 'g')
+  plt.plot(x, y1, 'r', label='file1')
+  plt.plot(x, y2, 'g', label='file2')
+  plt.legend()
   plt.xticks(x[::8], name)
   plt.savefig('./difference/%s.jpg' % pdb_filename.replace('.pdb',''))
   plt.show()
