@@ -107,12 +107,25 @@ class AEV(AEV_base):
     all_AEV = self.Rpart()
     for element, Rvc in all_AEV.items():
       Rvc.update(self.Apart()[element])
+      all_AEV[element].setdefault(element,[])
+      for values in Rvc.values():
+        for v in values:
+          all_AEV[element][element].append(v)
     return all_AEV
 
-  def get_items(self):
+  def all_items(self):
     empty = self.get_AEVS()
     for ele, values in empty.items():
       for item in values.keys():
         empty[ele][item] = []
     return empty
+
+  def all_list(self):
+    all_list = self.get_AEVS()
+    for ele, item in all_list.items():
+      all_list[ele].setdefault(ele, [])
+      for value in item.values():
+        for v in value:
+          all_list[ele][ele].append(v)
+    return all_list
 

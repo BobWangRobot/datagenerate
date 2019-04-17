@@ -25,21 +25,14 @@ def compare(aev1, aev2):
   diff = aev2.get_AEVS()
   for element, values in aev1.get_AEVS().items():
     diff[element].setdefault(element, [])
-    all1 = []
-    all2 = []
     for r_or_a, value in values.items():
       if 0 in value:
         diff[element][r_or_a] = [1]
       else:
         covalue = np.corrcoef(value, diff[element][r_or_a]).tolist()
         diff[element][r_or_a] = [covalue[1][0]]
-      for v1 in value:
-        all1.append(v1)
-      for v2 in aev2.get_AEVS()[element][r_or_a]:
-        all2.append(v2)
-    covalue = np.corrcoef(all1, all2).tolist()
-    diff[element][element] = [covalue[1][0]]
-
+      for v in value:
+        diff[element][element].append(v)
         #diff[element][element] =
   return diff
 
@@ -108,10 +101,12 @@ def plotcompare(diff,ele,pdb_filename):
   plt.savefig('./corrcoee/%s.jpg' % pdb_filename.replace('.pdb',''))
   plt.show()
 
-def main(pdb_file_name1,pdb_file_name2, elename, number):
-  total = compare_all(pdb_file_name1, pdb_file_name2, number)
+def main(pdb_file_name1): #, pdb_file_name2, elename, number):
+  a = AEV(pdb_file_name1)
+  print(a.get_AEVS())
+  #total = compare_all(pdb_file_name1, pdb_file_name2, number)
   #plotvalue(pdb_file_name1, pdb_file_name2, elename, number)
-  plotcompare(total, elename, pdb_file_name2)
+  #plotcompare(total, elename, pdb_file_name2)
 
 
 

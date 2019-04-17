@@ -24,36 +24,19 @@ def randomcolor():
 def compare(pdb_file1, pdb_file2):
   aev1 = AEV(pdb_file1)
   aev2 = AEV(pdb_file2)
-  diff = aev2.get_AEVS()
+  diff = aev1.get_items()
   for element, values in aev2.get_AEVS().items():
-    if element in aev1.get_AEVS():
+    if element in aev1.get_AEVS().keys():
+      print(element)
       for r_or_a, value in values.items():
-        if 0 in value:
-          diff[element][r_or_a] = [1]
-        else:
-          covalue = np.corrcoef(value, diff[element][r_or_a]).tolist()
-          diff[element][r_or_a] = [covalue[1][0]]
-    else:
-      for r_or_a, value in values.items():
-        if 0 in value:
-          diff[element][r_or_a] = [0]
-  #print(aev1.get_AEVS().keys() ^ diff.keys())
-  print(diff)
+        if r_or_a in aev1.get_AEVS()[element]:
+          if 0 in value:
+            diff[element][r_or_a] = [1]
+          else:
+            covalue = np.corrcoef(value, aev1.get_AEVS()[element][r_or_a]).tolist()
+            diff[element][r_or_a] = [covalue[1][0]]
+  #print(diff)
   return diff
-
-def compare_all(origin, march, number):
-  a = AEV(origin)
-  b = AEV(march)
-  total = compare(a, b)
-  for i in range(0, int(number) + 1):
-    march = march.replace('1.%s.pdb' % (i-1), '1.%s.pdb' % i)
-    b = AEV(march)
-    diff = compare(a, b)
-    for element, values in diff.items():
-        for r_or_a, value in values.items():
-          total[element][r_or_a].append(value[0])
-    print(march)
-  return total
 
 def plotvalue(pdb1, pdb2, elename):
   y1 = []
@@ -84,26 +67,29 @@ def plotvalue(pdb1, pdb2, elename):
   plt.show()
 
 def plotcompare(diff,ele,pdb_filename):
-  display = radial_aev_class()
+  name = []
+  y1 = []
+  y2 = []
   for element, values in diff.items():
     if ele in element:
-      display.setdefault(ele, {})
       for r_or_a, value in values.items():
-        c = randomcolor()
-        plt.plot(range(len(value)), value, label = '%r'%r_or_a, color = c)
-        plt.legend()
-        display[ele].update(values)
-        print (display)
+        name.append(r_or_a)
+        y1.append(value[0])
+  x = range(len(y1))
   plt.title("Correlation coefficient of %s atom"%ele)
-  plt.xlabel("all files")
+  plt.xlabel("radial or angular to %s"%ele)
   plt.ylabel("value")
-  plt.savefig('./corrcoee/%s.jpg' % pdb_filename.replace('.pdb',''))
+  plt.plot(x, y1, 'ob')
+  plt.xticks(x, name)
+  plt.savefig('./corrcoee/%s.jpg' % pdb_filename.replace('.pdb','%s'%ele))
   plt.show()
 
 def main(pdb_file_name1, pdb_file_name2, elename):
-  total = compare(pdb_file_name1, pdb_file_name2)
-  plotvalue(pdb_file_name1, pdb_file_name2, elename)
-  plotcompare(total, elename, pdb_file_name2)
+  #print(AEV(pdb_file_name1).get_AEVS(), AEV(pdb_file_name2).get_AEVS())
+  diff = compare(pdb_file_name1, pdb_file_name2)
+  plotcompare(diff, elename, pdb_file_name1)
+  # plotvalue(pdb_file_name1, pdb_file_name2, elename)
+  # plotcompare(total, elename, pdb_file_name2)
 
 
 
