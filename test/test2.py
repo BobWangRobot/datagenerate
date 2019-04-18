@@ -28,19 +28,14 @@ def compare(aev1, aev2):
     all1 = []
     all2 = []
     for r_or_a, value in values.items():
-      if 0 in value:
-        diff[element][r_or_a] = [1]
-      else:
-        covalue = np.corrcoef(value, diff[element][r_or_a]).tolist()
-        diff[element][r_or_a] = [covalue[1][0]]
+      covalue = np.corrcoef(value, diff[element][r_or_a]).tolist()
+      diff[element][r_or_a] = [covalue[1][0]]
       for v1 in value:
         all1.append(v1)
       for v2 in aev2.get_AEVS()[element][r_or_a]:
         all2.append(v2)
     covalue = np.corrcoef(all1, all2).tolist()
     diff[element][element] = [covalue[1][0]]
-
-        #diff[element][element] =
   return diff
 
 def compare_all(origin, march, number):
