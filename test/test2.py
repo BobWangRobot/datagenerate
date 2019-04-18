@@ -108,7 +108,7 @@ def plotcompare(diff,ele,pdb_filename):
 def main(pdb_file_name1,pdb_file_name2, elename, number):
   total = compare_all(pdb_file_name1, pdb_file_name2, number)
   plotvalue(pdb_file_name1, pdb_file_name2, elename, number)
-  #plotcompare(total, elename, pdb_file_name2)
+  plotcompare(total, elename, pdb_file_name2)
 
 
 

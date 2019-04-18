@@ -34,16 +34,13 @@ def randomcolor():
     return "#"+color
 
 def compare(pdb_file1, pdb_file2):
-  aev2 = AEV(pdb_file2).get_AEVS()
   aev1 = merge(AEV(pdb_file1).get_AEVS(), AEV(pdb_file2).get_items())
-  diff = AEV(pdb_file2).get_items()
+  aev2 = merge(AEV(pdb_file2).get_AEVS(), AEV(pdb_file1).get_items())
+  diff = merge(AEV(pdb_file2).get_items(),AEV(pdb_file1).get_items())
   for element, values in aev2.items():
-    if element in aev1.keys():
-      print(element)
-      for r_or_a, value in values.items():
-        if r_or_a in aev1[element]:
-          covalue = np.corrcoef(value, aev1[element][r_or_a]).tolist()
-          diff[element][r_or_a] = [covalue[1][0]]
+    for r_or_a, value in values.items():
+      covalue = np.corrcoef(value, aev1[element][r_or_a]).tolist()
+      diff[element][r_or_a] = [covalue[1][0]]
   return diff
 
 def plotvalue(pdb1, pdb2, elename):
@@ -58,14 +55,12 @@ def plotvalue(pdb1, pdb2, elename):
         for list1 in value:
           y1.append(list1)
         name.append(r_or_a)
-      print(pdb1, aev2[elename].keys())
   for element, values in aev2.items():
     if elename in element:
       for r_or_a in name:
         value = values[r_or_a]
         for list2 in value:
           y2.append(list2)
-      print(pdb2, aev1[elename].keys())
   x = range(len(y1))
   plt.title("%s AEV difference with two %s atom" %(pdb2.replace('.pdb',''), elename))
   plt.xlabel("radial or angular of %s atom" % elename)
@@ -74,7 +69,7 @@ def plotvalue(pdb1, pdb2, elename):
   plt.plot(x, y2, 'g', label='%s' % pdb2.replace('.pdb', ''))
   plt.xticks(x[::8], name)
   plt.legend()
-  plt.savefig('./difference/test3%s.jpg' % pdb2.replace('.pdb',''))
+  plt.savefig('./difference/%s.jpg' % pdb2.replace('.pdb','%s'%elename))
   plt.show()
 
 def plotcompare(diff,ele,pdb_filename):
@@ -91,12 +86,12 @@ def plotcompare(diff,ele,pdb_filename):
   plt.ylabel("value")
   plt.plot(x, y1, 'ob')
   plt.xticks(x, name)
-  plt.savefig('./corrcoee/test1%s.jpg' % pdb_filename.replace('.pdb','%s'%ele))
+  plt.savefig('./corrcoee/%s.jpg' % pdb_filename.replace('.pdb','%s'%ele))
   plt.show()
 
 def main(pdb_file_name1, pdb_file_name2, elename):
-  #print(AEV(pdb_file_name1).get_AEVS(), AEV(pdb_file_name2).get_AEVS())
-  #plotcompare(diff, elename, pdb_file_name1)
+  diff = compare(pdb_file_name1, pdb_file_name2)
+  plotcompare(diff, elename, pdb_file_name1)
   plotvalue(pdb_file_name1, pdb_file_name2, elename)
 
 
