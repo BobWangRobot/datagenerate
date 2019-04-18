@@ -8,7 +8,7 @@ from AEVclass import AEV, radial_aev_class
 
 #test 9 same element pdb file
 
-def _sort(k1, k2):
+def _sort(k1,k2):
   if len(k1)==1:
     return 1
   else:
@@ -56,23 +56,25 @@ def plotvalue(aev1, aev2, elename,number):
   a = AEV(aev1)
   y1 = []
   name = []
-  d = a.get_AEVS()
-  keys = d.keys()
-  keys.sort(_sort)
-  for key in keys:
-    values = d[key]
+  for key,values in a.get_AEVS().items():
     if elename in key:
-      for r_or_a, value in values.items():
+      d = values
+      keys = d.keys()
+      keys.sort(_sort)
+      for r_or_a in keys:
+        value = d[r_or_a]
         for list1 in value:
           y1.append(list1)
         name.append(r_or_a)
+    print(name)
   for i in range(0, int(number) + 1):
     y2 = []
     aev2 = aev2.replace('1.%s.pdb' % (i-1), '1.%s.pdb' % i)
     b = AEV(aev2)
     for element, values in b.get_AEVS().items():
       if elename in element:
-        for value in values.values():
+        for key in name:
+          value = values[key]
           for list2 in value:
             y2.append(list2)
     x = range(len(y1))
@@ -105,8 +107,8 @@ def plotcompare(diff,ele,pdb_filename):
 
 def main(pdb_file_name1,pdb_file_name2, elename, number):
   total = compare_all(pdb_file_name1, pdb_file_name2, number)
-  #plotvalue(pdb_file_name1, pdb_file_name2, elename, number)
-  plotcompare(total, elename, pdb_file_name2)
+  plotvalue(pdb_file_name1, pdb_file_name2, elename, number)
+  #plotcompare(total, elename, pdb_file_name2)
 
 
 

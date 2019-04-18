@@ -6,23 +6,24 @@ import sys
 sys.path.append("..")
 from AEVclass import AEV, radial_aev_class
 
-#test 2 different element pdb file
-
 def _sort(k1, k2):
   if len(k1)==1:
     return 1
   else:
     return -1
 
+#test 2 different element pdb file
+
 def merge(a, b):
-  for key, itme in b.items():
-    if key in a.keys():
-      for key1, itme1 in itme.items():
+  for key, item in b.items():
+    if key in a:
+      for key1, item1 in item.items():
         if key1 not in a[key].keys():
           a[key].setdefault(key1,[])
-          a[key][key1] = itme1
+          a[key][key1] = item1
     else:
-      a.update(b[key])
+      a.setdefault(key, {})
+      a[key] = item
   return a
 
 def randomcolor():
@@ -43,38 +44,35 @@ def compare(pdb_file1, pdb_file2):
         if r_or_a in aev1[element]:
           covalue = np.corrcoef(value, aev1[element][r_or_a]).tolist()
           diff[element][r_or_a] = [covalue[1][0]]
-  print(diff)
   return diff
 
 def plotvalue(pdb1, pdb2, elename):
   y1 = []
   y2 = []
-  name1 = []
-  name2 = []
-  aev1 = AEV(pdb1).get_AEVS()
-  aev2 = AEV(pdb2).get_AEVS()
-  aev1 = merge(aev1,AEV(pdb2).get_items())
+  name = []
+  aev1 = merge(AEV(pdb1).get_AEVS(), AEV(pdb2).get_items())
+  aev2 = merge(AEV(pdb2).get_AEVS(), AEV(pdb1).get_items())
   for ele, values in aev1.items():
     if elename in ele:
       for r_or_a, value in values.items():
         for list1 in value:
           y1.append(list1)
-        name1.append(r_or_a)
+        name.append(r_or_a)
+      print(pdb1, aev2[elename].keys())
   for element, values in aev2.items():
     if elename in element:
-      for r_or_a, value in values.items():
+      for r_or_a in name:
+        value = values[r_or_a]
         for list2 in value:
           y2.append(list2)
-        name2.append(r_or_a)
-  x1 = range(len(y1))
-  x2 = range(len(y2))
+      print(pdb2, aev1[elename].keys())
+  x = range(len(y1))
   plt.title("%s AEV difference with two %s atom" %(pdb2.replace('.pdb',''), elename))
   plt.xlabel("radial or angular of %s atom" % elename)
   plt.ylabel("value")
-  plt.plot(x1, y1, 'r', label='%s' % pdb1.replace('.pdb', ''))
-  plt.plot(x2, y2, 'g', label='%s' % pdb2.replace('.pdb', ''))
-  plt.xticks(x1[::8], name1)
-  plt.xticks(x2[::8], name2)
+  plt.plot(x, y1, 'r', label='%s' % pdb1.replace('.pdb', ''))
+  plt.plot(x, y2, 'g', label='%s' % pdb2.replace('.pdb', ''))
+  plt.xticks(x[::8], name)
   plt.legend()
   plt.savefig('./difference/test3%s.jpg' % pdb2.replace('.pdb',''))
   plt.show()
@@ -82,7 +80,6 @@ def plotvalue(pdb1, pdb2, elename):
 def plotcompare(diff,ele,pdb_filename):
   name = []
   y1 = []
-  y2 = []
   for element, values in diff.items():
     if ele in element:
       for r_or_a, value in values.items():
@@ -99,10 +96,8 @@ def plotcompare(diff,ele,pdb_filename):
 
 def main(pdb_file_name1, pdb_file_name2, elename):
   #print(AEV(pdb_file_name1).get_AEVS(), AEV(pdb_file_name2).get_AEVS())
-  diff = compare(pdb_file_name1, pdb_file_name2)
-  plotcompare(diff, elename, pdb_file_name1)
-  #plotvalue(pdb_file_name1, pdb_file_name2, elename)
-  # plotcompare(total, elename, pdb_file_name2)
+  #plotcompare(diff, elename, pdb_file_name1)
+  plotvalue(pdb_file_name1, pdb_file_name2, elename)
 
 
 

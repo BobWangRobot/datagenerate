@@ -10,6 +10,7 @@ class radial_aev_class(dict):
     outl = 'AEV ...\n'
     for key, item in self.items():
       outl += '  %s :\n' % (key)
+      print(type(key,item))
       for e, vec in item.items():
         outl += '     %s : ' % e
         for v in vec:
@@ -111,6 +112,7 @@ class AEV(AEV_base):
       for values in Rvc.values():
         for v in values:
           all_AEV[element][element].append(v)
+          print(element,v)
     return all_AEV
 
   def all_items(self):

@@ -2,12 +2,11 @@ from iotbx import pdb
 import numpy
 import iotbx
 import math
-from collections import OrderedDict
-dict = OrderedDict
+import collections
 
-class radial_aev_class(dict):
+class radial_aev_class(collections.OrderedDict):
   def __repr__(self):
-    outl = 'AEV ...\n'
+    outl = '...\n'
     for key, item in self.items():
       outl += '  %s :\n' % (key)
       for e, vec in item.items():
@@ -113,6 +112,6 @@ class AEV(AEV_base):
     empty = self.get_AEVS()
     for ele, values in empty.items():
       for item in values.keys():
-        empty[ele][item] = []
+        empty[ele][item] = [0,0,0,0,0,0,0,0]
     return empty
 
