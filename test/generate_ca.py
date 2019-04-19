@@ -172,7 +172,7 @@ ATOM     10  CE2 TYR A  20      -9.751  -1.791 -38.482  1.00  0.00           C
 ATOM     11  CZ  TYR A  20     -10.598  -0.703 -38.504  1.00  0.00           C
 ATOM     12  OH  TYR A  20     -10.194   0.489 -37.945  1.00  0.00           O
 '''
-
+#??
 def get_geometry_restraints_manager(pdb_filename=None,
                                     raw_records=None,
                                     #pdb_inp,

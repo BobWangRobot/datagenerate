@@ -68,6 +68,8 @@ class AEV(AEV_base):
               self.cutoff = self.radial_cutoff
               f = self.cutf(R)
               GmR += math.exp(- n * ((R - Rs) ** 2)) * f
+          if GmR<1e-6:
+            GmR = 0
           AEVs[a+x][b].append(GmR)
     return AEVs
 
@@ -98,6 +100,8 @@ class AEV(AEV_base):
                     GmA += (((1 + math.cos(ZETAijk - zetas))) ** l) * \
                           math.exp(- n * ((((Rij + Rik) / 2) - Rs) ** 2)) * fj * fk
               GmA = GmA * (2 ** (1 - l))
+              if GmA < 1e-6:
+                GmA = 0
               AEVs[a+x][b+c].append(GmA)
         f.pop(b)#delecte repeated atomes
     return AEVs
