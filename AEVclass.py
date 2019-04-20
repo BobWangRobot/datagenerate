@@ -19,8 +19,12 @@ class radial_aev_class(collections.OrderedDict):
 
 class AEV_base(object):
 
-  def __init__(self, pdb_file_name):
-    self.pdb_inp = iotbx.pdb.input(file_name=pdb_file_name)
+  def __init__(self, pdb_file_name=None, raw_records=None):
+    assert count(pdb_file_name, raw_records)==1
+    if pdb_file_name :
+      self.pdb_inp = iotbx.pdb.input(file_name=pdb_file_name)
+    elif raw_records:
+      self.pdb_inp = iotbx.pdb.input(lines=raw_records, source_info='raw records')
     self.hierarchy = self.pdb_inp.construct_hierarchy()
 
 #cutoff function
