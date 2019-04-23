@@ -105,9 +105,13 @@ def randomcolor():
         color += colorArr[random.randint(0,14)]
     return "#"+color
 
-def compare(pdb_file1=None, pdb_file2=None):
-  aev1 = merge(AEV(pdb_file1).get_AEVS(), AEV(pdb_file2).get_items())
-  aev2 = merge(AEV(pdb_file2).get_AEVS(), AEV(pdb_file1).get_items())
+def compare(pdb_file1=None, pdb_file2=None, record1=None, record2=None):
+  if pdb_file1 and pdb_file2:
+    aev1 = merge(AEV(pdb_file_name=pdb_file1).get_AEVS(), AEV(pdb_file_name=pdb_file2).get_items())
+    aev2 = merge(AEV(pdb_file_name=pdb_file2).get_AEVS(), AEV(pdb_file_name=pdb_file1).get_items())
+  else:
+    aev1 = merge(AEV(raw_records=record1).get_AEVS(), AEV(raw_records=record2).get_items())
+    aev2 = merge(AEV(raw_records=record2).get_AEVS(), AEV(raw_records=record1).get_items())
   list = ['C0', 'C1', 'C2']
   diff = {}
   for element in list:
@@ -131,10 +135,11 @@ def compare(pdb_file1=None, pdb_file2=None):
 
 
 def main(pdb_file_name1=None, pdb_file_name2=None):
-  if pdb_file_name1:
+  if pdb_file_name1 and pdb_file_name2:
     compare(pdb_file_name1, pdb_file_name2)
   else:
-    compare(pdb_file1=CCCC_pdb.replace('_','.'), pdb_file2=CCCS_pdb.replace('_','.'))
+    print(AEV(raw_records=CCCC_pdb).get_AEVS())
+    #compare(record1=CCCC_pdb, record2=CCCS_pdb)
 
 if __name__ == '__main__':
     import os, sys

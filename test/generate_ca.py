@@ -172,26 +172,14 @@ ATOM     10  CE2 TYR A  20      -9.751  -1.791 -38.482  1.00  0.00           C
 ATOM     11  CZ  TYR A  20     -10.598  -0.703 -38.504  1.00  0.00           C
 ATOM     12  OH  TYR A  20     -10.194   0.489 -37.945  1.00  0.00           O
 '''
-#??
-def get_geometry_restraints_manager(pdb_filename=None,
-                                    raw_records=None,
-                                    #pdb_inp,
-                                    #pdb_hierarchy,
-                                    ):
+
+def get_geometry_restraints_manager(pdb_filename=None, raw_records=None,):
   t0=time.time()
   from mmtbx.monomer_library import server
   from mmtbx.monomer_library import pdb_interpretation
-  #lines = pdb_hierarchy.as_pdb_string(
-  #  crystal_symmetry=pdb_inp.crystal_symmetry(),
-  #  )
   mon_lib_srv = server.server()
   ener_lib = server.ener_lib()
-  processed_pdb = pdb_interpretation.process(
-    mon_lib_srv,
-    ener_lib,
-    raw_records=raw_records,
-    file_name=pdb_filename,
-    )
+  processed_pdb = pdb_interpretation.process(mon_lib_srv, ener_lib, raw_records=raw_records, file_name=pdb_filename)
   geometry_restraints_manager = processed_pdb.geometry_restraints_manager()
   print 'time',time.time()-t0
   return geometry_restraints_manager
@@ -204,19 +192,10 @@ def generate_ca(filename=None, raw_records=None):
     pdb_inp = pdb.input(lines=raw_records, source_info='perfect_helix')
   hierarchy = pdb_inp.construct_hierarchy()
   hierarchy.reset_atom_i_seqs()
-  hierarchies = []
-  vector_atoms = []
-  atoms = hierarchy.atoms()
-
-  geometry_restraints_manager = get_geometry_restraints_manager(
-    pdb_filename=filename,
-    raw_records=raw_records)
+  geometry_restraints_manager = get_geometry_restraints_manager(pdb_filename=filename, raw_records=raw_records)
   hierarchy.reset_i_seq_if_necessary()
 
-  for five in generate_protein_fragments(hierarchy,
-                                         geometry_restraints_manager,
-                                         length=5,
-                                         ):
+  for five in generate_protein_fragments(hierarchy, geometry_restraints_manager, length=5):
     print five
     rc = []
     for atom in five.atoms():
