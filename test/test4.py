@@ -138,8 +138,7 @@ def main(pdb_file_name1=None, pdb_file_name2=None):
   if pdb_file_name1 and pdb_file_name2:
     compare(pdb_file_name1, pdb_file_name2)
   else:
-    print(AEV(raw_records=CCCC_pdb).get_AEVS())
-    #compare(record1=CCCC_pdb, record2=CCCS_pdb)
+    compare(record1=CCCC_pdb, record2=CCCS_pdb)
 
 if __name__ == '__main__':
     import os, sys

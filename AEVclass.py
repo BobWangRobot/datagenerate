@@ -45,8 +45,8 @@ class AEV_base(object):
     return atom_elements
 
 class AEV(AEV_base):
-  def __init__(self, pdb_file_name):
-    AEV_base.__init__(self, pdb_file_name)
+  def __init__(self, pdb_file_name=None, raw_records=None):
+    AEV_base.__init__(self, pdb_file_name, raw_records)
     self.rs_values = [0.900000, 1.437500, 1.975000, 2.512500, 3.050000, 3.587500, 4.125000, 4.662500]
     self.Rj = [2.1, 2.2, 2.5]
     self.radial_cutoff = 5.2
