@@ -172,13 +172,22 @@ ATOM     10  CE2 TYR A  20      -9.751  -1.791 -38.482  1.00  0.00           C
 ATOM     11  CZ  TYR A  20     -10.598  -0.703 -38.504  1.00  0.00           C
 ATOM     12  OH  TYR A  20     -10.194   0.489 -37.945  1.00  0.00           O
 '''
+<<<<<<< HEAD
 def get_geometry_restraints_manager(pdb_filename=None, raw_records=None):
+=======
+
+def get_geometry_restraints_manager(pdb_filename=None, raw_records=None,):
+>>>>>>> 2ac24475e84591dd8906e2d3b4038814bd4b1776
   t0=time.time()
   from mmtbx.monomer_library import server
   from mmtbx.monomer_library import pdb_interpretation
   mon_lib_srv = server.server()
   ener_lib = server.ener_lib()
+<<<<<<< HEAD
   processed_pdb = pdb_interpretation.process(mon_lib_srv, ener_lib, raw_records=raw_records,file_name=pdb_filename)
+=======
+  processed_pdb = pdb_interpretation.process(mon_lib_srv, ener_lib, raw_records=raw_records, file_name=pdb_filename)
+>>>>>>> 2ac24475e84591dd8906e2d3b4038814bd4b1776
   geometry_restraints_manager = processed_pdb.geometry_restraints_manager()
   print 'time',time.time()-t0
   return geometry_restraints_manager
@@ -191,12 +200,19 @@ def generate_ca(filename=None, raw_records=None):
     pdb_inp = pdb.input(lines=raw_records, source_info='perfect_helix')
   hierarchy = pdb_inp.construct_hierarchy()
   hierarchy.reset_atom_i_seqs()
+<<<<<<< HEAD
   atoms = hierarchy.atoms()
 
   geometry_restraints_manager = get_geometry_restraints_manager(pdb_filename=filename, raw_records=raw_records)
   hierarchy.reset_i_seq_if_necessary()
 
   for five in generate_protein_fragments(hierarchy,geometry_restraints_manager,length=5):
+=======
+  geometry_restraints_manager = get_geometry_restraints_manager(pdb_filename=filename, raw_records=raw_records)
+  hierarchy.reset_i_seq_if_necessary()
+
+  for five in generate_protein_fragments(hierarchy, geometry_restraints_manager, length=5):
+>>>>>>> 2ac24475e84591dd8906e2d3b4038814bd4b1776
     print five
     rc = []
     for atom in five.atoms():
