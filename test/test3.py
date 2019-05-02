@@ -91,8 +91,9 @@ def plotcompare(diff,ele,pdb_filename):
 
 def main(pdb_file_name1, pdb_file_name2, elename):
   diff = compare(pdb_file_name1, pdb_file_name2)
-  plotcompare(diff, elename, pdb_file_name1)
-  plotvalue(pdb_file_name1, pdb_file_name2, elename)
+  print(diff)
+  # plotcompare(diff, elename, pdb_file_name1)
+  # plotvalue(pdb_file_name1, pdb_file_name2, elename)
 
 
 

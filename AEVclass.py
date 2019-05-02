@@ -1,5 +1,5 @@
 from iotbx import pdb
-import numpy
+import numpy as np
 import iotbx
 import math
 import collections
@@ -123,3 +123,43 @@ class AEV(AEV_base):
         empty[ele][item] = [0,0,0,0,0,0,0,0]
     return empty
 
+  def merge(self, b):
+    a = self.get_AEVS()
+    for key, item in b.items():
+      if key in a:
+        for key1, item1 in item.items():
+          if key1 not in a[key].keys():
+            a[key].setdefault(key1, [])
+            a[key][key1] = item1
+      else:
+        a.setdefault(key, {})
+        a[key] = item
+    return a
+
+  def compare(self, match_item, element_list=None):
+    aev1 = self.merge(match_item.get_items())
+    aev2 = match_item.merge(self.get_items())
+    diff = {}
+    if element_list:
+      list = element_list
+    else:
+      list = aev1.keys()
+    print(list, aev2.keys())
+    for element in list:
+      diff.setdefault(element, [])
+      all1 = []
+      for r_or_a, value in aev1[element].items():
+        for v1 in value:
+          all1.append(v1)
+      for element2 in list:
+        all2 = []
+        for r_or_a2 in aev1[element].keys():
+          print(element, element2)
+          value2 = aev2[element2][r_or_a2]
+          for v2 in value2:
+            all2.append(v2)
+        covalue = np.corrcoef(all1, all2).tolist()
+        diff[element].append(covalue[1][0])
+    return diff
+
+  # def copare_detail(self,match):

@@ -42,7 +42,7 @@ def compare_all(origin, march, number):
   a = AEV(origin)
   b = AEV(march)
   total = compare(a, b)
-  for i in range(0, int(number) + 1):
+  for i in range(1, int(number) + 1):
     march = march.replace('1.%s.pdb' % (i-1), '1.%s.pdb' % i)
     b = AEV(march)
     diff = compare(a, b)

@@ -102,7 +102,7 @@ def randomcolor():
     colorArr = ['1','2','3','4','5','6','7','8','9','A','B','C','D','E','F']
     color = ""
     for i in range(6):
-        color += colorArr[random.randint(0,14)]
+        color += colorArr[random.randint(0, 14)]
     return "#"+color
 
 def compare(pdb_file1=None, pdb_file2=None, record1=None, record2=None):
@@ -130,9 +130,6 @@ def compare(pdb_file1=None, pdb_file2=None, record1=None, record2=None):
       diff[element].append(covalue[1][0])
   print diff
   return diff
-
-
-
 
 def main(pdb_file_name1=None, pdb_file_name2=None):
   if pdb_file_name1 and pdb_file_name2:
