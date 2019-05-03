@@ -139,12 +139,13 @@ class AEV(AEV_base):
   def compare(self, match_item, element_list=None):
     aev1 = self.merge(match_item.get_items())
     aev2 = match_item.merge(self.get_items())
+    print(aev1, aev2)
     diff = {}
     if element_list:
       list = element_list
     else:
-      list = aev1.keys()
-    print(list, aev2.keys())
+      list = aev2.keys()
+    print(list)
     for element in list:
       diff.setdefault(element, [])
       all1 = []
@@ -153,11 +154,15 @@ class AEV(AEV_base):
           all1.append(v1)
       for element2 in list:
         all2 = []
-        for r_or_a2 in aev1[element].keys():
-          print(element, element2)
-          value2 = aev2[element2][r_or_a2]
-          for v2 in value2:
-            all2.append(v2)
+        try:
+          for r_or_a2 in aev1[element].keys():
+            print(element, element2, r_or_a)
+            value2 = aev2[element2][r_or_a2]
+            for v2 in value2:
+              all2.append(v2)
+        except KeyError:
+          pass
+        print('list1:%s\nlist2:%s'%(len(all1), len(all2)))
         covalue = np.corrcoef(all1, all2).tolist()
         diff[element].append(covalue[1][0])
     return diff
