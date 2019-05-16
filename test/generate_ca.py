@@ -191,11 +191,9 @@ def generate_ca(filename=None, raw_records=None):
     pdb_inp = pdb.input(lines=raw_records, source_info='perfect_helix')
   hierarchy = pdb_inp.construct_hierarchy()
   hierarchy.reset_atom_i_seqs()
-  atoms = hierarchy.atoms()
   geometry_restraints_manager = get_geometry_restraints_manager(pdb_filename=filename, raw_records=raw_records)
   hierarchy.reset_i_seq_if_necessary()
   for five in generate_protein_fragments(hierarchy,geometry_restraints_manager,length=5):
-    print five
     rc = []
     for atom in five.atoms():
       if atom.name==' CA ':

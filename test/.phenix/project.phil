@@ -1,0 +1,20 @@
+project {
+  project_id = 123
+  directory = /home/bob/Desktop/datagenerate/test
+  last_modified = 1558017779.2
+  job_count = 0
+  best_r_free = None
+  default_file {
+    file_name = None
+    program_name = None
+    file_type = None
+    file_description = None
+  }
+  sequence_file = None
+  user_comments = None
+  always_add_hydrogens = False
+  use_phaser_fast_mode = False
+  citation = None
+  group_id = None
+  cached_output_dir = None
+}

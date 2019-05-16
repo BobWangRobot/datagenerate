@@ -71,7 +71,9 @@ class AEV(AEV_base):
               R = atom1.distance(atom2)
               self.cutoff = self.radial_cutoff
               f = self.cutf(R)
-              GmR += math.exp(- n * ((R - Rs) ** 2)) * f
+              if f != 0:
+                GmR += math.exp(- n * ((R - Rs) ** 2)) * f
+              else: continue
           if GmR<1e-6:
             GmR = 0
           AEVs[a+x][b].append(GmR)
@@ -101,8 +103,10 @@ class AEV(AEV_base):
                     self.cutoff = self.angular_cutoff
                     fk = self.cutf(Rik)
                     fj = self.cutf(Rij)
-                    GmA += (((1 + math.cos(ZETAijk - zetas))) ** l) * \
-                          math.exp(- n * ((((Rij + Rik) / 2) - Rs) ** 2)) * fj * fk
+                    if fk != 0 and fj != 0:
+                      GmA += (((1 + math.cos(ZETAijk - zetas))) ** l) * \
+                            math.exp(- n * ((((Rij + Rik) / 2) - Rs) ** 2)) * fj * fk
+                    else: continue
               GmA = GmA * (2 ** (1 - l))
               if GmA < 1e-6:
                 GmA = 0
@@ -139,6 +143,7 @@ class AEV(AEV_base):
   def compare(self, match_item, element_list=None):
     aev1 = self.merge(match_item.get_items())
     aev2 = match_item.merge(self.get_items())
+    print(aev1, aev2)
     diff = {}
     if element_list:
       list = element_list

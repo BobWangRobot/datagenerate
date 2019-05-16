@@ -78,26 +78,23 @@ CONECT   12    4
 END'''
 
 
-def _sort(k1, k2):
-  if len(k1)==1:
-
-    return 1
-  else:
-    return -1
 
 #test 2 different element pdb file
 
 
 
-def main(pdb_file_name1=None, pdb_file_name2=None, *list):
-  if pdb_file_name1 and pdb_file_name2:
-    aev1 = AEV(pdb_file_name=pdb_file_name1)
-    aev2 = AEV(pdb_file_name=pdb_file_name2)
-  else:
-    aev1 = AEV(raw_records=CCCC_pdb)
-    aev2 = AEV(raw_records=CCCS_pdb)
-  print(aev1.compare(aev2,list))
-
+# def main(pdb_file_name1=None, pdb_file_name2=None, elelist=None):
+#   if pdb_file_name1 and pdb_file_name2:
+#     aev1 = AEV(pdb_file_name=pdb_file_name1)
+#     aev2 = AEV(pdb_file_name=pdb_file_name2)
+#   else:
+#     aev1 = AEV(raw_records=CCCC_pdb)
+#     aev2 = AEV(raw_records=CCCS_pdb)
+#   print(aev1.Rpart(), aev2.Apart())
+#   #print(aev1.compare(aev2,elelist))
+def main(pdb_file_name):
+  aev = AEV(pdb_file_name).Rpart()
+  print(aev)
 if __name__ == '__main__':
     import os, sys
     main(*tuple(sys.argv[1:]))
