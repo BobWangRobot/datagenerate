@@ -21,3 +21,7 @@ test5.py:
     phenix.python test5.py
          
     phenix.python test5.py CCCC.pdb CCCS.pdb C1 C2 C3
+
+test6.py:
+
+    phenix.python test6.py
