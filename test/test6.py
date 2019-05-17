@@ -213,8 +213,6 @@ def Atome_classify(filename=None, raw_records=None):
     e = b.element.upper().strip()
     atom_elements.setdefault(e, [])
     atom_elements[e].append(b)
-    print(e)
-  print(atom_elements)
   return atom_elements
 
 def generate_ca(filename=None, raw_records=None):
@@ -235,36 +233,76 @@ def generate_ca(filename=None, raw_records=None):
     if len(rc)==5:
       yield rc
 
-def cutf(distance):
-  if distance <= 5.2:
+def cutf(cutff,distance):
+  if distance <= cutff:
     Fc = 0.5 * math.cos(math.pi * distance / 5.2) + 0.5
   else:
     Fc = 0
   return Fc
   
 def Rpart():
-  AEVs = radial_aev_class() #It is a multiple dictionary
   n = 4.0
   rs_values = [0.900000, 1.437500, 1.975000, 2.512500, 3.050000, 3.587500, 4.125000, 4.662500]
   for five in generate_ca(raw_records=perfect_helix):
+    AEVs = radial_aev_class()  # It is a multiple dictionary
     for atom1 in five:
       x = str(atom1.i_seq)
       a = atom1.element.upper().strip()
       AEVs.setdefault(a+x, {})
-      for b, atom2list in Atome_classify().items():
+      for b, atom2list in Atome_classify(raw_records=perfect_helix).items():
         for Rs in rs_values:
           AEVs[a+x].setdefault(b, [])
           GmR = 0
           for atom2 in atom2list:
             if atom1 != atom2:
               R = atom1.distance(atom2)
-              f = cutf(R)
+              f = cutf(5.2, R)
               if f != 0:
                 GmR += math.exp(- n * ((R - Rs) ** 2)) * f
               else: continue
           if GmR<1e-6:
             GmR = 0
           AEVs[a+x][b].append(GmR)
+    print(AEVs)
+  return AEVs
+
+def Apart():
+  l = 8.00
+  n = 4.0
+  angular_rs_values = [0.900000, 2.200000]
+  ts_values = [0.392699, 1.178097, 1.963495, 2.748894]
+  for five in generate_ca(raw_records=perfect_helix):
+    AEVs = radial_aev_class()
+    for atom1 in five:
+      x = str(atom1.i_seq)
+      a = atom1.element.upper().strip()
+      AEVs.setdefault(a+x, {})
+      f = Atome_classify(raw_records=perfect_helix)
+      for b, atom2list in f.items():
+        for c, atom3list in f.items():
+          for Rs in angular_rs_values:
+            for zetas in ts_values:
+              AEVs[a+x].setdefault(b+c, [])
+              GmA = 0
+              for atom2 in atom2list:
+                for atom3 in atom3list:
+                  if atom2 != atom1 and atom3 != atom1:
+                    Rij = atom1.distance(atom2)
+                    Rik = atom1.distance(atom2)
+                    ZETAijk = atom1.angle(atom2, atom3,deg=True)
+                    if ZETAijk is None:ZETAijk = 0
+                    fk = cutf(3.2, Rik)
+                    fj = cutf(3.2, Rij)
+                    if fk != 0 and fj != 0:
+                      GmA += (((1 + math.cos(ZETAijk - zetas))) ** l) * \
+                            math.exp(- n * ((((Rij + Rik) / 2) - Rs) ** 2)) * fj * fk
+                    else: continue
+              GmA = GmA * (2 ** (1 - l))
+              if GmA < 1e-6:
+                GmA = 0
+              AEVs[a+x][b+c].append(GmA)
+        f.pop(b)#delecte repeated atomes
+    print(AEVs)
   return AEVs
 
 def main(filename=None):
@@ -274,7 +312,8 @@ def main(filename=None):
   else:
     for five in generate_ca(raw_records=perfect_helix):
       print five
-  print(Atome_classify())
-
+    Apart()
+    Rpart()
+    
 if __name__ == '__main__':
   main(*tuple(sys.argv[1:]))
