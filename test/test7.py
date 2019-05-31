@@ -186,8 +186,6 @@ def main(filename=None):
       print five
   else:
     a = AEV(raw_records=perfect_helix)
-    for five in a.generate_ca():
-      print five
     print(a.get_AEVS())
 
 if __name__ == '__main__':
