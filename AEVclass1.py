@@ -81,6 +81,7 @@ class AEV(AEV_base):
     self.angular_cutoff = 3.5
     self.angular_zeta = 8
     self.AEVs = radial_aev_class()
+    self.five = []
 
   def get_AEVS(self):
     n = 4.0
@@ -179,4 +180,10 @@ class AEV(AEV_base):
           continue
     return diff
 
-
+  def find_function(self):
+    for self.five in self.generate_ca():
+      print(self.five)
+      print(self.get_AEVS())
+      self.AEVs = radial_aev_class()
+      self.five = []
+      

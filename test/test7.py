@@ -186,7 +186,7 @@ def main(filename=None):
       print five
   else:
     a = AEV(raw_records=perfect_helix)
-    print(a.get_AEVS())
+    print(a.find_function())
 
 if __name__ == '__main__':
   main(*tuple(sys.argv[1:]))
