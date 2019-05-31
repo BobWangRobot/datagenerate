@@ -25,3 +25,7 @@ test5.py:
 test6.py:
 
     phenix.python test6.py
+
+test7.py:
+
+    phenix.python test7.py
