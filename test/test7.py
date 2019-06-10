@@ -179,11 +179,17 @@ ATOM     12  OH  TYR A  20     -10.194   0.489 -37.945  1.00  0.00           O
 '''
 
 
-def main(filename=None):
-  if filename:
-    a = AEV(pdb_file_name=filename)
-    for five in a.generate_ca():
-      print five
+def main(filename1=None, filename2=None):
+  if filename1 and filename2:
+    a = AEV(pdb_file_name=filename1)
+    b = AEV(pdb_file_name=filename2)
+    for a.five in a.generate_ca():
+      for b.five in b.generate_ca():
+        print(a.compare(b))
+        b.AEVs = radial_aev_class()
+        b.five = []
+      a.AEVs = radial_aev_class()
+      a.five = []
   else:
     a = AEV(raw_records=perfect_helix)
     print(a.find_function())

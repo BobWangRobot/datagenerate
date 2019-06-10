@@ -151,10 +151,12 @@ class AEV(AEV_base):
         a.setdefault(key, {})
         a[key] = item
     return a
-
+  
+  
   def compare(self, match_item, element_list=None):
     aev1 = self.get_AEVS()
     aev2 = match_item.get_items()
+    #print(aev1, aev2)
     diff = {}
     if element_list:
       list = element_list
