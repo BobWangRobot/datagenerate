@@ -1,0 +1,69 @@
+data_default
+loop_
+  _struct_asym.id
+   A
+
+loop_
+  _chem_comp.id
+   ALA
+   ARG
+   ASN
+   ASP
+   CYS
+   GLN
+   GLU
+   GLY
+   HIS
+   ILE
+   LEU
+   LYS
+   MET
+   PHE
+   PRO
+   SER
+   THR
+   TRP
+   TYR
+   VAL
+
+loop_
+  _atom_site.group_PDB
+  _atom_site.id
+  _atom_site.label_atom_id
+  _atom_site.label_alt_id
+  _atom_site.label_comp_id
+  _atom_site.auth_asym_id
+  _atom_site.auth_seq_id
+  _atom_site.pdbx_PDB_ins_code
+  _atom_site.Cartn_x
+  _atom_site.Cartn_y
+  _atom_site.Cartn_z
+  _atom_site.occupancy
+  _atom_site.B_iso_or_equiv
+  _atom_site.type_symbol
+  _atom_site.pdbx_formal_charge
+  _atom_site.label_asym_id
+  _atom_site.label_entity_id
+  _atom_site.label_seq_id
+  _atom_site.pdbx_PDB_model_num
+   ATOM 1 CA . ALA A 1 ? -5.85000 -1.19400 -13.85200 1.000 0.00000 C ? A ? 1 1
+   ATOM 2 CA . CYS A 2 ? -3.26100 -2.49900 -16.31300 1.000 0.00000 C ? A ? 2 1
+   ATOM 3 CA . GLU A 3 ? -5.21600 -5.73100 -16.75500 1.000 0.00000 C ? A ? 3 1
+   ATOM 4 CA . ASP A 4 ? -8.44200 -3.78500 -17.27300 1.000 0.00000 C ? A ? 4 1
+   ATOM 5 CA . GLY A 5 ? -6.73500 -1.49800 -19.78700 1.000 0.00000 C ? A ? 5 1
+   ATOM 6 CA . PHE A 6 ? -5.26800 -4.49300 -21.61400 1.000 0.00000 C ? A ? 6 1
+   ATOM 7 CA . ILE A 7 ? -8.66000 -6.21200 -21.65500 1.000 0.00000 C ? A ? 7 1
+   ATOM 8 CA . HIS A 8 ? -10.32400 -3.03900 -22.93000 1.000 0.00000 C ? A ? 8 1
+   ATOM 9 CA . LYS A 9 ? -7.65800 -2.64100 -25.61300 1.000 0.00000 C ? A ? 9 1
+   ATOM 10 CA . MET A 10 ? -8.04600 -6.28400 -26.63100 1.000 0.00000 C ? A ? 10 1
+   ATOM 11 CA . LEU A 11 ? -11.82900 -5.91500 -26.75100 1.000 0.00000 C ? A ? 11 1
+   ATOM 12 CA . ASN A 12 ? -11.51900 -2.73400 -28.81100 1.000 0.00000 C ? A ? 12 1
+   ATOM 13 CA . GLN A 13 ? -9.06700 -4.42600 -31.17400 1.000 0.00000 C ? A ? 13 1
+   ATOM 14 CA . PRO A 14 ? -11.36400 -7.43800 -31.50500 1.000 0.00000 C ? A ? 14 1
+   ATOM 15 CA . SER A 15 ? -14.34800 -5.17300 -32.15500 1.000 0.00000 C ? A ? 15 1
+   ATOM 16 CA . ARG A 16 ? -12.37300 -3.20300 -34.74000 1.000 0.00000 C ? A ? 16 1
+   ATOM 17 CA . THR A 17 ? -11.22900 -6.42000 -36.41300 1.000 0.00000 C ? A ? 17 1
+   ATOM 18 CA . TRP A 18 ? -14.79100 -7.75400 -36.43100 1.000 0.00000 C ? A ? 18 1
+   ATOM 19 CA . VAL A 19 ? -16.08000 -4.47700 -37.86600 1.000 0.00000 C ? A ? 19 1
+   ATOM 20 CA . TYR A 20 ? -13.36000 -4.49600 -40.52400 1.000 0.00000 C ? A ? 20 1
+

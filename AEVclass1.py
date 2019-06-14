@@ -1,16 +1,17 @@
-from iotbx import pdb
 import numpy as np
 import iotbx
 import math
-import collections
-from iotbx import pdb
 import time
+import copy
+from collections import OrderedDict
+from iotbx import pdb
+from iotbx import pdb
 from mmtbx import *
 from mmtbx.monomer_library import server
 from mmtbx.monomer_library import pdb_interpretation
 from mmtbx.conformation_dependent_library import generate_protein_fragments
 
-class radial_aev_class(collections.OrderedDict):
+class radial_aev_class(OrderedDict):
   def __repr__(self):
     outl = '...\n'
     for key, item in self.items():
@@ -64,7 +65,7 @@ class AEV_base(object):
 
 #generate a dictionary about all atome
   def Atome_classify(self):
-    for b in self.hierarchy.atoms():
+    for b in self.five:#.hierarchy.atoms():
       e = b.element.upper().strip()
       self.atom_elements.setdefault(e, [])
       self.atom_elements[e].append(b)
@@ -86,8 +87,10 @@ class AEV(AEV_base):
   def get_AEVS(self):
     n = 4.0
     l = 8.00
+    i = 0
     for atom1 in self.five:
-      x = str(atom1.i_seq)
+      i = i + 1
+      x = str(i)
       a = atom1.element.upper().strip()
       self.AEVs.setdefault(a+x, {})
       dis = self.Atome_classify()
@@ -152,35 +155,51 @@ class AEV(AEV_base):
         a[key] = item
     return a
   
-  
-  def compare(self, match_item, element_list=None):
+  def compare(self,match):
     aev1 = self.get_AEVS()
-    aev2 = match_item.get_items()
-    #print(aev1, aev2)
+    aev2 = match.get_AEVS()
     diff = {}
-    if element_list:
-      list = element_list
-    else:
-      list = aev2.keys()
-    for element in list:
-      diff.setdefault(element, [])
+    print(aev1, aev2)
+    for ele,value in aev1.items():
+      diff.setdefault(ele, [])
+      all = []
       all1 = []
-      for r_or_a, value in aev1[element].items():
-        for v1 in value:
-          all1.append(v1)
-      for element2 in list:
-        all2 = []
-        try:
-          for r_or_a2 in aev1[element].keys():
-            value2 = aev2[element2][r_or_a2]
-            for v2 in value2:
-              all2.append(v2)
-          covalue = np.corrcoef(all1, all2).tolist()
-          diff[element].append(covalue[1][0])
-        except KeyError:
-          print('%s:type error'%element)
-          continue
+      for a in value.values():
+        all.extend(a)
+      for b in aev2[ele].values():
+        all1.extend(b)
+      covalue = np.corrcoef(all, all1).tolist()
+      diff[ele].append(covalue[1][0])
     return diff
+    
+  
+  # def compare(self, match_item, element_list=None):
+  #   aev1 = self.get_AEVS()
+  #   aev2 = match_item.get_items()
+  #   diff = {}
+  #   if element_list:
+  #     list = element_list
+  #   else:
+  #     list = aev2.keys()
+  #   for element in list:
+  #     diff.setdefault(element, [])
+  #     all1 = []
+  #     for r_or_a, value in aev1[element].items():
+  #       for v1 in value:
+  #         all1.append(v1)
+  #     for element2 in list:
+  #       all2 = []
+  #       try:
+  #         for r_or_a2 in aev1[element].keys():
+  #           value2 = aev2[element2][r_or_a2]
+  #           for v2 in value2:
+  #             all2.append(v2)
+  #         covalue = np.corrcoef(all1, all2).tolist()
+  #         diff[element].append(covalue[1][0])
+  #       except KeyError:
+  #         print('%s:type error'%element)
+  #         continue
+  #   return diff
 
   def find_function(self):
     for self.five in self.generate_ca():

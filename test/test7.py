@@ -188,10 +188,10 @@ def main(filename1=None, filename2=None):
         print(a.compare(b))
         b.AEVs = radial_aev_class()
         b.five = []
-      a.AEVs = radial_aev_class()
-      a.five = []
+        a.AEVs = radial_aev_class()
+        a.five = []
   else:
-    a = AEV(raw_records=perfect_helix)
+    a = AEV(pdb_file_name=filename1)
     print(a.find_function())
 
 if __name__ == '__main__':
