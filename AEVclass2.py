@@ -161,6 +161,7 @@ class AEV(AEV_base):
     aev1 = self.get_AEVS()
     aev2 = match.get_AEVS()
     diff = {}
+    num = 0
     print(aev1, aev2)
     for ele, value in aev1.items():
       diff.setdefault(ele, [])
@@ -172,6 +173,9 @@ class AEV(AEV_base):
         all1.extend(b)
       covalue = np.corrcoef(all, all1).tolist()
       diff[ele].append(covalue[1][0])
+      num = num + covalue[1][0]
+    num = num / 5
+    diff.setdefault('num', num)
     return diff
   
   # def compare(self, match_item, element_list=None):

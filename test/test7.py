@@ -185,11 +185,11 @@ def main(filename1=None, filename2=None):
     b = AEV(pdb_file_name=filename2)
     for a.five in a.generate_ca():
       for b.five in b.generate_ca():
-        print(a.compare(b))
+        print('diff:',a.compare(b))
         b.AEVs = radial_aev_class()
         b.five = []
         a.AEVs = radial_aev_class()
-        a.five = []
+      a.five = []
   else:
     a = AEV(pdb_file_name=filename1)
     print(a.find_function())
