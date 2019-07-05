@@ -184,6 +184,7 @@ def main(filename1=None, filename2=None):
     a = AEV(pdb_file_name=filename1)
     b = AEV(pdb_file_name=filename2)
     for a.five in a.generate_ca():
+      print('start')
       for b.five in b.generate_ca():
         print('diff:',a.compare(b))
         b.AEVs = radial_aev_class()

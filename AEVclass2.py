@@ -162,7 +162,6 @@ class AEV(AEV_base):
     aev2 = match.get_AEVS()
     diff = {}
     num = 0
-    print(aev1, aev2)
     for ele, value in aev1.items():
       diff.setdefault(ele, [])
       all = []
