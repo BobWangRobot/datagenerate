@@ -28,4 +28,7 @@ test6.py:
 
 test7.py:
 
-    phenix.python test7.py
+    phenix.python test7.py helix2.pdb(helix strucure) 2do7.pdb(any other pdb file)
+
+test8.py:
+    phenix.python test8.py helix2.pdb(helix strucure) 2do7.pdb(any other pdb file)

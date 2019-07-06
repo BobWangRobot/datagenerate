@@ -181,18 +181,16 @@ ATOM     12  OH  TYR A  20     -10.194   0.489 -37.945  1.00  0.00           O
 
 def main(filename1=None, filename2=None):
   if filename1 and filename2:
-    i = 0
     a = AEV(pdb_file_name=filename1)
     b = AEV(pdb_file_name=filename2)
-    for a.five in a.generate_ca():
-      i = i + 1
-      print('atom%d'%i)
-      for b.five in b.generate_ca():
-        print('diff:',a.compare(b))
-        b.AEVs = radial_aev_class()
-        b.five = []
-        a.AEVs = radial_aev_class()
-      a.five = []
+    a.five = next(a.generate_ca())
+    for b.five in b.generate_ca():
+      c = a.compare(b)
+      if c['num'] > 0.9:
+        a.five = next(a.generate_ca())
+        print(c)
+      b.five = []
+    a.five = []
   else:
     a = AEV(pdb_file_name=filename1)
     print(a.find_function())
