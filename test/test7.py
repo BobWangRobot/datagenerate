@@ -7,7 +7,7 @@ import os, sys
 import time
 import mmtbx
 sys.path.append("..")
-from AEVclass2 import *
+from AEVclass1 import *
 
 perfect_helix = '''ATOM      1  N   ALA A   1      -5.606  -2.251 -12.878  1.00  0.00           N
 ATOM      2  CA  ALA A   1      -5.850  -1.194 -13.852  1.00  0.00           C
@@ -188,7 +188,7 @@ def main(filename1=None, filename2=None):
       i = i + 1
       print('atom%d'%i)
       for b.five in b.generate_ca():
-        print('diff:',a.compare(b))
+        print('difference:%r'%(a.compare(b)))
         b.AEVs = radial_aev_class()
         b.five = []
         a.AEVs = radial_aev_class()

@@ -183,17 +183,7 @@ def main(filename1=None, filename2=None):
   if filename1 and filename2:
     a = AEV(pdb_file_name=filename1)
     b = AEV(pdb_file_name=filename2)
-    a.five = next(a.generate_ca())
-    for b.five in b.generate_ca():
-      c = a.compare(b)
-      if c['num'] > 0.9:
-        a.five = next(a.generate_ca())
-        print(c)
-      b.five = []
-    a.five = []
-  else:
-    a = AEV(pdb_file_name=filename1)
-    print(a.find_function())
-
+    a.generate_ca()[1][1].get_AEVS()
+    
 if __name__ == '__main__':
   main(*tuple(sys.argv[1:]))

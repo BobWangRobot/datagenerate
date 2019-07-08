@@ -88,53 +88,50 @@ class AEV(AEV_base):
   def get_AEVS(self):
     n = 4.0
     l = 8.00
-    i = 0
-    for atom1 in self.five:
-      i = i + 1
-      x = str(i)
-      a = atom1.element.upper().strip()
-      self.AEVs.setdefault(a + x, {})
-      dis = self.Atome_classify()
-      for b, atom2list in dis.items():
-        for Rs in self.rs_values:
-          self.AEVs[a + x].setdefault(b, [])
+    a = self.element.upper().strip()
+    x = str(atom1.i_seq)
+    self.AEVs.setdefault(a + x, {})
+    dis = self.Atome_classify()
+    for b, atom2list in dis.items():
+      for Rs in self.rs_values:
+        self.AEVs[a + x].setdefault(b, [])
+        GmR = 0
+        for atom2 in atom2list:  # radial caculation
+          if atom1 != atom2:
+            R = atom1.distance(atom2)
+            self.cutoff = self.radial_cutoff
+            f = self.cutf(R)
+            if f != 0:
+              GmR += math.exp(- n * ((R - Rs) ** 2)) * f
+            else:
+              continue
+        if GmR < 1e-6:
           GmR = 0
-          for atom2 in atom2list:  # radial caculation
-            if atom1 != atom2:
-              R = atom1.distance(atom2)
-              self.cutoff = self.radial_cutoff
-              f = self.cutf(R)
-              if f != 0:
-                GmR += math.exp(- n * ((R - Rs) ** 2)) * f
-              else:
-                continue
-          if GmR < 1e-6:
-            GmR = 0
-          self.AEVs[a + x][b].append(GmR)
-        for c, atom3list in dis.items():  # angle caculation
-          for Rs in self.angular_rs_values:
-            for zetas in self.ts_values:
-              self.AEVs[a + x].setdefault(b + c, [])
+        self.AEVs[a + x][b].append(GmR)
+      for c, atom3list in dis.items():  # angle caculation
+        for Rs in self.angular_rs_values:
+          for zetas in self.ts_values:
+            self.AEVs[a + x].setdefault(b + c, [])
+            GmA = 0
+            for atom2 in atom2list:
+              for atom3 in atom3list:
+                if atom2 != atom1 and atom3 != atom1:
+                  Rij = atom1.distance(atom2)
+                  Rik = atom1.distance(atom2)
+                  ZETAijk = atom1.angle(atom2, atom3)
+                  self.cutoff = self.angular_cutoff
+                  fk = self.cutf(Rik)
+                  fj = self.cutf(Rij)
+                  if fk != 0 and fj != 0:
+                    GmA += (((1 + math.cos(ZETAijk - zetas))) ** l) * \
+                           math.exp(- n * ((((Rij + Rik) / 2) - Rs) ** 2)) * fj * fk
+                  else:
+                    continue
+            GmA = GmA * (2 ** (1 - l))
+            if GmA < 1e-6:
               GmA = 0
-              for atom2 in atom2list:
-                for atom3 in atom3list:
-                  if atom2 != atom1 and atom3 != atom1:
-                    Rij = atom1.distance(atom2)
-                    Rik = atom1.distance(atom2)
-                    ZETAijk = atom1.angle(atom2, atom3)
-                    self.cutoff = self.angular_cutoff
-                    fk = self.cutf(Rik)
-                    fj = self.cutf(Rij)
-                    if fk != 0 and fj != 0:
-                      GmA += (((1 + math.cos(ZETAijk - zetas))) ** l) * \
-                             math.exp(- n * ((((Rij + Rik) / 2) - Rs) ** 2)) * fj * fk
-                    else:
-                      continue
-              GmA = GmA * (2 ** (1 - l))
-              if GmA < 1e-6:
-                GmA = 0
-              self.AEVs[a + x][b + c].append(GmA)
-        dis.pop(b)  # delecte repeated atomes
+            self.AEVs[a + x][b + c].append(GmA)
+      dis.pop(b)  # delecte repeated atomes
     return self.AEVs
   
   def get_items(self):
@@ -161,49 +158,18 @@ class AEV(AEV_base):
     aev1 = self.get_AEVS()
     aev2 = match.get_AEVS()
     diff = {}
-    num = 0
-    for ele, value in aev1.items():
+    for ele, value in aev2.items():
       diff.setdefault(ele, [])
       all = []
       all1 = []
       for a in value.values():
         all.extend(a)
-      for b in aev2[ele].values():
+      for b in aev1.values().values():
         all1.extend(b)
       covalue = np.corrcoef(all, all1).tolist()
       diff[ele].append(covalue[1][0])
-      num = num + covalue[1][0]
-    num = num / 5
-    diff.setdefault('num', num)
     return diff
   
-  # def compare(self, match_item, element_list=None):
-  #   aev1 = self.get_AEVS()
-  #   aev2 = match_item.get_items()
-  #   diff = {}
-  #   if element_list:
-  #     list = element_list
-  #   else:
-  #     list = aev2.keys()
-  #   for element in list:
-  #     diff.setdefault(element, [])
-  #     all1 = []
-  #     for r_or_a, value in aev1[element].items():
-  #       for v1 in value:
-  #         all1.append(v1)
-  #     for element2 in list:
-  #       all2 = []
-  #       try:
-  #         for r_or_a2 in aev1[element].keys():
-  #           value2 = aev2[element2][r_or_a2]
-  #           for v2 in value2:
-  #             all2.append(v2)
-  #         covalue = np.corrcoef(all1, all2).tolist()
-  #         diff[element].append(covalue[1][0])
-  #       except KeyError:
-  #         print('%s:type error'%element)
-  #         continue
-  #   return diff
   
   def find_function(self):
     for self.five in self.generate_ca():
