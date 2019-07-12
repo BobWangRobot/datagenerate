@@ -22,6 +22,7 @@ def main(filename1=None, filename2=None):
     b.five = next(b.generate_ca())
     aev1 = a.Rpart()
     aev2 = b.Rpart()
+    print(aev1,aev2)
     for ele, values in aev1.items():
       for r_or_a, value in values.items():
         for list1 in value:
