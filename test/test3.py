@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import random
 import sys
 sys.path.append("..")
-from AEVclass import AEV, radial_aev_class
+from AEVclass import *
 
 def _sort(k1, k2):
   if len(k1)==1:
@@ -12,19 +12,8 @@ def _sort(k1, k2):
   else:
     return -1
 
-#test 2 different element pdb file
+#test 2 different pdb-files and plot
 
-def merge(a, b):
-  for key, item in b.items():
-    if key in a:
-      for key1, item1 in item.items():
-        if key1 not in a[key].keys():
-          a[key].setdefault(key1,[])
-          a[key][key1] = item1
-    else:
-      a.setdefault(key, {})
-      a[key] = item
-  return a
 
 def randomcolor():
     colorArr = ['1','2','3','4','5','6','7','8','9','A','B','C','D','E','F']
@@ -33,22 +22,12 @@ def randomcolor():
         color += colorArr[random.randint(0,14)]
     return "#"+color
 
-def compare(pdb_file1, pdb_file2):
-  aev1 = merge(AEV(pdb_file1).get_AEVS(), AEV(pdb_file2).get_items())
-  aev2 = merge(AEV(pdb_file2).get_AEVS(), AEV(pdb_file1).get_items())
-  diff = merge(AEV(pdb_file2).get_items(),AEV(pdb_file1).get_items())
-  for element, values in aev2.items():
-    for r_or_a, value in values.items():
-      covalue = np.corrcoef(value, aev1[element][r_or_a]).tolist()
-      diff[element][r_or_a] = [covalue[1][0]]
-  return diff
-
 def plotvalue(pdb1, pdb2, elename):
   y1 = []
   y2 = []
   name = []
-  aev1 = merge(AEV(pdb1).get_AEVS(), AEV(pdb2).get_items())
-  aev2 = merge(AEV(pdb2).get_AEVS(), AEV(pdb1).get_items())
+  aev1 = AEV(pdb1).merge(AEV(pdb2).get_items())
+  aev2 = AEV(pdb2).merge(AEV(pdb1).get_items())
   for ele, values in aev1.items():
     if elename in ele:
       for r_or_a, value in values.items():
@@ -90,10 +69,10 @@ def plotcompare(diff,ele,pdb_filename):
   plt.show()
 
 def main(pdb_file_name1, pdb_file_name2, elename):
-  diff = compare(pdb_file_name1, pdb_file_name2)
-  print(diff)
+  # diff = compare(pdb_file_name1, pdb_file_name2)
+  # print(diff)
   # plotcompare(diff, elename, pdb_file_name1)
-  # plotvalue(pdb_file_name1, pdb_file_name2, elename)
+  plotvalue(pdb_file_name1, pdb_file_name2, elename)
 
 
 
