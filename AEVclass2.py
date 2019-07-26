@@ -84,9 +84,12 @@ class AEV(AEV_base):
     self.angular_zeta = 8
     self.AEVs = radial_aev_class()
     self.five = []
+    self.AEVs = radial_aev_class()
+    self.rdistance = radial_aev_class()
   
   def Rpart(self):
-    AEVs = radial_aev_class() #It is a multiple dictionary
+    AEVs = self.AEVs #It is a multiple dictionary
+    rdistance = self.rdistance
     n = 4.0
     i = 0
     for atom1 in self.five:
@@ -94,9 +97,11 @@ class AEV(AEV_base):
       x = str(i)
       a = atom1.element.upper().strip()
       AEVs.setdefault(a+x, {})
+      rdistance.setdefault(a + x, {})
       for b, atom2list in self.Atome_classify().items():
         for Rs in self.rs_values:
           AEVs[a+x].setdefault(b, [])
+          rdistance[a+x].setdefault(b, [])
           GmR = 0
           for atom2 in atom2list:
             if atom1 != atom2:
@@ -109,7 +114,8 @@ class AEV(AEV_base):
           if GmR<1e-6:
             GmR = 0
           AEVs[a+x][b].append(GmR)
-    return AEVs
+          rdistance[a + x][b].append(R)
+    return 0
 
   def Apart(self):
     l = 8.00
