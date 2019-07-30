@@ -110,7 +110,8 @@ class AEV(AEV_base):
               f = self.cutf(R)
               if f != 0:
                 GmR += math.exp(- n * ((R - Rs) ** 2)) * f
-              else: continue
+                print(GmR,R,Rs)
+              #else: continue
           if GmR<1e-6:
             GmR = 0
           AEVs[a+x][b].append(GmR)

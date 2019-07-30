@@ -160,7 +160,6 @@ class AEV(AEV_base):
   def compare(self, match):
     aev1 = self.get_AEVS()
     aev2 = match.get_AEVS()
-    print(aev1,aev2)
     diff = {}
     num = 0
     for ele, value in aev1.items():
