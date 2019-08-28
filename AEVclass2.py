@@ -40,6 +40,7 @@ class AEV_base(object):
                                                     raw_records=raw_records)
     self.geometry_restraints_manager = self.processed_pdb.geometry_restraints_manager()
     self.atom_elements = {}
+    self.rc = []
 
   # generate five ca
   def generate_ca(self):
@@ -54,7 +55,7 @@ class AEV_base(object):
       if len(rc) == 5:
         yield rc
     print 'time', time.time() - t0
-  
+
   # cutoff function
   def cutf(self, distance):
     if distance <= self.cutoff:
@@ -65,7 +66,7 @@ class AEV_base(object):
 
   # generate a dictionary about all atome
   def Atome_classify(self):
-    for b in self.five:  # .hierarchy.atoms():
+    for b in self.hierarchy.atoms():
       e = b.element.upper().strip()
       self.atom_elements.setdefault(e, [])
       self.atom_elements[e].append(b)
@@ -92,30 +93,32 @@ class AEV(AEV_base):
     rdistance = self.rdistance
     n = 4.0
     i = 0
-    for atom1 in self.five:
-      i = i + 1
-      x = str(i)
-      a = atom1.element.upper().strip()
-      AEVs.setdefault(a+x, {})
-      rdistance.setdefault(a + x, {})
-      for b, atom2list in self.Atome_classify().items():
-        for Rs in self.rs_values:
-          AEVs[a+x].setdefault(b, [])
-          rdistance[a+x].setdefault(b, [])
-          GmR = 0
-          for atom2 in atom2list:
-            if atom1 != atom2:
-              R = atom1.distance(atom2)
-              self.cutoff = self.radial_cutoff
-              f = self.cutf(R)
-              if f != 0:
-                GmR += math.exp(- n * ((R - Rs) ** 2)) * f
-                print(GmR,R,Rs)
-              #else: continue
-          if GmR<1e-6:
+    for five in self.generate_ca():
+      print(five)
+      for atom1 in five:
+        i = i + 1
+        x = str(i)
+        a = atom1.element.upper().strip()
+        AEVs.setdefault(a+x, {})
+        rdistance.setdefault(a + x, {})
+        for b, atom2list in self.Atome_classify().items():
+          for Rs in self.rs_values:
+            AEVs[a+x].setdefault(b, [])
+            rdistance[a+x].setdefault(b, [])
             GmR = 0
-          AEVs[a+x][b].append(GmR)
-          rdistance[a + x][b].append(R)
+            for atom2 in atom2list:
+              if atom1 != atom2:
+                R = atom1.distance(atom2)
+                self.cutoff = self.radial_cutoff
+                f = self.cutf(R)
+                if f != 0:
+                  GmR += math.exp(- n * ((R - Rs) ** 2)) * f
+                #else: continue
+            if GmR<1e-6:
+              GmR = 0
+            AEVs[a+x][b].append(GmR)
+            rdistance[a + x][b].append(R)
+        print(rdistance)
     return 0
 
   def Apart(self):

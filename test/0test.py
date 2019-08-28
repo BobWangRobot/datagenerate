@@ -1,8 +1,13 @@
+from iotbx import pdb
+import numpy as np
+import iotbx
+import math
+import collections
 import os, sys
 import time
 import mmtbx
-
-from iotbx import pdb
+sys.path.append("..")
+from AEVclass2 import *
 
 perfect_helix = '''ATOM      1  N   ALA A   1      -5.606  -2.251 -12.878  1.00  0.00           N
 ATOM      2  CA  ALA A   1      -5.850  -1.194 -13.852  1.00  0.00           C
@@ -172,43 +177,14 @@ ATOM     10  CE2 TYR A  20      -9.751  -1.791 -38.482  1.00  0.00           C
 ATOM     11  CZ  TYR A  20     -10.598  -0.703 -38.504  1.00  0.00           C
 ATOM     12  OH  TYR A  20     -10.194   0.489 -37.945  1.00  0.00           O
 '''
-def get_geometry_restraints_manager(pdb_filename=None, raw_records=None):
-  t0=time.time()
-  from mmtbx.monomer_library import server
-  from mmtbx.monomer_library import pdb_interpretation
-  mon_lib_srv = server.server()
-  ener_lib = server.ener_lib()
-  processed_pdb = pdb_interpretation.process(mon_lib_srv, ener_lib, raw_records=raw_records,file_name=pdb_filename)
-  geometry_restraints_manager = processed_pdb.geometry_restraints_manager()
-  print 'time',time.time()-t0
-  return geometry_restraints_manager
 
-def generate_ca(filename=None, raw_records=None):
-  from mmtbx.conformation_dependent_library import generate_protein_fragments
-  if filename:
-    pdb_inp = pdb.input(filename)
+def main(filename1=None):
+  if filename1:
+    a = AEV(pdb_file_name=filename1)
   else:
-    pdb_inp = pdb.input(lines=raw_records, source_info='perfect_helix')
-  hierarchy = pdb_inp.construct_hierarchy()
-  hierarchy.reset_atom_i_seqs()
-  geometry_restraints_manager = get_geometry_restraints_manager(pdb_filename=filename, raw_records=raw_records)
-  hierarchy.reset_i_seq_if_necessary()
-  for five in generate_protein_fragments(hierarchy,geometry_restraints_manager,length=5):
-    rc = []
-    for atom in five.atoms():
-      if atom.name==' CA ':
-        rc.append(atom)
-    if len(rc)==5:
-      yield rc
-
-
-def main(filename=None):
-  if filename:
-    for five in generate_ca(filename):
-      print five
-  else:
-    for five in generate_ca(raw_records=perfect_helix):
-      print five
+    a = AEV(raw_records=perfect_helix)
+    for five in a.generate_ca():
+      print(five)
 
 if __name__ == '__main__':
   main(*tuple(sys.argv[1:]))
