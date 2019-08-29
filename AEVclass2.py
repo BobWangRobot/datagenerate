@@ -65,11 +65,12 @@ class AEV_base(object):
     return Fc
 
   # generate a dictionary about all atome
-  def Atome_classify(self):
+  def Atome_classify(self, atype):
     for b in self.hierarchy.atoms():
       e = b.element.upper().strip()
-      self.atom_elements.setdefault(e, [])
-      self.atom_elements[e].append(b)
+      if e in atype:
+        self.atom_elements.setdefault(e, [])
+        self.atom_elements[e].append(b)
     return self.atom_elements
 
 
@@ -87,39 +88,33 @@ class AEV(AEV_base):
     self.five = []
     self.AEVs = radial_aev_class()
     self.rdistance = radial_aev_class()
-  
-  def Rpart(self):
-    AEVs = self.AEVs #It is a multiple dictionary
-    rdistance = self.rdistance
-    n = 4.0
-    i = 0
-    for five in self.generate_ca():
-      print(five)
-      for atom1 in five:
-        i = i + 1
-        x = str(i)
-        a = atom1.element.upper().strip()
-        AEVs.setdefault(a+x, {})
-        rdistance.setdefault(a + x, {})
-        for b, atom2list in self.Atome_classify().items():
-          for Rs in self.rs_values:
-            AEVs[a+x].setdefault(b, [])
-            rdistance[a+x].setdefault(b, [])
-            GmR = 0
-            for atom2 in atom2list:
-              if atom1 != atom2:
-                R = atom1.distance(atom2)
-                self.cutoff = self.radial_cutoff
-                f = self.cutf(R)
-                if f != 0:
-                  GmR += math.exp(- n * ((R - Rs) ** 2)) * f
-                #else: continue
-            if GmR<1e-6:
-              GmR = 0
-            AEVs[a+x][b].append(GmR)
-            rdistance[a + x][b].append(R)
-        print(rdistance)
-    return 0
+  #
+  # def Rpart(self):
+  #   n = 4.0
+  #   i = 0
+  #   for five in self.generate_ca():
+  #     AEVs = radial_aev_class()
+  #     for atom1 in five:
+  #       i = i + 1
+  #       x = str(i)
+  #       a = atom1.element.upper().strip()
+  #       AEVs.setdefault(a+x, {})
+  #       for b, atom2list in self.Atome_classify("C").items():
+  #         for Rs in self.rs_values:
+  #           AEVs[a+x].setdefault(b, [])
+  #           GmR = 0
+  #           for atom2 in atom2list:
+  #             if atom1 != atom2:
+  #               R = atom1.distance(atom2)
+  #               self.cutoff = self.radial_cutoff
+  #               f = self.cutf(R)
+  #               if f != 0:
+  #                 GmR += math.exp(- n * ((R - Rs) ** 2)) * f
+  #               #else: continue
+  #           if GmR<1e-6:
+  #             GmR = 0
+  #           AEVs[a+x][b].append(GmR)
+  #   return 0
 
   def Apart(self):
     l = 8.00
@@ -154,18 +149,20 @@ class AEV(AEV_base):
                 GmA = 0
               AEVs[a+x][b+c].append(GmA)
         f.pop(b)#delecte repeated atomes
+    print(AEVs)
     return AEVs
   
   def get_AEVS(self):
     n = 4.0
     l = 8.00
     i = 0
+    self.AEVs = radial_aev_class()
     for atom1 in self.five:
       i = i + 1
       x = str(i)
       a = atom1.element.upper().strip()
       self.AEVs.setdefault(a + x, {})
-      dis = self.Atome_classify()
+      dis = self.Atome_classify("C")
       for b, atom2list in dis.items():
         for Rs in self.rs_values:
           self.AEVs[a + x].setdefault(b, [])
@@ -231,7 +228,6 @@ class AEV(AEV_base):
   def compare(self, match):
     aev1 = self.Rpart()
     aev2 = match.Rpart()
-    print(aev1,aev2)
     diff = {}
     for ele, value in aev2.items():
       diff.setdefault(ele, [])

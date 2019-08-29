@@ -135,6 +135,7 @@ class AEV(AEV_base):
                 GmA = 0
               self.AEVs[a + x][b + c].append(GmA)
         dis.pop(b)  # delecte repeated atomes
+    print(self.AEVs)
     return self.AEVs
   
   def get_items(self):
