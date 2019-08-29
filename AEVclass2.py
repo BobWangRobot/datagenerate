@@ -113,7 +113,6 @@ class AEV(AEV_base):
           if GmR<1e-6:
             GmR = 0
           AEVs[a+x][b].append(GmR)
-    print(self.five)
     return AEVs
 
   def Apart(self):
@@ -241,6 +240,8 @@ class AEV(AEV_base):
       covalue = np.corrcoef(all, all1).tolist()
       diff[ele].append(covalue[1][0])
     print(diff)
+    aev1 = []
+    aev2 = []
     return diff
   
   
