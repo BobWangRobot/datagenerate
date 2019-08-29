@@ -88,33 +88,33 @@ class AEV(AEV_base):
     self.five = []
     self.AEVs = radial_aev_class()
     self.rdistance = radial_aev_class()
-  #
-  # def Rpart(self):
-  #   n = 4.0
-  #   i = 0
-  #   for five in self.generate_ca():
-  #     AEVs = radial_aev_class()
-  #     for atom1 in five:
-  #       i = i + 1
-  #       x = str(i)
-  #       a = atom1.element.upper().strip()
-  #       AEVs.setdefault(a+x, {})
-  #       for b, atom2list in self.Atome_classify("C").items():
-  #         for Rs in self.rs_values:
-  #           AEVs[a+x].setdefault(b, [])
-  #           GmR = 0
-  #           for atom2 in atom2list:
-  #             if atom1 != atom2:
-  #               R = atom1.distance(atom2)
-  #               self.cutoff = self.radial_cutoff
-  #               f = self.cutf(R)
-  #               if f != 0:
-  #                 GmR += math.exp(- n * ((R - Rs) ** 2)) * f
-  #               #else: continue
-  #           if GmR<1e-6:
-  #             GmR = 0
-  #           AEVs[a+x][b].append(GmR)
-  #   return 0
+
+  def Rpart(self):
+    n = 4.0
+    i = 0
+    AEVs = radial_aev_class()
+    for atom1 in self.five:
+      i = i + 1
+      x = str(i)
+      a = atom1.element.upper().strip()
+      AEVs.setdefault(a+x, {})
+      for b, atom2list in self.Atome_classify("C").items():
+        for Rs in self.rs_values:
+          AEVs[a+x].setdefault(b, [])
+          GmR = 0
+          for atom2 in atom2list:
+            if atom1 != atom2:
+              R = atom1.distance(atom2)
+              self.cutoff = self.radial_cutoff
+              f = self.cutf(R)
+              if f != 0:
+                GmR += math.exp(- n * ((R - Rs) ** 2)) * f
+              #else: continue
+          if GmR<1e-6:
+            GmR = 0
+          AEVs[a+x][b].append(GmR)
+    print(self.five)
+    return AEVs
 
   def Apart(self):
     l = 8.00
@@ -228,6 +228,7 @@ class AEV(AEV_base):
   def compare(self, match):
     aev1 = self.Rpart()
     aev2 = match.Rpart()
+    print(aev1,aev2)
     diff = {}
     for ele, value in aev2.items():
       diff.setdefault(ele, [])
@@ -235,17 +236,18 @@ class AEV(AEV_base):
       all1 = []
       for a in value.values():
         all.extend(a)
-      for b in aev1.values().values():
-        all1.extend(b)
+      for b in aev1.values():
+        all1.extend(b.values())
       covalue = np.corrcoef(all, all1).tolist()
       diff[ele].append(covalue[1][0])
+    print(diff)
     return diff
   
   
-  def find_function(self):
+  def find_function(self,match):
     for self.five in self.generate_ca():
-      print(self.five)
-      print(self.get_AEVS())
-      self.AEVs = radial_aev_class()
-      self.five = []
+      for match.five in match.generate_ca():
+        self.compare(match)
+      print("bingo")
+
 
