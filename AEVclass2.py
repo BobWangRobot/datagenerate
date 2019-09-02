@@ -5,7 +5,6 @@ import time
 import copy
 from collections import OrderedDict
 from iotbx import pdb
-from iotbx import pdb
 from mmtbx import *
 from mmtbx.monomer_library import server
 from mmtbx.monomer_library import pdb_interpretation
@@ -91,16 +90,14 @@ class AEV(AEV_base):
 
   def Rpart(self):
     n = 4.0
-    i = 0
     AEVs = radial_aev_class()
     for atom1 in self.five:
-      i = i + 1
-      x = str(i)
+      x = str(atom1.i_seq)
       a = atom1.element.upper().strip()
-      AEVs.setdefault(a+x, {})
+      AEVs.setdefault(a + x, {})
       for b, atom2list in self.Atome_classify("C").items():
+        AEVs[a + x].setdefault(b, [])
         for Rs in self.rs_values:
-          AEVs[a+x].setdefault(b, [])
           GmR = 0
           for atom2 in atom2list:
             if atom1 != atom2:
@@ -109,10 +106,8 @@ class AEV(AEV_base):
               f = self.cutf(R)
               if f != 0:
                 GmR += math.exp(- n * ((R - Rs) ** 2)) * f
-              #else: continue
-          if GmR<1e-6:
-            GmR = 0
           AEVs[a+x][b].append(GmR)
+          print(AEVs)
     return AEVs
 
   def Apart(self):
@@ -202,6 +197,7 @@ class AEV(AEV_base):
                 GmA = 0
               self.AEVs[a + x][b + c].append(GmA)
         dis.pop(b)  # delecte repeated atomes
+    print(self.AEVs)
     return self.AEVs
   
   def get_items(self):
@@ -227,7 +223,7 @@ class AEV(AEV_base):
   def compare(self, match):
     aev1 = self.Rpart()
     aev2 = match.Rpart()
-    print(aev1,aev2)
+    print(aev1,self.five,aev2,match.five)
     diff = {}
     for ele, value in aev2.items():
       diff.setdefault(ele, [])
@@ -240,15 +236,14 @@ class AEV(AEV_base):
       covalue = np.corrcoef(all, all1).tolist()
       diff[ele].append(covalue[1][0])
     print(diff)
-    aev1 = []
-    aev2 = []
-    return diff
+    return 0
   
   
   def find_function(self,match):
     for self.five in self.generate_ca():
       for match.five in match.generate_ca():
         self.compare(match)
-      print("bingo")
+      break
+
 
 

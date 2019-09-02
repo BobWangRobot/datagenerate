@@ -185,7 +185,8 @@ def main(filename1=None,filename2=None):
     a.find_function(b)
   else:
     a = AEV(raw_records=perfect_helix)
-    a.Rpart()
+    for a.five in a.generate_ca():
+      a.Rpart()
 
 if __name__ == '__main__':
   main(*tuple(sys.argv[1:]))
