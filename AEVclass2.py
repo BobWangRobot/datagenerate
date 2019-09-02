@@ -19,8 +19,18 @@ class radial_aev_class(OrderedDict):
       for e, vec in item.items():
         outl += '     %s : ' % e
         for v in vec:
-          outl += '%0.3f,' % v
+          outl += '%0.3f, ' % v
         outl += '\n'
+    return outl
+
+class diff_class(OrderedDict):
+  def __repr__(self):
+    outl = '...\n'
+    for key, item in self.items():
+      outl +=' %s :' % (key)
+      for v in item:
+        outl +='%0.3f,' % v
+      outl += '\n'
     return outl
 
 
@@ -91,11 +101,12 @@ class AEV(AEV_base):
   def Rpart(self):
     n = 4.0
     AEVs = radial_aev_class()
+    dis = self.Atome_classify("C")
     for atom1 in self.five:
       x = str(atom1.i_seq)
       a = atom1.element.upper().strip()
       AEVs.setdefault(a + x, {})
-      for b, atom2list in self.Atome_classify("C").items():
+      for b, atom2list in dis.items():
         AEVs[a + x].setdefault(b, [])
         for Rs in self.rs_values:
           GmR = 0
@@ -107,7 +118,8 @@ class AEV(AEV_base):
               if f != 0:
                 GmR += math.exp(- n * ((R - Rs) ** 2)) * f
           AEVs[a+x][b].append(GmR)
-          print(AEVs)
+    dis.pop(b)
+    print(AEVs)
     return AEVs
 
   def Apart(self):
@@ -223,8 +235,8 @@ class AEV(AEV_base):
   def compare(self, match):
     aev1 = self.Rpart()
     aev2 = match.Rpart()
-    print(aev1,self.five,aev2,match.five)
-    diff = {}
+    #print(aev1,aev2)
+    diff = diff_class()
     for ele, value in aev2.items():
       diff.setdefault(ele, [])
       all = []
@@ -243,7 +255,6 @@ class AEV(AEV_base):
     for self.five in self.generate_ca():
       for match.five in match.generate_ca():
         self.compare(match)
-      break
 
 
 

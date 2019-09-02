@@ -186,7 +186,7 @@ def main(filename1=None,filename2=None):
   else:
     a = AEV(raw_records=perfect_helix)
     for a.five in a.generate_ca():
-      a.Rpart()
+      a.get_AEVS()
 
 if __name__ == '__main__':
   main(*tuple(sys.argv[1:]))
