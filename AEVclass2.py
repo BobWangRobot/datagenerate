@@ -75,12 +75,15 @@ class AEV_base(object):
 
   # generate a dictionary about all atome
   def Atome_classify(self, atype):
+    atom_elements = {}
     for b in self.hierarchy.atoms():
       e = b.element.upper().strip()
       if e in atype:
-        self.atom_elements.setdefault(e, [])
-        self.atom_elements[e].append(b)
-    return self.atom_elements
+        atom_elements.setdefault(e, [])
+        atom_elements[e].append(b)
+        # self.atom_elements.setdefault(e, [])
+        # self.atom_elements[e].append(b)
+    return atom_elements
 
 
 class AEV(AEV_base):
@@ -118,7 +121,7 @@ class AEV(AEV_base):
               if f != 0:
                 GmR += math.exp(- n * ((R - Rs) ** 2)) * f
           AEVs[a+x][b].append(GmR)
-    dis.pop(b)
+    #dis.pop(b)
     print(AEVs)
     return AEVs
 
@@ -165,7 +168,7 @@ class AEV(AEV_base):
     self.AEVs = radial_aev_class()
     for atom1 in self.five:
       i = i + 1
-      x = str(i)
+      x = str(atom1.i_seq)
       a = atom1.element.upper().strip()
       self.AEVs.setdefault(a + x, {})
       dis = self.Atome_classify("C")
@@ -208,7 +211,7 @@ class AEV(AEV_base):
               if GmA < 1e-6:
                 GmA = 0
               self.AEVs[a + x][b + c].append(GmA)
-        dis.pop(b)  # delecte repeated atomes
+        #dis.pop(b)  # delecte repeated atomes
     print(self.AEVs)
     return self.AEVs
   
