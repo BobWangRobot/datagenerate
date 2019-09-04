@@ -235,33 +235,32 @@ class AEV(AEV_base):
     return a
   
   def compare(self, match):
-    # aev1 = self.Rpart()
-    # aev2 = match.Rpart()
     diff = diff_class()
+    all = 0
     for aev1, aev2 in zip(self.Rpart().items(), match.Rpart().items()):
       ele1 = aev1[0]
       ele2 = aev2[0]
-      all1 = aev1[1].values()
-      all2 = aev2[1].values()
-      covalue = np.corrcoef(all1, all2).tolist()
+      list1 = aev1[1].values()
+      list2 = aev2[1].values()
+      covalue = np.corrcoef(list1, list2).tolist()
       diff.setdefault(ele1 + ele2, covalue[1][0])
-    print(diff)
+      all += covalue[1][0]
+    diff.setdefault('all',all/5)
     return diff
-  
-  
-  # def find_function(self,match):
-  #   for self.five in self.generate_ca():
-  #     break_flag = False
-  #     for match.five in match.generate_ca():
-  #       for b, c in self.compare(match).items():
-  #         if c == 1.0:
-  #           print(b)
-  #           break_flag=True
-  #           break
-  #       if break_flag==True: break
 
+  def test(self):
+    AEVs = radial_aev_class()
+    for atom1 in self.five:
+      x = str(atom1.i_seq)
+      a = atom1.element.upper().strip()
+      AEVs.setdefault(a + x, {})
+    print(AEVs)
+  
   def find_function(self,match):
     for self.five in self.generate_ca():
       for match.five in match.generate_ca():
-        self.compare(match)
+        diffs = self.compare(match)
+        print(diffs)
+        #if diffs['all'] > 0.9:
+          #print(diffs.keys())
 

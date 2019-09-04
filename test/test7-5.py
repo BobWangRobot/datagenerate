@@ -183,6 +183,10 @@ def main(filename1=None,filename2=None):
     a = AEV(pdb_file_name=filename1)
     b = AEV(pdb_file_name=filename2)
     a.find_function(b)
+  elif filename1:
+    a = AEV(pdb_file_name=filename1)
+    for a.five in a.generate_ca():
+      a.test()
   else:
     a = AEV(raw_records=perfect_helix)
     print(a.generate_ca())
