@@ -3,6 +3,7 @@ import iotbx
 import math
 import time
 import copy
+from itertools import chain
 from collections import OrderedDict
 from iotbx import pdb
 from mmtbx import *
@@ -27,9 +28,8 @@ class diff_class(OrderedDict):
   def __repr__(self):
     outl = '...\n'
     for key, item in self.items():
-      outl +=' %s :' % (key)
-      for v in item:
-        outl +='%0.3f,' % v
+      outl +=' %s :' % key
+      outl +='%0.3f,' % item
       outl += '\n'
     return outl
 
@@ -56,14 +56,15 @@ class AEV_base(object):
     t0 = time.time()
     self.hierarchy.reset_atom_i_seqs()
     self.hierarchy.reset_i_seq_if_necessary()
-    for five in generate_protein_fragments(self.hierarchy, self.geometry_restraints_manager, length=5):
+    for five in generate_protein_fragments(self.hierarchy,
+                                                    self.geometry_restraints_manager, length=5):
       rc = []
       for atom in five.atoms():
         if atom.name == ' CA ':
           rc.append(atom)
       if len(rc) == 5:
         yield rc
-    print 'time', time.time() - t0
+    #print 'time', time.time() - t0
 
   # cutoff function
   def cutf(self, distance):
@@ -121,8 +122,6 @@ class AEV(AEV_base):
               if f != 0:
                 GmR += math.exp(- n * ((R - Rs) ** 2)) * f
           AEVs[a+x][b].append(GmR)
-    #dis.pop(b)
-    print(AEVs)
     return AEVs
 
   def Apart(self):
@@ -236,28 +235,33 @@ class AEV(AEV_base):
     return a
   
   def compare(self, match):
-    aev1 = self.Rpart()
-    aev2 = match.Rpart()
-    #print(aev1,aev2)
+    # aev1 = self.Rpart()
+    # aev2 = match.Rpart()
     diff = diff_class()
-    for ele, value in aev2.items():
-      diff.setdefault(ele, [])
-      all = []
-      all1 = []
-      for a in value.values():
-        all.extend(a)
-      for b in aev1.values():
-        all1.extend(b.values())
-      covalue = np.corrcoef(all, all1).tolist()
-      diff[ele].append(covalue[1][0])
+    for aev1, aev2 in zip(self.Rpart().items(), match.Rpart().items()):
+      ele1 = aev1[0]
+      ele2 = aev2[0]
+      all1 = aev1[1].values()
+      all2 = aev2[1].values()
+      covalue = np.corrcoef(all1, all2).tolist()
+      diff.setdefault(ele1 + ele2, covalue[1][0])
     print(diff)
-    return 0
+    return diff
   
   
+  # def find_function(self,match):
+  #   for self.five in self.generate_ca():
+  #     break_flag = False
+  #     for match.five in match.generate_ca():
+  #       for b, c in self.compare(match).items():
+  #         if c == 1.0:
+  #           print(b)
+  #           break_flag=True
+  #           break
+  #       if break_flag==True: break
+
   def find_function(self,match):
     for self.five in self.generate_ca():
       for match.five in match.generate_ca():
         self.compare(match)
-
-
 
