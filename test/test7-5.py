@@ -178,11 +178,11 @@ ATOM     11  CZ  TYR A  20     -10.598  -0.703 -38.504  1.00  0.00           C
 ATOM     12  OH  TYR A  20     -10.194   0.489 -37.945  1.00  0.00           O
 '''
 
-def main(filename1=None,filename2=None):
-  if filename1 and filename2:
+def main(filename1=None,filename2=None,limit=None):
+  if filename1 and filename2 and limit:
     a = AEV(pdb_file_name=filename1)
     b = AEV(pdb_file_name=filename2)
-    a.find_function(b)
+    a.find_function(b, limit)
   elif filename1:
     a = AEV(pdb_file_name=filename1)
     for a.five in a.generate_ca():

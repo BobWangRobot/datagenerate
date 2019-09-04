@@ -101,6 +101,7 @@ class AEV(AEV_base):
     self.five = []
     self.AEVs = radial_aev_class()
     self.rdistance = radial_aev_class()
+    self.diffs = diff_class()
 
   def Rpart(self):
     n = 4.0
@@ -234,9 +235,10 @@ class AEV(AEV_base):
         a[key] = item
     return a
   
-  def compare(self, match):
+  def compare(self, match, limit):
     diff = diff_class()
     all = 0
+    limit = float(limit)
     for aev1, aev2 in zip(self.Rpart().items(), match.Rpart().items()):
       ele1 = aev1[0]
       ele2 = aev2[0]
@@ -245,22 +247,20 @@ class AEV(AEV_base):
       covalue = np.corrcoef(list1, list2).tolist()
       diff.setdefault(ele1 + ele2, covalue[1][0])
       all += covalue[1][0]
+      if covalue[1][0] > limit:
+        self.diffs.setdefault(ele1+ele2, covalue[1][0])
     diff.setdefault('all',all/5)
     return diff
 
   def test(self):
-    AEVs = radial_aev_class()
-    for atom1 in self.five:
-      x = str(atom1.i_seq)
-      a = atom1.element.upper().strip()
-      AEVs.setdefault(a + x, {})
-    print(AEVs)
-  
-  def find_function(self,match):
+    self.hierarchy.reset_atom_i_seqs().write_pdb_file(file_name="helix3.pdb")
+
+  def find_function(self, match, limit):
     for self.five in self.generate_ca():
       for match.five in match.generate_ca():
-        diffs = self.compare(match)
-        print(diffs)
-        #if diffs['all'] > 0.9:
-          #print(diffs.keys())
+        self.compare(match, limit)
+    print(self.diffs)
+        #print(diffs)
+        # if diffs['all'] > 0.9:
+        #   print(diffs.keys())
 
