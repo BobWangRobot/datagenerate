@@ -105,14 +105,14 @@ class AEV(AEV_base):
 
   def Rpart(self):
     n = 4.0
-    AEVs = radial_aev_class()
+    AEVs = self.AEVs
     dis = self.Atome_classify("C")
     for atom1 in self.five:
       x = str(atom1.i_seq)
       a = atom1.element.upper().strip()
       AEVs.setdefault(a + x, {})
       for b, atom2list in dis.items():
-        AEVs[a + x].setdefault(b, [])
+        AEVs[a + x].setdefault(b, set())
         for Rs in self.rs_values:
           GmR = 0
           for atom2 in atom2list:
@@ -122,8 +122,8 @@ class AEV(AEV_base):
               f = self.cutf(R)
               if f != 0:
                 GmR += math.exp(- n * ((R - Rs) ** 2)) * f
-          AEVs[a+x][b].append(GmR)
-    return AEVs
+          AEVs[a+x][b].add(GmR)
+    return self.AEVs
 
   def Apart(self):
     l = 8.00
@@ -251,9 +251,6 @@ class AEV(AEV_base):
         self.diffs.setdefault(ele1+ele2, covalue[1][0])
     diff.setdefault('all',all/5)
     return diff
-
-  def test(self):
-    self.hierarchy.reset_atom_i_seqs().write_pdb_file(file_name="helix3.pdb")
 
   def find_function(self, match, limit):
     for self.five in self.generate_ca():
