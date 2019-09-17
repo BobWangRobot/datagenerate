@@ -64,7 +64,7 @@ class AEV_base(object):
           rc.append(atom)
       if len(rc) == 5:
         yield rc
-    #print 'time', time.time() - t0
+    print 'time', time.time() - t0
 
   # cutoff function
   def cutf(self, distance):
@@ -82,8 +82,6 @@ class AEV_base(object):
       if e in atype:
         atom_elements.setdefault(e, [])
         atom_elements[e].append(b)
-        # self.atom_elements.setdefault(e, [])
-        # self.atom_elements[e].append(b)
     return atom_elements
 
 
@@ -105,14 +103,14 @@ class AEV(AEV_base):
 
   def Rpart(self):
     n = 4.0
-    AEVs = self.AEVs
+    AEVs = radial_aev_class()
     dis = self.Atome_classify("C")
     for atom1 in self.five:
       x = str(atom1.i_seq)
       a = atom1.element.upper().strip()
       AEVs.setdefault(a + x, {})
       for b, atom2list in dis.items():
-        AEVs[a + x].setdefault(b, set())
+        AEVs[a + x].setdefault(b, [])
         for Rs in self.rs_values:
           GmR = 0
           for atom2 in atom2list:
@@ -122,19 +120,20 @@ class AEV(AEV_base):
               f = self.cutf(R)
               if f != 0:
                 GmR += math.exp(- n * ((R - Rs) ** 2)) * f
-          AEVs[a+x][b].add(GmR)
-    return self.AEVs
+          AEVs[a+x][b].append(GmR)
+    self.AEVs.update(AEVs)
+    return AEVs
 
   def Apart(self):
     l = 8.00
     n = 4.0
     AEVs = radial_aev_class()
-    for atom1 in self.hierarchy.atoms():
+    for atom1 in self.five:
       x = str(atom1.i_seq)
       a = atom1.element.upper().strip()
       AEVs.setdefault(a+x, {})
-      f = self.Atome_classify()
-      for b, atom2list in f.items():
+      f = dict(self.Atome_classify("C"))
+      for b, atom2list in self.Atome_classify("C").items():
         for c, atom3list in f.items():
           for Rs in self.angular_rs_values:
             for zetas in self.ts_values:
@@ -158,61 +157,13 @@ class AEV(AEV_base):
                 GmA = 0
               AEVs[a+x][b+c].append(GmA)
         f.pop(b)#delecte repeated atomes
-    print(AEVs)
+    #print(AEVs)
+    self.AEVs.update(AEVs)
     return AEVs
   
   def get_AEVS(self):
-    n = 4.0
-    l = 8.00
-    i = 0
-    self.AEVs = radial_aev_class()
-    for atom1 in self.five:
-      i = i + 1
-      x = str(atom1.i_seq)
-      a = atom1.element.upper().strip()
-      self.AEVs.setdefault(a + x, {})
-      dis = self.Atome_classify("C")
-      for b, atom2list in dis.items():
-        for Rs in self.rs_values:
-          self.AEVs[a + x].setdefault(b, [])
-          GmR = 0
-          for atom2 in atom2list:  # radial caculation
-            if atom1 != atom2:
-              R = atom1.distance(atom2)
-              self.cutoff = self.radial_cutoff
-              f = self.cutf(R)
-              if f != 0:
-                GmR += math.exp(- n * ((R - Rs) ** 2)) * f
-              else:
-                continue
-          if GmR < 1e-6:
-            GmR = 0
-          self.AEVs[a + x][b].append(GmR)
-        for c, atom3list in dis.items():  # angle caculation
-          for Rs in self.angular_rs_values:
-            for zetas in self.ts_values:
-              self.AEVs[a + x].setdefault(b + c, [])
-              GmA = 0
-              for atom2 in atom2list:
-                for atom3 in atom3list:
-                  if atom2 != atom1 and atom3 != atom1:
-                    Rij = atom1.distance(atom2)
-                    Rik = atom1.distance(atom2)
-                    ZETAijk = atom1.angle(atom2, atom3)
-                    self.cutoff = self.angular_cutoff
-                    fk = self.cutf(Rik)
-                    fj = self.cutf(Rij)
-                    if fk != 0 and fj != 0:
-                      GmA += (((1 + math.cos(ZETAijk - zetas))) ** l) * \
-                             math.exp(- n * ((((Rij + Rik) / 2) - Rs) ** 2)) * fj * fk
-                    else:
-                      continue
-              GmA = GmA * (2 ** (1 - l))
-              if GmA < 1e-6:
-                GmA = 0
-              self.AEVs[a + x][b + c].append(GmA)
-        #dis.pop(b)  # delecte repeated atomes
-    print(self.AEVs)
+    self.Rpart()
+    self.Apart()
     return self.AEVs
   
   def get_items(self):
@@ -250,6 +201,7 @@ class AEV(AEV_base):
       if covalue[1][0] > limit:
         self.diffs.setdefault(ele1+ele2, covalue[1][0])
     diff.setdefault('all',all/5)
+    print (diff)
     return diff
 
   def find_function(self, match, limit):
