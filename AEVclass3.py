@@ -12,30 +12,31 @@ from mmtbx.monomer_library import pdb_interpretation
 from mmtbx.conformation_dependent_library import generate_protein_fragments
 
 
-class radial_aev_class(OrderedDict):
+class radial_aev_class(list):
   def __repr__(self):
+    i = 0
     outl = '...\n'
-    for key, item in self.items():
-      outl += '  %s :\n' % (key)
-      for e, vec in item.items():
-        outl += '     %s : ' % e
-        for v in vec:
-          outl += '%0.3f, ' % v
+    for v in self:
+      outl += '%0.3f, ' % v
+      i = i + 1
+      if i == 8:
         outl += '\n'
+        i = 0
     return outl
+
 
 class diff_class(OrderedDict):
   def __repr__(self):
     outl = '...\n'
     for key, item in self.items():
-      outl +=' %s :' % key
-      outl +='%0.3f,' % item
+      outl += ' %s :' % key
+      outl += '%0.3f,' % item
       outl += '\n'
     return outl
 
 
 class AEV_base(object):
-  
+
   def __init__(self, pdb_file_name=None, raw_records=None):
     # assert count(pdb_file_name, raw_records)==1
     if pdb_file_name:
@@ -59,13 +60,15 @@ class AEV_base(object):
     for five in generate_protein_fragments(self.hierarchy,
                                            self.geometry_restraints_manager,
                                            include_non_standard_peptides=True,
-                                           length=5):
+                                           length=2):
       rc = []
       for atom in five.atoms():
         if atom.name == ' CA ':
-          rc.append(atom)
-      if len(rc) == 5:
-        yield rc
+          if len(rc) < 1:
+            rc.append(atom)
+      yield rc
+      # if len(rc) == 4:
+      # yield rc
     print 'time', time.time() - t0
 
   # cutoff function
@@ -100,19 +103,20 @@ class AEV(AEV_base):
     self.AEVs = radial_aev_class()
     self.five = []
     self.AEVs = radial_aev_class()
+    self.e_name = []
     self.rdistance = radial_aev_class()
     self.diffs = diff_class()
 
+
   def Rpart(self):
     n = 4.0
-    AEVs = radial_aev_class()
+    AEVs = self.AEVs
     dis = self.Atome_classify("C")
     for atom1 in self.five:
       x = str(atom1.i_seq)
       a = atom1.element.upper().strip()
-      AEVs.setdefault(a + x, {})
+      self.e_name.append(a + x)
       for b, atom2list in dis.items():
-        AEVs[a + x].setdefault(b, [])
         for Rs in self.rs_values:
           GmR = 0
           for atom2 in atom2list:
@@ -122,8 +126,7 @@ class AEV(AEV_base):
               f = self.cutf(R)
               if f != 0:
                 GmR += math.exp(- n * ((R - Rs) ** 2)) * f
-          AEVs[a+x][b].append(GmR)
-    self.AEVs.update(AEVs)
+          AEVs.append(GmR)
     return AEVs
 
   def Apart(self):
@@ -133,13 +136,13 @@ class AEV(AEV_base):
     for atom1 in self.five:
       x = str(atom1.i_seq)
       a = atom1.element.upper().strip()
-      AEVs.setdefault(a+x, {})
+      AEVs.setdefault(a + x, {})
       f = dict(self.Atome_classify("C"))
       for b, atom2list in self.Atome_classify("C").items():
         for c, atom3list in f.items():
           for Rs in self.angular_rs_values:
             for zetas in self.ts_values:
-              AEVs[a+x].setdefault(b+c, [])
+              AEVs[a + x].setdefault(b + c, [])
               GmA = 0
               for atom2 in atom2list:
                 for atom3 in atom3list:
@@ -152,29 +155,30 @@ class AEV(AEV_base):
                     fj = self.cutf(Rij)
                     if fk != 0 and fj != 0:
                       GmA += (((1 + math.cos(ZETAijk - zetas))) ** l) * \
-                            math.exp(- n * ((((Rij + Rik) / 2) - Rs) ** 2)) * fj * fk
-                    else: continue
+                             math.exp(- n * ((((Rij + Rik) / 2) - Rs) ** 2)) * fj * fk
+                    else:
+                      continue
               GmA = GmA * (2 ** (1 - l))
               if GmA < 1e-6:
                 GmA = 0
-              AEVs[a+x][b+c].append(GmA)
-        f.pop(b)#delecte repeated atomes
-    #print(AEVs)
+              AEVs[a + x][b + c].append(GmA)
+        f.pop(b)  # delecte repeated atomes
+    # print(AEVs)
     self.AEVs.update(AEVs)
     return AEVs
-  
+
   def get_AEVS(self):
     self.Rpart()
     self.Apart()
     return self.AEVs
-  
+
   def get_items(self):
     empty = self.get_AEVS()
     for ele, values in empty.items():
       for item in values.keys():
         empty[ele][item] = [0, 0, 0, 0, 0, 0, 0, 0]
     return empty
-  
+
   def merge(self, b):
     a = self.get_AEVS()
     for key, item in b.items():
@@ -187,11 +191,12 @@ class AEV(AEV_base):
         a.setdefault(key, {})
         a[key] = item
     return a
-  
-  def compare(self, match):
+
+  def compare(self, match, limit):
     diff = diff_class()
     all = 0
-    for aev1, aev2 in zip(self.Rpart().items(), match.Rpart().items()):
+    limit = float(limit)
+    for aev1, aev2 in zip(self.Rpart(), match.Rpart()):
       ele1 = aev1[0]
       ele2 = aev2[0]
       list1 = aev1[1].values()
@@ -199,18 +204,18 @@ class AEV(AEV_base):
       covalue = np.corrcoef(list1, list2).tolist()
       diff.setdefault(ele1 + ele2, covalue[1][0])
       all += covalue[1][0]
-      #if covalue[1][0] > limit:
-      self.diffs.setdefault(ele1+ele2, covalue[1][0])
-    diff.setdefault('all',all/5)
-    #print (diff)
+      if covalue[1][0] > limit:
+        self.diffs.setdefault(ele1 + ele2, covalue[1][0])
+    diff.setdefault('all', all / 5)
+    print (diff)
     return diff
 
-  def find_function(self, match):
-    for self.five, match.five in zip(self.generate_ca(),match.generate_ca()):
-      #for match.five in match.generate_ca():
-      self.compare(match)
+  def find_function(self, match, limit):
+    for self.five in self.generate_ca():
+      for match.five in match.generate_ca():
+        self.compare(match, limit)
     print(self.diffs)
-        #print(diffs)
-        # if diffs['all'] > 0.9:
-        #   print(diffs.keys())
+    # print(diffs)
+    # if diffs['all'] > 0.9:
+    #   print(diffs.keys())
 

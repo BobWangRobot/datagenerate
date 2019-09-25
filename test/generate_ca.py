@@ -205,7 +205,8 @@ def generate_ca(filename=None, raw_records=None):
 def main(filename=None):
   if filename:
     for five in generate_ca(filename):
-      print five
+      for atom in five:
+        print(atom.i_seq)
   else:
     for five in generate_ca(raw_records=perfect_helix):
       print five

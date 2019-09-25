@@ -8,45 +8,35 @@ import collections
 import os, sys
 import time
 import mmtbx
+#plot all atomes compare result
 sys.path.append("..")
-from AEVclass2 import *
+from AEVclass3 import *
+
 
 def main(filename1=None, filename2=None):
   if filename1 and filename2:
-    y1 = []
-    y2 = []
-    name = []
     a = AEV(pdb_file_name=filename1)
     b = AEV(pdb_file_name=filename2)
-    a.five = next(a.generate_ca())
-    b.five = next(b.generate_ca())
-    #a.Rpart()
-    #b.Rpart()
-    aev1 = a.Rpart()
-    aev2 = b.Rpart()
-    print(aev1,aev2)
-    for ele, values in aev1.items():
-      for r_or_a, value in values.items():
-        for list1 in value:
-          y1.append(list1)
-      name.append(ele)
-    for ele, values in aev2.items():
-      for r_or_a, value in values.items():
-        for list2 in value:
-          y2.append(list2)
+    for a.five in a.generate_ca():
+      a.Rpart()
+    for b.five in b.generate_ca():
+      b.Rpart()
+    y1 = a.AEVs
+    y2 = b.AEVs
     x = range(len(y1))
     plt.title("%s and %s radial part AEV values " % (filename1.replace('.pdb', ''), (filename2.replace('.pdb', ''))))
     plt.xlabel("atom number")
     plt.ylabel("value")
     plt.plot(x, y1, 'r', label='%s' % filename1.replace('.pdb', ''))
     plt.plot(x, y2, 'g', label='%s' % filename2.replace('.pdb', ''))
-    plt.xticks(x[::8], name)
+    plt.xticks(x[::8], (a.e_name+b.e_name))
     plt.legend()
-    plt.savefig('./difference/%s.jpg' % filename2.replace('.pdb', '%s' % ele))
+    plt.savefig('./difference/%s.jpg' % (filename1.replace('.pdb','')+filename2.replace('.pdb','')))
     plt.show()
   else:
     a = AEV(pdb_file_name=filename1)
     print(a.find_function())
-    
+
+
 if __name__ == '__main__':
   main(*tuple(sys.argv[1:]))
