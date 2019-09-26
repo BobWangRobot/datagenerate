@@ -67,8 +67,6 @@ class AEV_base(object):
           if len(rc) < 1:
             rc.append(atom)
       yield rc
-      # if len(rc) == 4:
-      # yield rc
     print 'time', time.time() - t0
 
   # cutoff function

@@ -9,7 +9,8 @@ import mmtbx
 sys.path.append("..")
 from AEVclass2 import *
 
-perfect_helix = '''ATOM      1  N   ALA A   1      -5.606  -2.251 -12.878  1.00  0.00           N
+perfect_helix = '''
+ATOM      1  N   ALA A   1      -5.606  -2.251 -12.878  1.00  0.00           N
 ATOM      2  CA  ALA A   1      -5.850  -1.194 -13.852  1.00  0.00           C
 ATOM      3  C   ALA A   1      -5.186  -1.524 -15.184  1.00  0.00           C
 ATOM      4  O   ALA A   1      -5.744  -1.260 -16.249  1.00  0.00           O
@@ -189,7 +190,9 @@ def main(filename1=None,filename2=None):
       print(a.Rpart())
   else:
     a = AEV(raw_records=perfect_helix)
-    print(a.Rpart())
+    for a.five in a.generate_ca():
+      a.Rpart()
+    print(a.AEVs)
 
 
 if __name__ == '__main__':

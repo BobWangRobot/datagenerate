@@ -9,7 +9,7 @@ import os, sys
 import time
 import mmtbx
 sys.path.append("..")
-from AEVclass3 import *
+from AEVclass2 import *
 #helix_5_12 from 1an0
 helix1='''
 ATOM      1  N   LEU A 165      50.506  10.993  25.761  1.00  2.00           N
@@ -197,6 +197,10 @@ ATOM     87  OD2 ASP B  23      29.966  32.245  16.603  1.00 29.14           O
 
 #plot two parallel helices(same length)
 def main(filename1=None, filename2=None):
+  y1 = []
+  y2 = []
+  name1 = []
+  name2 = []
   if filename1 and filename2:
     a = AEV(pdb_file_name=filename1)
     b = AEV(pdb_file_name=filename2)
@@ -224,17 +228,23 @@ def main(filename1=None, filename2=None):
       a.Rpart()
     for b.five in b.generate_ca():
       b.Rpart()
-    y1 = a.AEVs
-    y2 = b.AEVs
+    for key1,value1 in a.AEVs.items():
+      name1.append(key1)
+      for v1 in value1.values():
+        y1.extend(v1)
+    for key2,value2 in b.AEVs.items():
+      name2.append(key2)
+      for v2 in value2.values():
+        y2.extend(v2)
     x = range(len(y2))
     plt.title("1an0-helix and 10gs-helix radial part AEV values" )
     plt.xlabel("atom number")
     plt.ylabel("value")
     plt.plot(x, y1, 'r', label='1an0')
     plt.plot(x, y2, 'g', label='10gs')
-    plt.xticks(x[::8], (name1+name2 for name1, name2 in zip(a.e_name, b.e_name)))
+    plt.xticks(x[::8], (a_name+b_name for a_name, b_name in zip(name1, name2)))
     plt.legend()
-    plt.savefig('./difference/1an0-10gs-helix.jpg' )
+    plt.savefig('./difference/1an0-10gs-helix1.jpg' )
     plt.show()
 
 

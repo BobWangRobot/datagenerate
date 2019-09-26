@@ -28,11 +28,13 @@ class diff_class(OrderedDict):
   def __repr__(self):
     outl = '...\n'
     for key, item in self.items():
-      outl +=' %s :' % key
-      outl +='%0.3f,' % item
-      outl += '\n'
+      outl += '  %s :\n' % (key)
+      for e, vec in item.items():
+        outl += '     %s : ' % e
+        for v in vec:
+          outl += '%0.3f, ' % v
+        outl += '\n'
     return outl
-
 
 class AEV_base(object):
   
@@ -188,21 +190,21 @@ class AEV(AEV_base):
         a[key] = item
     return a
   
+
   def compare(self, match):
     diff = diff_class()
-    all = 0
-    for aev1, aev2 in zip(self.Rpart().items(), match.Rpart().items()):
-      ele1 = aev1[0]
-      ele2 = aev2[0]
-      list1 = aev1[1].values()
-      list2 = aev2[1].values()
-      covalue = np.corrcoef(list1, list2).tolist()
-      diff.setdefault(ele1 + ele2, covalue[1][0])
-      all += covalue[1][0]
-      #if covalue[1][0] > limit:
-      self.diffs.setdefault(ele1+ele2, covalue[1][0])
-    diff.setdefault('all',all/5)
-    #print (diff)
+    # all = 0
+    # limit = float(limit)
+    for ele1,item1 in self.Rpart().items():
+      self.diffs.setdefault(ele1, {})
+      for ele2,item2 in match.Rpart().items():
+        for list1,list2 in zip(item1.values(),item2.values()):
+          covalue = np.corrcoef(list1, list2).tolist()
+          self.diffs[ele1].setdefault(ele2, covalue[1][0])
+      # all += covalue[1][0]
+      # if covalue[1][0] > limit:
+      #   self.diffs.setdefault(ele1 + ele2, covalue[1][0])
+    print (diff)
     return diff
 
   def find_function(self, match):
