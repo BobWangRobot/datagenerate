@@ -30,14 +30,12 @@ class diff_class(OrderedDict):
     for key, item in self.items():
       outl += '  %s :\n' % (key)
       for e, vec in item.items():
-        outl += '     %s : ' % e
-        for v in vec:
-          outl += '%0.3f, ' % v
-        outl += '\n'
+        outl += '     %s : %0.2f ' % (e, vec)
+      outl += '\n'
     return outl
 
 class AEV_base(object):
-  
+
   def __init__(self, pdb_file_name=None, raw_records=None):
     # assert count(pdb_file_name, raw_records)==1
     if pdb_file_name:
@@ -164,19 +162,19 @@ class AEV(AEV_base):
     #print(AEVs)
     self.AEVs.update(AEVs)
     return AEVs
-  
+
   def get_AEVS(self):
     self.Rpart()
     self.Apart()
     return self.AEVs
-  
+
   def get_items(self):
     empty = self.get_AEVS()
     for ele, values in empty.items():
       for item in values.keys():
         empty[ele][item] = [0, 0, 0, 0, 0, 0, 0, 0]
     return empty
-  
+
   def merge(self, b):
     a = self.get_AEVS()
     for key, item in b.items():
@@ -189,28 +187,26 @@ class AEV(AEV_base):
         a.setdefault(key, {})
         a[key] = item
     return a
-  
+
 
   def compare(self, match):
-    diff = diff_class()
-    # all = 0
-    # limit = float(limit)
     for ele1,item1 in self.Rpart().items():
-      self.diffs.setdefault(ele1, {})
+      self.diffs.setdefault(ele1, OrderedDict())
       for ele2,item2 in match.Rpart().items():
         for list1,list2 in zip(item1.values(),item2.values()):
           covalue = np.corrcoef(list1, list2).tolist()
+          if covalue[1][0] < 0.9:
+            covalue[1][0] = 0
           self.diffs[ele1].setdefault(ele2, covalue[1][0])
       # all += covalue[1][0]
       # if covalue[1][0] > limit:
       #   self.diffs.setdefault(ele1 + ele2, covalue[1][0])
-    print (diff)
-    return diff
 
   def find_function(self, match):
-    for self.five, match.five in zip(self.generate_ca(),match.generate_ca()):
+    for self.five in self.generate_ca():
+      for match.five in match.generate_ca():
       #for match.five in match.generate_ca():
-      self.compare(match)
+        self.compare(match)
     print(self.diffs)
         #print(diffs)
         # if diffs['all'] > 0.9:
