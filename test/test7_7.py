@@ -10,6 +10,9 @@ import time
 import mmtbx
 sys.path.append("..")
 from AEVclass2 import *
+
+#plot two parallel helices(same length)
+
 #helix_5_12 from 1an0
 helix1='''
 ATOM      1  N   LEU A 165      50.506  10.993  25.761  1.00  2.00           N
@@ -195,7 +198,6 @@ ATOM     86  OD1 ASP B  23      29.380  34.102  15.590  1.00 28.68           O
 ATOM     87  OD2 ASP B  23      29.966  32.245  16.603  1.00 29.14           O
 '''
 
-#plot two parallel helices(same length)
 def main(filename1=None, filename2=None):
   y1 = []
   y2 = []
@@ -205,21 +207,29 @@ def main(filename1=None, filename2=None):
     a = AEV(pdb_file_name=filename1)
     b = AEV(pdb_file_name=filename2)
     for a.five in a.generate_ca():
-      a.Rpart()
+      a.get_AEVs()
     for b.five in b.generate_ca():
-      b.Rpart()
-    y1 = a.AEVs
-    y2 = b.AEVs
-    x = range(len(y2))
-    plt.title("%s and %s radial part AEV values " % (filename1.replace('.pdb', ''),
+      b.get_AEVs()
+    for key1,value1 in a.AEVs.items():
+      name1.append(key1)
+      for v1 in value1.values():
+        y1.extend(v1)
+    for key2,value2 in b.AEVs.items():
+      name2.append(key2)
+      for v2 in value2.values():
+        y2.extend(v2)
+    print(a.AEVs, b.AEVs)
+    x1 = range(len(y1))
+    x2 = range(len(y2))
+    plt.title("%s and %s AEV values " % (filename1.replace('.pdb', ''),
                                                      filename2.replace('.pdb', '')))
     plt.xlabel("atom number")
     plt.ylabel("value")
-    plt.plot(x, y1, 'r', label='%s' % filename1.replace('.pdb', ''))
-    plt.plot(x, y2, 'g', label='%s' % filename2.replace('.pdb', ''))
-    plt.xticks(x[::8], (name1 + name2 for name1, name2 in zip(a.e_name, b.e_name)))
+    plt.plot(x1, y1, 'r', label='%s' % filename1.replace('.pdb', ''))
+    plt.plot(x2, y2, 'g', label='%s' % filename2.replace('.pdb', ''))
+    plt.xticks(x1[::16], (a_name+b_name for a_name, b_name in zip(name1, name2)))
     plt.legend()
-    plt.savefig('./difference/%s.jpg' % (filename1.replace('.pdb','')+filename2.replace('.pdb','')))
+    plt.savefig('./difference/%s all.jpg' % (filename1.replace('.pdb','')+filename2.replace('.pdb','')))
     plt.show()
   else:
     a = AEV(raw_records=helix1)
@@ -236,15 +246,17 @@ def main(filename1=None, filename2=None):
       name2.append(key2)
       for v2 in value2.values():
         y2.extend(v2)
-    x = range(len(y2))
+    x1 = range(len(y1))
+    x2 = range(len(y2))
     plt.title("1an0-helix and 10gs-helix radial part AEV values" )
     plt.xlabel("atom number")
     plt.ylabel("value")
-    plt.plot(x, y1, 'r', label='1an0')
-    plt.plot(x, y2, 'g', label='10gs')
-    plt.xticks(x[::8], (a_name+b_name for a_name, b_name in zip(name1, name2)))
+    plt.plot(x1, y1, 'r', label='1an0')
+    plt.plot(x2, y2, 'g', label='10gs')
+    plt.xticks(x1[::8], name1)
+    plt.xticks(x2[::8], name2)
     plt.legend()
-    plt.savefig('./difference/1an0-10gs-helix1.jpg' )
+    #plt.savefig('1an0-10gs-helix1.jpg' )
     plt.show()
 
 

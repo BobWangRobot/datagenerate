@@ -187,7 +187,9 @@ def main(filename1=None,filename2=None):
   elif filename1 :
     a = AEV(pdb_file_name=filename1)
     for a.five in a.generate_ca():
-      print(a.Rpart())
+      a.Rpart()
+      # a.get_AEVs()
+    print(a.AEVs)
   else:
     a = AEV(raw_records=perfect_helix)
     for a.five in a.generate_ca():

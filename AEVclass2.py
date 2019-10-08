@@ -59,12 +59,12 @@ class AEV_base(object):
     for five in generate_protein_fragments(self.hierarchy,
                                            self.geometry_restraints_manager,
                                            include_non_standard_peptides=True,
-                                           length=5):
+                                           length=2):
       rc = []
       for atom in five.atoms():
         if atom.name == ' CA ':
           rc.append(atom)
-      if len(rc) == 5:
+      if len(rc) == 2:
         yield rc
     print 'time', time.time() - t0
 
@@ -81,7 +81,8 @@ class AEV_base(object):
     atom_elements = {}
     for b in self.hierarchy.atoms():
       e = b.element.upper().strip()
-      if e in atype:
+      #e = b.name.strip()
+      if e == atype:
         atom_elements.setdefault(e, [])
         atom_elements[e].append(b)
     return atom_elements
@@ -97,7 +98,6 @@ class AEV(AEV_base):
     self.angular_rs_values = [0.900000, 6.225000]
     self.angular_cutoff = 8
     self.angular_zeta = 8
-    self.AEVs = radial_aev_class()
     self.five = []
     self.AEVs = radial_aev_class()
     self.rdistance = radial_aev_class()
@@ -106,7 +106,7 @@ class AEV(AEV_base):
   def Rpart(self):
     n = 4.0
     AEVs = radial_aev_class()
-    dis = self.Atome_classify("C")
+    dis = self.Atome_classify('C')
     for atom1 in self.five:
       x = str(atom1.i_seq)
       a = atom1.element.upper().strip()
@@ -123,7 +123,7 @@ class AEV(AEV_base):
               if f != 0:
                 GmR += math.exp(- n * ((R - Rs) ** 2)) * f
           AEVs[a+x][b].append(GmR)
-    self.AEVs.update(AEVs)
+          self.AEVs.update(AEVs)
     return AEVs
 
   def Apart(self):
@@ -159,11 +159,10 @@ class AEV(AEV_base):
                 GmA = 0
               AEVs[a+x][b+c].append(GmA)
         f.pop(b)#delecte repeated atomes
-    #print(AEVs)
-    self.AEVs.update(AEVs)
+        self.AEVs[a+x].update(AEVs[a+x])
     return AEVs
 
-  def get_AEVS(self):
+  def get_AEVs(self):
     self.Rpart()
     self.Apart()
     return self.AEVs
