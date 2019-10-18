@@ -256,7 +256,7 @@ def main(filename1=None, filename2=None):
     plt.xticks(x1[::8], name1)
     plt.xticks(x2[::8], name2)
     plt.legend()
-    #plt.savefig('1an0-10gs-helix1.jpg' )
+    plt.savefig('1an0-10gs.jpg' )
     plt.show()
 
 

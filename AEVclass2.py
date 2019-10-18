@@ -100,6 +100,8 @@ class AEV(AEV_base):
     self.angular_zeta = 8
     self.five = []
     self.AEVs = radial_aev_class()
+    self.FAEVs = radial_aev_class()
+    self.BAEVs = radial_aev_class()
     self.rdistance = radial_aev_class()
     self.diffs = diff_class()
 
@@ -114,14 +116,22 @@ class AEV(AEV_base):
       for b, atom2list in dis.items():
         AEVs[a + x].setdefault(b, [])
         for Rs in self.rs_values:
+          FGmR = 0
+          BGmR = 0
           GmR = 0
           for atom2 in atom2list:
+            z = str(atom2.i_seq)
             if atom1 != atom2:
               R = atom1.distance(atom2)
               self.cutoff = self.radial_cutoff
               f = self.cutf(R)
               if f != 0:
-                GmR += math.exp(- n * ((R - Rs) ** 2)) * f
+                mR = math.exp(- n * ((R - Rs) ** 2)) * f
+                GmR += mR
+                if int(z) < int(x):
+                  FGmR += mR
+                elif int(z) > int(x):
+                  BGmR += mR
           AEVs[a+x][b].append(GmR)
           self.AEVs.update(AEVs)
     return AEVs
