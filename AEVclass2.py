@@ -30,7 +30,7 @@ class diff_class(OrderedDict):
     for key, item in self.items():
       outl += '  %s :\n' % (key)
       for e, vec in item.items():
-        outl += '     %s : %0.2f ' % (e, vec)
+        outl += '     %s : %0.3f ' % (e, vec)
       outl += '\n'
     return outl
 
@@ -80,8 +80,8 @@ class AEV_base(object):
   def Atome_classify(self, atype):
     atom_elements = {}
     for b in self.hierarchy.atoms():
-      e = b.element.upper().strip()
-      #e = b.name.strip()
+      #e = b.element.upper().strip()
+      e = b.name.strip()
       if e == atype:
         atom_elements.setdefault(e, [])
         atom_elements[e].append(b)
@@ -108,7 +108,7 @@ class AEV(AEV_base):
   def Rpart(self):
     n = 4.0
     AEVs = radial_aev_class()
-    dis = self.Atome_classify('C')
+    dis = self.Atome_classify('CA')
     for atom1 in self.five:
       x = str(atom1.i_seq)
       a = atom1.element.upper().strip()
@@ -128,12 +128,16 @@ class AEV(AEV_base):
               if f != 0:
                 mR = math.exp(- n * ((R - Rs) ** 2)) * f
                 GmR += mR
+                k = k + 1
                 if int(z) < int(x):
                   FGmR += mR
+                  i = i + 1
                 elif int(z) > int(x):
                   BGmR += mR
+                  j = j + 1
           AEVs[a+x][b].append(GmR)
-          self.AEVs.update(AEVs)
+        #AEVs[a + x][b].append(k)
+        self.AEVs.update(AEVs)
     return AEVs
 
   def Apart(self):
@@ -199,12 +203,12 @@ class AEV(AEV_base):
 
 
   def compare(self, match):
-    for ele1,item1 in self.Rpart().items():
+    for ele1,item1 in self.get_AEVs().items():
       self.diffs.setdefault(ele1, OrderedDict())
-      for ele2,item2 in match.Rpart().items():
+      for ele2,item2 in match.get_AEVs().items():
         for list1,list2 in zip(item1.values(),item2.values()):
           covalue = np.corrcoef(list1, list2).tolist()
-          if covalue[1][0] < 0.9:
+          if covalue[1][0] < 0.8:
             covalue[1][0] = 0
           self.diffs[ele1].setdefault(ele2, covalue[1][0])
       # all += covalue[1][0]

@@ -9,6 +9,7 @@ import mmtbx
 sys.path.append("..")
 from AEVclass3 import *
 
+# Rpart AEVs
 perfect_helix = '''ATOM      1  N   ALA A   1      -5.606  -2.251 -12.878  1.00  0.00           N
 ATOM      2  CA  ALA A   1      -5.850  -1.194 -13.852  1.00  0.00           C
 ATOM      3  C   ALA A   1      -5.186  -1.524 -15.184  1.00  0.00           C
@@ -178,24 +179,31 @@ ATOM     11  CZ  TYR A  20     -10.598  -0.703 -38.504  1.00  0.00           C
 ATOM     12  OH  TYR A  20     -10.194   0.489 -37.945  1.00  0.00           O
 '''
 
-def main(filename1=None,filename2=None,limit=None):
-  if filename1 and filename2 and limit:
-    a = AEV(pdb_file_name=filename1)
-    b = AEV(pdb_file_name=filename2)
-    a.find_function(b, limit)
-  elif filename1 and filename2:
-    a = AEV(pdb_file_name=filename1)
-    b = AEV(pdb_file_name=filename2)
-    for a.five in a.generate_ca():
-      print(a.Rpart())
-  elif filename1:
-    a = AEV(pdb_file_name=filename1)
-    for a.five in a.generate_ca():
-      a.Rpart()
-    print(a.AEVs)
-  else:
-    a = AEV(raw_records=perfect_helix)
-    print(a.Rpart())
+def main(type, filename1=None):
+  if type=='R':
+    if filename1 :
+      a = AEV(pdb_file_name=filename1)
+      for a.five in a.generate_ca():
+        a.Rpart()
+      print(a.AEVs)
+    else:
+      a = AEV(raw_records=perfect_helix)
+      for a.five in a.generate_ca():
+        a.Rpart()
+      print(a.AEVs)
+  if type=='all':
+    if filename1 :
+      a = AEV(pdb_file_name=filename1)
+      for a.five in a.generate_ca():
+        a.Rpart()
+        a.Apart()
+      print(a.AEVs)
+    else:
+      a = AEV(raw_records=perfect_helix)
+      for a.five in a.generate_ca():
+        a.Rpart()
+        a.Apart()
+      print(a.AEVs)
 
 
 if __name__ == '__main__':
