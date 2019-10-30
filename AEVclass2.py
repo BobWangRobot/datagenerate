@@ -105,7 +105,7 @@ class AEV(AEV_base):
     self.rdistance = radial_aev_class()
     self.diffs = diff_class()
 
-  def Rpart(self):
+  def Rpart(self, scope):
     n = 4.0
     AEVs = radial_aev_class()
     dis = self.Atome_classify('CA')
@@ -128,19 +128,20 @@ class AEV(AEV_base):
               if f != 0:
                 mR = math.exp(- n * ((R - Rs) ** 2)) * f
                 GmR += mR
-                k = k + 1
                 if int(z) < int(x):
                   FGmR += mR
-                  i = i + 1
                 elif int(z) > int(x):
                   BGmR += mR
-                  j = j + 1
-          AEVs[a+x][b].append(GmR)
-        #AEVs[a + x][b].append(k)
-        self.AEVs.update(AEVs)
+          if scope=='back':
+            AEVs[a+x][b].append(BGmR)
+          if scope=='fward':
+            AEVs[a+x][b].append(FGmR)
+          if scope=='all':
+            AEVs[a + x][b].append(GmR)
+    self.AEVs.update(AEVs)
     return AEVs
 
-  def Apart(self):
+  def Apart(self,scope):
     l = 8.00
     n = 4.0
     AEVs = radial_aev_class()
@@ -148,15 +149,19 @@ class AEV(AEV_base):
       x = str(atom1.i_seq)
       a = atom1.element.upper().strip()
       AEVs.setdefault(a+x, {})
-      f = dict(self.Atome_classify("C"))
-      for b, atom2list in self.Atome_classify("C").items():
+      f = dict(self.Atome_classify("CA"))
+      for b, atom2list in self.Atome_classify("CA").items():
         for c, atom3list in f.items():
           for Rs in self.angular_rs_values:
             for zetas in self.ts_values:
               AEVs[a+x].setdefault(b+c, [])
               GmA = 0
+              FGmA = 0
+              BGmA = 0
               for atom2 in atom2list:
+                y = str(atom2.i_seq)
                 for atom3 in atom3list:
+                  z = str(atom3.i_seq)
                   if atom2 != atom1 and atom3 != atom1:
                     Rij = atom1.distance(atom2)
                     Rik = atom1.distance(atom2)
@@ -165,20 +170,31 @@ class AEV(AEV_base):
                     fk = self.cutf(Rik)
                     fj = self.cutf(Rij)
                     if fk != 0 and fj != 0:
-                      GmA += (((1 + math.cos(ZETAijk - zetas))) ** l) * \
+                      mA = (((1 + math.cos(ZETAijk - zetas))) ** l) * \
                             math.exp(- n * ((((Rij + Rik) / 2) - Rs) ** 2)) * fj * fk
-                    else: continue
+                      GmA += mA
+                      if int(y) < int(x) and int(z) < int(x):
+                        FGmA += mA
+                      elif int(y) > int(x) and int(z) > int(x):
+                        BGmA += mA
               GmA = GmA * (2 ** (1 - l))
+              BGmA = BGmA * (2 ** (1 - l))
+              FGmA = FGmA * (2 ** (1 - l))
               if GmA < 1e-6:
                 GmA = 0
-              AEVs[a+x][b+c].append(GmA)
+              if scope == 'back':
+                AEVs[a + x][b + c].append(BGmA)
+              if scope == 'fward':
+                AEVs[a + x][b + c].append(FGmA)
+              if scope == 'all':
+                AEVs[a + x][b + c].append(GmA)
         f.pop(b)#delecte repeated atomes
-        self.AEVs[a+x].update(AEVs[a+x])
+      self.AEVs[a+x].update(AEVs[a+x])
     return AEVs
 
-  def get_AEVs(self):
-    self.Rpart()
-    self.Apart()
+  def get_AEVs(self, scope):
+    self.Rpart(scope)
+    self.Apart(scope)
     return self.AEVs
 
   def get_items(self):
@@ -202,24 +218,27 @@ class AEV(AEV_base):
     return a
 
 
-  def compare(self, match):
-    for ele1,item1 in self.get_AEVs().items():
+  def compare(self, match, scope):
+    for ele1,item1 in self.get_AEVs(scope).items():
       self.diffs.setdefault(ele1, OrderedDict())
-      for ele2,item2 in match.get_AEVs().items():
+      for ele2,item2 in match.get_AEVs(scope).items():
+        list11 = []
+        list22 = []
         for list1,list2 in zip(item1.values(),item2.values()):
-          covalue = np.corrcoef(list1, list2).tolist()
-          if covalue[1][0] < 0.8:
-            covalue[1][0] = 0
-          self.diffs[ele1].setdefault(ele2, covalue[1][0])
+          list11 += list1
+          list22 += list2
+        covalue = np.corrcoef(list11, list22).tolist()
+        # if covalue[1][0] < 0.8:
+        #   covalue[1][0] = 0
+        self.diffs[ele1].setdefault(ele2, covalue[1][0])
       # all += covalue[1][0]
       # if covalue[1][0] > limit:
       #   self.diffs.setdefault(ele1 + ele2, covalue[1][0])
 
-  def find_function(self, match):
+  def find_function(self, match, scope):
     for self.five in self.generate_ca():
       for match.five in match.generate_ca():
-      #for match.five in match.generate_ca():
-        self.compare(match)
+        self.compare(match, scope)
     print(self.diffs)
         #print(diffs)
         # if diffs['all'] > 0.9:

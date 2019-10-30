@@ -110,19 +110,5 @@ ATOM     41  NZ  LYS A  77      11.579  -3.603  22.570  1.00  2.92           N
 ANISOU   41  NZ  LYS A  77      395    389    325     -8    -24      0       N
 ATOM     42  N   LEU A  78       5.549  -3.331  17.819  1.00  2.68           N
 ANISOU   42  N   LEU A  78      382    363    274     18    -25    -58       N
-ATOM     43  CA  LEU A  78       4.907  -3.926  16.650  1.00  2.67           C
-ANISOU   43  CA  LEU A  78      349    395    270     15    -17    -61       C
-ATOM     44  C   LEU A  78       5.988  -4.455  15.713  1.00  2.67           C
-ANISOU   44  C   LEU A  78      344    395    274     28    -32    -47       C
-ATOM     45  O   LEU A  78       6.827  -3.679  15.247  1.00  3.05           O
-ANISOU   45  O   LEU A  78      384    418    357     -9     13    -48       O
-ATOM     46  CB  LEU A  78       4.149  -2.801  15.929  1.00  3.07           C
-ANISOU   46  CB  LEU A  78      413    431    322     74    -55    -59       C
-ATOM     47  CG  LEU A  78       3.452  -3.228  14.634  1.00  3.40           C
-ANISOU   47  CG  LEU A  78      429    519    343    102    -73    -76       C
-ATOM     48  CD1 LEU A  78       2.203  -4.043  14.930  1.00  4.38           C
-ANISOU   48  CD1 LEU A  78      443    720    500     10   -117   -128       C
-ATOM     49  CD2 LEU A  78       3.134  -2.004  13.802  1.00  4.78           C
-ANISOU   49  CD2 LEU A  78      720    640    455    166   -181    -21       C
 TER
 END

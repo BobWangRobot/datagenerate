@@ -179,21 +179,21 @@ ATOM     11  CZ  TYR A  20     -10.598  -0.703 -38.504  1.00  0.00           C
 ATOM     12  OH  TYR A  20     -10.194   0.489 -37.945  1.00  0.00           O
 '''
 
-def main(filename1=None,filename2=None):
+def main(scope, filename1=None,filename2=None):
   if filename1 and filename2:
     a = AEV(pdb_file_name=filename1)
     b = AEV(pdb_file_name=filename2)
-    a.find_function(b)
+    a.find_function(b,scope)
   elif filename1 :
     a = AEV(pdb_file_name=filename1)
     for a.five in a.generate_ca():
-      #a.Rpart()
-      a.get_AEVs()
+      #a.Rpart(scope)
+      a.get_AEVs(scope)
     print(a.AEVs)
   else:
     a = AEV(raw_records=perfect_helix)
     for a.five in a.generate_ca():
-      a.Rpart()
+      a.Rpart(scope)
     print(a.AEVs)
 
 

@@ -36,11 +36,12 @@ class diff_class(OrderedDict):
 
 class AEV(object):
 
-  def __init__(self, pdb_file_name=None, raw_records=None):
+  def __init__(self, scope, pdb_file_name=None, raw_records=None):
     if pdb_file_name:
       self.pdb_inp = iotbx.pdb.input(file_name=pdb_file_name)
     else:
       self.pdb_inp = iotbx.pdb.input(lines=raw_records, source_info='raw_records')
+    self.scope = scope
     self.hierarchy = self.pdb_inp.construct_hierarchy()
     self.mon_lib_srv = server.server()
     self.ener_lib = server.ener_lib()
@@ -71,12 +72,12 @@ class AEV(object):
     for five in generate_protein_fragments(self.hierarchy,
                                            self.geometry_restraints_manager,
                                            include_non_standard_peptides=True,
-                                           length=2):
+                                           length=5):
       rc = []
       for atom in five.atoms():
         if atom.name == ' CA ':
           rc.append(atom)
-      if len(rc) == 2:
+      if len(rc) == 5:
         yield rc
     print 'time', time.time() - t0
 
@@ -114,9 +115,6 @@ class AEV(object):
           FGmR = 0
           BGmR = 0
           GmR = 0
-          i = 0
-          j = 0
-          k = 0
           for atom2 in atom2list:
             z = str(atom2.i_seq)
             if atom1 != atom2:
@@ -126,16 +124,17 @@ class AEV(object):
               if f != 0:
                 mR = math.exp(- n * ((R - Rs) ** 2)) * f
                 GmR += mR
-                k = k + 1
                 if int(z) < int(x):
                   FGmR += mR
-                  i = i + 1
                 elif int(z) > int(x):
                   BGmR += mR
-                  j = j + 1
-          AEVs[a+x][b].append(GmR)
-        AEVs[a + x][b].append(k)
-        self.AEVs.update(AEVs)
+          if self.scope=='back':
+            AEVs[a+x][b].append(BGmR)
+          if self.scope=='fward':
+            AEVs[a+x][b].append(FGmR)
+          if self.scope=='all':
+            AEVs[a + x][b].append(GmR)
+    self.AEVs.update(AEVs)
     return AEVs
 
   def Apart(self):
@@ -146,15 +145,19 @@ class AEV(object):
       x = str(atom1.i_seq)
       a = atom1.element.upper().strip()
       AEVs.setdefault(a+x, {})
-      f = dict(self.Atome_classify("C"))
-      for b, atom2list in self.Atome_classify("C").items():
+      f = dict(self.Atome_classify("CA"))
+      for b, atom2list in self.Atome_classify("CA").items():
         for c, atom3list in f.items():
           for Rs in self.angular_rs_values:
             for zetas in self.ts_values:
               AEVs[a+x].setdefault(b+c, [])
               GmA = 0
+              FGmA = 0
+              BGmA = 0
               for atom2 in atom2list:
+                y = str(atom2.i_seq)
                 for atom3 in atom3list:
+                  z = str(atom3.i_seq)
                   if atom2 != atom1 and atom3 != atom1:
                     Rij = atom1.distance(atom2)
                     Rik = atom1.distance(atom2)
@@ -163,15 +166,26 @@ class AEV(object):
                     fk = self.cutf(Rik)
                     fj = self.cutf(Rij)
                     if fk != 0 and fj != 0:
-                      GmA += (((1 + math.cos(ZETAijk - zetas))) ** l) * \
+                      mA = (((1 + math.cos(ZETAijk - zetas))) ** l) * \
                             math.exp(- n * ((((Rij + Rik) / 2) - Rs) ** 2)) * fj * fk
-                    else: continue
+                      GmA += mA
+                      if int(y) < int(x) and int(z) < int(x):
+                        FGmA += mA
+                      elif int(y) > int(x) and int(z) > int(x):
+                        BGmA += mA
               GmA = GmA * (2 ** (1 - l))
+              BGmA = BGmA * (2 ** (1 - l))
+              FGmA = FGmA * (2 ** (1 - l))
               if GmA < 1e-6:
                 GmA = 0
-              AEVs[a+x][b+c].append(GmA)
+              if self.scope == 'back':
+                AEVs[a + x][b + c].append(BGmA)
+              if self.scope == 'fward':
+                AEVs[a + x][b + c].append(FGmA)
+              if self.scope == 'all':
+                AEVs[a + x][b + c].append(GmA)
         f.pop(b)#delecte repeated atomes
-        self.AEVs[a+x].update(AEVs[a+x])
+      self.AEVs[a+x].update(AEVs[a+x])
     return AEVs
 
   def get_AEVs(self):
@@ -179,47 +193,5 @@ class AEV(object):
     self.Apart()
     return self.AEVs
 
-  def get_items(self):
-    empty = self.get_AEVS()
-    for ele, values in empty.items():
-      for item in values.keys():
-        empty[ele][item] = [0, 0, 0, 0, 0, 0, 0, 0]
-    return empty
 
-  def merge(self, b):
-    a = self.get_AEVS()
-    for key, item in b.items():
-      if key in a:
-        for key1, item1 in item.items():
-          if key1 not in a[key].keys():
-            a[key].setdefault(key1, [])
-            a[key][key1] = item1
-      else:
-        a.setdefault(key, {})
-        a[key] = item
-    return a
-
-
-  def compare(self, match):
-    for ele1,item1 in self.Rpart().items():
-      self.diffs.setdefault(ele1, OrderedDict())
-      for ele2,item2 in match.Rpart().items():
-        for list1,list2 in zip(item1.values(),item2.values()):
-          covalue = np.corrcoef(list1, list2).tolist()
-          if covalue[1][0] < 0.9:
-            covalue[1][0] = 0
-          self.diffs[ele1].setdefault(ele2, covalue[1][0])
-      # all += covalue[1][0]
-      # if covalue[1][0] > limit:
-      #   self.diffs.setdefault(ele1 + ele2, covalue[1][0])
-
-  def find_function(self, match):
-    for self.five in self.generate_ca():
-      for match.five in match.generate_ca():
-      #for match.five in match.generate_ca():
-        self.compare(match)
-    print(self.diffs)
-        #print(diffs)
-        # if diffs['all'] > 0.9:
-        #   print(diffs.keys())
 

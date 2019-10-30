@@ -196,32 +196,33 @@ ATOM     86  OD1 ASP B  23      29.380  34.102  15.590  1.00 28.68           O
 ATOM     87  OD2 ASP B  23      29.966  32.245  16.603  1.00 29.14           O
 '''
 
-#Compare all
+#Compare five CA atoms
 def compare(AEV1, AEV2):
-  diffs = diff_class()
+  diff = {}
+  list1 = []
+  list2 = []
+  name1 = str()
+  name2 = str()
   for ele1, item1 in AEV1.items():
-    diffs.setdefault(ele1, OrderedDict())
-    for ele2, item2 in AEV2.items():
-      for list1, list2 in zip(item1.values(), item2.values()):
-        covalue = np.corrcoef(list1, list2).tolist()
-        diffs[ele1].setdefault(ele2, covalue[1][0])
-  return diffs
+    for value1 in item1.values():
+      list1 += value1
+      name1 += ele1
+  for ele2, item2 in AEV2.items():
+    for value2 in item2.values():
+      list2 += value2
+      name2 += ele2
+  covalue = np.corrcoef(list1, list2).tolist()
+  diff.setdefault(name1 + ' ' + name2, covalue[1][0])
+  return diff
 
 def main(scope, filename1=None, filename2=None):
   if filename1 and filename2:
     a = AEV(scope,pdb_file_name=filename1)
     b = AEV(scope,pdb_file_name=filename2)
     for a.five in a.generate_ca():
-      a.get_AEVs()
-    for b.five in b.generate_ca():
-      b.get_AEVs()
-    print(compare(a.AEVs, b.AEVs))
-  if filename1:
-    a = AEV(scope, pdb_file_name=filename1)
-    for a.five in a.generate_ca():
-      a.get_AEVs()
-    print(a.AEVs)
-
+      for b.five in b.generate_ca():
+        b.get_AEVs()
+        print(compare(a.Rpart(), b.Rpart()))
 
 
 if __name__ == '__main__':
