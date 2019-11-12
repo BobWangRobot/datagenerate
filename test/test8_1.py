@@ -207,21 +207,21 @@ def compare(AEV1, AEV2):
         diffs[ele1].setdefault(ele2, covalue[1][0])
   return diffs
 
-def main(scope, filename1=None, filename2=None):
+def main(direction, scope, filename1=None, filename2=None):
   if filename1 and filename2:
-    a = AEV(scope,pdb_file_name=filename1)
-    b = AEV(scope,pdb_file_name=filename2)
+    a = AEV(direction,scope,pdb_file_name=filename1)
+    b = AEV(direction,scope,pdb_file_name=filename2)
     for a.five in a.generate_ca():
       a.get_AEVs()
     for b.five in b.generate_ca():
       b.get_AEVs()
     print(compare(a.AEVs, b.AEVs))
-  if filename1:
-    a = AEV(scope, pdb_file_name=filename1)
+  elif filename1:
+    a = AEV(direction, scope, pdb_file_name=filename1)
     for a.five in a.generate_ca():
       a.get_AEVs()
     print(a.AEVs)
-
+    print(a.atom_range)
 
 
 if __name__ == '__main__':
