@@ -8,6 +8,7 @@ import collections
 import os, sys
 import time
 import mmtbx
+import xlwt
 sys.path.append("..")
 from AEVclass3 import *
 
@@ -202,10 +203,36 @@ def compare(AEV1, AEV2):
   for ele1, item1 in AEV1.items():
     diffs.setdefault(ele1, OrderedDict())
     for ele2, item2 in AEV2.items():
+      com_list1 = []
+      com_list2 = []
       for list1, list2 in zip(item1.values(), item2.values()):
-        covalue = np.corrcoef(list1, list2).tolist()
-        diffs[ele1].setdefault(ele2, covalue[1][0])
+        com_list1.extend(list1)
+        com_list2.extend(list2)
+      covalue = np.corrcoef(com_list1, com_list2).tolist()
+      diffs[ele1].setdefault(ele2, covalue[1][0])
   return diffs
+
+def data_save(datas):
+  f = xlwt.Workbook()
+  sheet1 = f.add_sheet(u'sheet1', cell_overwrite_ok=True)
+  line_list = []
+  row_list = datas.keys()
+  for value in datas.values():
+    for key in value.keys():
+      line_list.append(key)
+  for i in range(len(row_list)):
+    sheet1.write(i+1, 0, row_list[i])
+  for j in range(len(line_list)):
+    sheet1.write(0, j+1, line_list[j])
+  i = 1
+  for dict2 in datas.values():
+    j = 1
+    for value in dict2.values():
+      value = float('%.2f'%value)
+      sheet1.write(i, j, value)
+      j = j + 1
+    i = i + 1
+  f.save('helix_sheet.xls')
 
 def main(direction, scope, filename1=None, filename2=None):
   if filename1 and filename2:
@@ -213,15 +240,20 @@ def main(direction, scope, filename1=None, filename2=None):
     b = AEV(direction,scope,pdb_file_name=filename2)
     for a.five in a.generate_ca():
       a.get_AEVs()
+      # a.Rpart()
     for b.five in b.generate_ca():
       b.get_AEVs()
-    print(compare(a.AEVs, b.AEVs))
+      # b.Rpart()
+    com_result = compare(a.AEVs, b.AEVs)
+    print(com_result)
+    data_save(com_result)
   elif filename1:
     a = AEV(direction, scope, pdb_file_name=filename1)
     for a.five in a.generate_ca():
       a.get_AEVs()
     print(a.AEVs)
     print(a.atom_range)
+
 
 
 if __name__ == '__main__':

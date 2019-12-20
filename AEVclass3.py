@@ -49,11 +49,13 @@ class AEV(object):
                                                     raw_records=raw_records)
     self.geometry_restraints_manager = self.processed_pdb.geometry_restraints_manager()
     self.atom_elements = {}
-    self.rs_values = [0.900000, 2.100000, 3.300000, 4.500000, 5.700000, 6.900000, 8.100000, 9.300000]
+    # self.rs_values = [0.900000, 2.100000, 3.300000, 4.500000, 5.700000, 6.900000, 8.100000, 9.300000]
+    self.rs_values = [2.0, 3.8, 5.2, 5.5, 6.2, 7.0, 8.6, 10.0]
     self.Rj = [2.1, 2.2, 2.5]
     self.cutoff = float(scope)
-    self.ts_values = [0.392699, 1.178097, 1.963495, 2.748894]
-    self.angular_rs_values = [0.900000, 6.225000]
+    # self.ts_values = [0.392699, 1.178097, 1.963495, 2.748894]
+    self.ts_values = [1.178097, 2.748894]
+    self.angular_rs_values = [3.8, 5.2, 5.5, 6.2]
     self.angular_zeta = 8
     self.five = []
     self.rc = []
