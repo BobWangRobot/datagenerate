@@ -53,13 +53,14 @@ def plot(AEV1, AEV2=None):
       for item1 in value1.values():
         list1 += item1
     x = range(len(list1))
-    plt.title("reference structure AEV values ", font1)
+    plt.title("AEV values ", font1)
     plt.xlabel("atom index",font1)
     plt.ylabel("AEV values",font1)
-    plt.plot(x, list1, 'green', label='reference structure')
+    plt.plot(x, list1, 'green', label='AEVs')
     # plt.plot(x, list1, 'green', label='real structure')
-    plt.legend(prop=font2,loc='best')
-    plt.xticks(x[::16], (range(1,23)))
+    # plt.legend(prop=font2)
+    plt.legend()
+    plt.xticks(x[::16], (range(1,100)))
 #small plot
     # plt.axes([0.17, 0.42, 0.1, 0.2])
     # y1 = list1[:8]
@@ -113,8 +114,9 @@ def main(direction, scope, AEV1=None, AEV2=None):
     a = AEV(direction, scope, pdb_file_name=AEV1)
     for a.five in a.generate_ca():
       a.get_AEVs()
+      # a.Rpart()
     plot(a.AEVs)
-    data_save(a.AEVs)
+    # data_save(a.AEVs)
 
 
 if __name__ == '__main__':

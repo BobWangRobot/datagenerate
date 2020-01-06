@@ -213,16 +213,22 @@ def compare(AEV1, AEV2):
       name2 += ele2
   covalue = np.corrcoef(list1, list2).tolist()
   diff.setdefault(name1 + ' ' + name2, covalue[1][0])
+  # if covalue[1][0]>0.9:
+    # print(diff)
   return diff
 
-def main(scope, filename1=None, filename2=None):
+def main(direction, scope, filename1=None, filename2=None):
   if filename1 and filename2:
-    a = AEV(scope,pdb_file_name=filename1)
-    b = AEV(scope,pdb_file_name=filename2)
+    a = AEV(direction,scope,pdb_file_name=filename1)
+    b = AEV(direction,scope,pdb_file_name=filename2)
+    # for a.five, b.five in zip(a.generate_ca(),b.generate_ca()):
+    #   print(compare(a.Rpart(),b.Rpart()))
+    #   print(compare(a.get_AEVs(),b.get_AEVs()))
     for a.five in a.generate_ca():
       for b.five in b.generate_ca():
-        b.get_AEVs()
-        print(compare(a.Rpart(), b.Rpart()))
+        # print(compare(a.Rpart(), b.Rpart()))
+        print(compare(a.get_AEVs(), b.get_AEVs()))
+        # compare(a.Apart(), b.Apart())
 
 
 if __name__ == '__main__':

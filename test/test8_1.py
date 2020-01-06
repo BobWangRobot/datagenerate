@@ -217,9 +217,8 @@ def data_save(datas):
   sheet1 = f.add_sheet(u'sheet1', cell_overwrite_ok=True)
   line_list = []
   row_list = datas.keys()
-  for value in datas.values():
-    for key in value.keys():
-      line_list.append(key)
+  for value in datas['%s'%row_list[0]].keys():
+    line_list.append(value)
   for i in range(len(row_list)):
     sheet1.write(i+1, 0, row_list[i])
   for j in range(len(line_list)):

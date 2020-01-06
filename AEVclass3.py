@@ -53,8 +53,9 @@ class AEV(object):
     self.rs_values = [2.0, 3.8, 5.2, 5.5, 6.2, 7.0, 8.6, 10.0]
     self.Rj = [2.1, 2.2, 2.5]
     self.cutoff = float(scope)
-    # self.ts_values = [0.392699, 1.178097, 1.963495, 2.748894]
-    self.ts_values = [1.178097, 2.748894]
+    self.ts_values = [0.392699, 1.178097, 1.963495, 2.748894]
+    # self.ts_values = [1.178097, 2.748894]
+    # self.angular_rs_values = [0.900000, 6.225000]
     self.angular_rs_values = [3.8, 5.2, 5.5, 6.2]
     self.angular_zeta = 8
     self.five = []
@@ -208,6 +209,8 @@ class AEV(object):
             if self.direction == 'all':
               AEVs[a + x][b + b].append(GmA)
               atom_range[a + x]['Apart'] = len(set(repeat_list))
+      # self.AEVs.update(AEVs)
+      # self.atom_range.update(atom_range)
       self.AEVs[a + x].update(AEVs[a + x])
       self.atom_range[a + x].update(atom_range[a + x])
     return AEVs
