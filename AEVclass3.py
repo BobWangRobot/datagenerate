@@ -20,7 +20,7 @@ class radial_aev_class(OrderedDict):
       for e, vec in item.items():
         outl += '     %s : ' % e
         for v in vec:
-          outl += '%0.3f, ' % v
+          outl += '%0.4f, ' % v
         outl += '\n'
     return outl
 
@@ -30,7 +30,7 @@ class diff_class(OrderedDict):
     for key, item in self.items():
       outl += '  %s :\n' % (key)
       for e, vec in item.items():
-        outl += '     %s : %0.3f ' % (e, vec)
+        outl += '     %s : %0.4f ' % (e, vec)
       outl += '\n'
     return outl
 

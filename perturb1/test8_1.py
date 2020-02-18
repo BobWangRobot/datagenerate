@@ -229,7 +229,7 @@ def data_save(datas,name):
   for dict2 in datas.values():
     j = 1
     for value in dict2.values():
-      value = float('%.2f'%value)
+      value = float('%.4f'%value)
       sheet1.write(i, j, value)
       j = j + 1
     i = i + 1
@@ -251,7 +251,8 @@ def main(direction, scope, filename1=None, filename2=None):
   elif filename1:
     a = AEV(direction, scope, pdb_file_name=filename1)
     for a.five in a.generate_ca():
-      a.get_AEVs()
+      # a.get_AEVs()
+      a.Rpart()
     print(a.AEVs)
     print(a.atom_range)
 
