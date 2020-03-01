@@ -81,7 +81,7 @@ class AEV(object):
           rc.append(atom)
       if len(rc) == 5:
         yield rc
-    print 'time', time.time() - t0
+    print('time', time.time() - t0)
 
   # cutoff function
   def cutf(self, distance):
