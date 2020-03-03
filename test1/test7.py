@@ -6,7 +6,6 @@ import collections
 import os, sys
 import time
 import mmtbx
-sys.path.append("..")
 from AEVclass1 import *
 
 perfect_helix = '''ATOM      1  N   ALA A   1      -5.606  -2.251 -12.878  1.00  0.00           N

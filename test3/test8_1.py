@@ -9,7 +9,6 @@ import os, sys
 import time
 import mmtbx
 import xlwt
-sys.path.append("../..")
 from AEVclass3 import *
 
 #helix_5_12 from 1an0

@@ -1,8 +1,6 @@
 import iotbx
 import numpy as np
 import matplotlib.pyplot as plt
-import sys
-sys.path.append("..")
 from AEVclass import AEV
 
 #test two same element pdb file

@@ -2,8 +2,6 @@ import iotbx
 import numpy as np
 import matplotlib.pyplot as plt
 import random
-import sys
-sys.path.append("..")
 from AEVclass import *
 
 def _sort(k1, k2):
@@ -79,4 +77,5 @@ def main(pdb_file_name1, pdb_file_name2, elename):
 if __name__ == '__main__':
     import os, sys
     main(*tuple(sys.argv[1:]))
+import sys
 

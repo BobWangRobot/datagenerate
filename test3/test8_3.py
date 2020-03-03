@@ -8,7 +8,6 @@ import collections
 import os, sys
 import time
 import mmtbx
-sys.path.append("../..")
 from AEVclass3 import *
 
 #helix_5_12 from 1an0

@@ -9,7 +9,6 @@ import os, sys
 import time
 import mmtbx
 import xlwt
-sys.path.append("../..")
 from AEVclass3 import *
 
 perfect_helix_12='''

@@ -2,8 +2,6 @@ import iotbx
 import numpy as np
 import matplotlib.pyplot as plt
 import random
-import sys
-sys.path.append("..")
 from AEVclass import AEV, radial_aev_class
 
 #test 9 same element pdb file
