@@ -60,7 +60,8 @@ class AEV(object):
     self.angular_zeta = 8
     self.five = []
     self.rc = []
-    self.AEVs = radial_aev_class()
+    self.AEVs = {}
+    #self.AEVs = radial_aev_class()
     self.FAEVs = radial_aev_class()
     self.BAEVs = radial_aev_class()
     self.diffs = diff_class()
@@ -105,8 +106,10 @@ class AEV(object):
 
   def Rpart(self):
     n = 4.0
-    AEVs = radial_aev_class()
-    atom_range = diff_class()
+    AEVs = {}
+    atom_range = {}
+    # AEVs = radial_aev_class()
+    # atom_range = diff_class()
     dis = self.Atome_classify('CA')
     for atom1 in self.five:
       x = str(atom1.i_seq)
@@ -154,8 +157,10 @@ class AEV(object):
   def Apart(self):
     l = 8.00
     n = 4.0
-    AEVs = radial_aev_class()
-    atom_range = diff_class()
+    AEVs = {}
+    atom_range = {}
+    # AEVs = radial_aev_class()
+    # atom_range = diff_class()
     for atom1 in self.five:
       x = str(atom1.i_seq)
       a = atom1.element.upper().strip()

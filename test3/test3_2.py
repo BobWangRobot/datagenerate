@@ -112,7 +112,7 @@ def main(direction, scope, AEV1=None, AEV2=None):
   elif AEV1:
     a = AEV(direction, scope, pdb_file_name=AEV1)
     for a.five in a.generate_ca():
-      a.get_AEVs()
+      print(a.get_AEVs())
       # a.Rpart()
     plot(a.AEVs)
     # data_save(a.AEVs)

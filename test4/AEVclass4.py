@@ -75,10 +75,12 @@ class AEV(object):
                                            self.geometry_restraints_manager,
                                            include_non_standard_peptides=True,
                                            length=5):
-      rc = []
-      for atom in five.atoms():
-        if atom.name == ' CA ':
-          rc.append(atom)
+      rc = OrderedDict()
+      for residue in five:
+        # rc.setdefault(residue.resname)
+        for atom in residue.atoms():
+          if atom.name == ' CA ':
+            rc[residue.resname] = atom
       if len(rc) == 5:
         yield rc
     print('time', time.time() - t0)
@@ -108,9 +110,9 @@ class AEV(object):
     AEVs = radial_aev_class()
     atom_range = diff_class()
     dis = self.Atome_classify('CA')
-    for atom1 in self.five:
+    for a, atom1 in self.five.items():
       x = str(atom1.i_seq)
-      a = atom1.element.upper().strip()
+      # a = atom1.element.upper().strip()
       AEVs.setdefault(a + x, {})
       atom_range.setdefault(a + x, {})
       atom_range[a + x].setdefault('Rpart')
