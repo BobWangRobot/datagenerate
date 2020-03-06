@@ -49,17 +49,13 @@ class AEV(object):
                                                     raw_records=raw_records)
     self.geometry_restraints_manager = self.processed_pdb.geometry_restraints_manager()
     self.atom_elements = {}
-    # self.rs_values = [0.900000, 2.100000, 3.300000, 4.500000, 5.700000, 6.900000, 8.100000, 9.300000]
     self.rs_values = [2.0, 3.8, 5.2, 5.5, 6.2, 7.0, 8.6, 10.0]
     self.Rj = [2.1, 2.2, 2.5]
     self.cutoff = float(scope)
     self.ts_values = [0.392699, 1.178097, 1.963495, 2.748894]
-    # self.ts_values = [1.178097, 2.748894]
-    # self.angular_rs_values = [0.900000, 6.225000]
     self.angular_rs_values = [3.8, 5.2, 5.5, 6.2]
     self.angular_zeta = 8
     self.five = []
-    self.rc = []
     self.AEVs = radial_aev_class()
     self.FAEVs = radial_aev_class()
     self.BAEVs = radial_aev_class()
@@ -94,61 +90,60 @@ class AEV(object):
     return Fc
 
   # generate a dictionary about all atome
-  def Atome_classify(self, atype):
-    atom_elements = {}
-    for b in self.hierarchy.atoms():
-      #e = b.element.upper().strip()
-      e = b.name.strip()
-      if e == atype:
-        atom_elements.setdefault(e, [])
-        atom_elements[e].append(b)
-    return atom_elements
+  # def Atome_classify(self, atype):
+  #   atom_elements = {}
+  #   for b in self.hierarchy.atoms():
+  #     #e = b.element.upper().strip()
+  #     e = b.name.strip()
+  #     if e == atype:
+  #       atom_elements.setdefault(e, [])
+  #       atom_elements[e].append(b)
+  #   return atom_elements
 
 
   def Rpart(self):
     n = 4.0
     AEVs = radial_aev_class()
     atom_range = diff_class()
-    dis = self.Atome_classify('CA')
+    # dis = self.Atome_classify('CA')
     for a, atom1 in self.five.items():
       x = str(atom1.i_seq)
-      # a = atom1.element.upper().strip()
       AEVs.setdefault(a + x, {})
       atom_range.setdefault(a + x, {})
-      atom_range[a + x].setdefault('Rpart')
-      for b, atom2list in dis.items():
-        AEVs[a + x].setdefault(b, [])
-        for Rs in self.rs_values:
-          FGmR = 0
-          BGmR = 0
-          GmR = 0
-          F_range = 0
-          B_range = 0
-          All_range = 0
-          for atom2 in atom2list:
-            z = str(atom2.i_seq)
-            if atom1 != atom2:
-              R = atom1.distance(atom2)
-              f = self.cutf(R)
-              if f != 0:
-                mR = math.exp(- n * ((R - Rs) ** 2)) * f
-                GmR += mR
-                All_range = All_range + 1
-                if int(z) < int(x):
-                  FGmR += mR
-                  F_range = F_range + 1
-                elif int(z) > int(x):
-                  BGmR += mR
-                  B_range = B_range + 1
-          if self.direction=='back':
-            AEVs[a+x][b].append(BGmR)
-            atom_range[a + x]['Rpart'] = B_range
-          if self.direction=='fward':
-            AEVs[a+x][b].append(FGmR)
-            atom_range[a + x]['Rpart'] = F_range
-          if self.direction=='all':
-            AEVs[a + x][b].append(GmR)
-            atom_range[a + x]['Rpart'] = All_range
+      atom_range[a + x].setdefault('Rpart')#AEV coverage
+      # for atom2list in self.five.values():
+      AEVs[a + x].setdefault('Rpart', [])
+      for Rs in self.rs_values:
+        FGmR = 0
+        BGmR = 0
+        GmR = 0
+        F_range = 0
+        B_range = 0
+        All_range = 0
+        for atom2 in self.five.values():
+          z = str(atom2.i_seq)
+          if atom1 != atom2:
+            R = atom1.distance(atom2)
+            f = self.cutf(R)
+            if f != 0:
+              mR = math.exp(- n * ((R - Rs) ** 2)) * f
+              GmR += mR
+              All_range = All_range + 1
+              if int(z) < int(x):
+                FGmR += mR
+                F_range = F_range + 1
+              elif int(z) > int(x):
+                BGmR += mR
+                B_range = B_range + 1
+        if self.direction=='back':
+          AEVs[a+x]['Rpart'].append(BGmR)
+          atom_range[a + x]['Rpart'] = B_range
+        if self.direction=='fward':
+          AEVs[a+x]['Rpart'].append(FGmR)
+          atom_range[a + x]['Rpart'] = F_range
+        if self.direction=='all':
+          AEVs[a + x]['Rpart'].append(GmR)
+          atom_range[a + x]['Rpart'] = All_range
     self.AEVs.update(AEVs)
     self.atom_range.update(atom_range)
     return AEVs
