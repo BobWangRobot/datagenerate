@@ -97,13 +97,15 @@ def data_save(datas,name):
   print(i)
   f.save('%s(%0.6f).xls' % (name, average))
 
-def main(direction, scope, filename):
-  a = AEV(direction,scope,pdb_file_name=filename)
-  for a.five in a.generate_ca():
+def main(filename):
+  a = AEV(pdb_file_name=filename)
+  # for a.five in a.generate_ca():
     # a.get_AEVs()
-    a.Rpart()
-  com_result = compare(a.AEVs)
-  print(com_result)
+  a.generate_AEV()
+  print(a.BAEVs)
+
+  # com_result = compare(a.AEVs)
+  # print(com_result)
   # data_save(com_result,name=filename.replace('.pdb',''))
 
 

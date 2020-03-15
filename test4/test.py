@@ -1,7 +1,8 @@
 import iotbx
 from iotbx import pdb
 import sys
-from AEVclass3 import *
+import collections
+from AEVclass4 import *
 
 def name():
   pdb_inp = iotbx.pdb.input('per1.pdb')
@@ -11,9 +12,18 @@ def name():
 
 def main(direction, scope, filename):
   a = AEV(direction,scope,pdb_file_name=filename)
+
   for a.five in a.generate_ca():
-    for atoms in a.five:
-      print(dir(atoms))
+
+    print(a.five)
+    # for atoms in a.five:
+    #   print(atoms)
+def test():
+  b = collections.OrderedDict()
+  b['a'] = 1
+  b['b'] = 2
+  print(b[1])
 
 if __name__ == '__main__':
-  main(*tuple(sys.argv[1:]))
+  # main(*tuple(sys.argv[1:]))
+  test()

@@ -36,12 +36,12 @@ class diff_class(OrderedDict):
 
 class AEV(object):
 
-  def __init__(self, direction, scope, pdb_file_name=None, raw_records=None):
+  def __init__(self, pdb_file_name=None, raw_records=None):
     if pdb_file_name:
       self.pdb_inp = iotbx.pdb.input(file_name=pdb_file_name)
     else:
       self.pdb_inp = iotbx.pdb.input(lines=raw_records, source_info='raw_records')
-    self.direction = direction
+    # self.direction = direction
     self.hierarchy = self.pdb_inp.construct_hierarchy()
     self.mon_lib_srv = server.server()
     self.ener_lib = server.ener_lib()
@@ -51,13 +51,13 @@ class AEV(object):
     self.atom_elements = {}
     self.rs_values = [2.0, 3.8, 5.2, 5.5, 6.2, 7.0, 8.6, 10.0]
     self.Rj = [2.1, 2.2, 2.5]
-    self.cutoff = float(scope)
+    self.cutoff = 8.1
     self.ts_values = [0.392699, 1.178097, 1.963495, 2.748894]
     self.angular_rs_values = [3.8, 5.2, 5.5, 6.2]
     self.angular_zeta = 8
     self.five = []
-    self.AEVs = radial_aev_class()
-    self.FAEVs = radial_aev_class()
+    self.EAEVs = radial_aev_class()
+    self.MAEVs = radial_aev_class()
     self.BAEVs = radial_aev_class()
     self.diffs = diff_class()
     self.atom_range = diff_class()
@@ -71,13 +71,15 @@ class AEV(object):
                                            self.geometry_restraints_manager,
                                            include_non_standard_peptides=True,
                                            length=5):
-      rc = OrderedDict()
+      rc = []
+      res_name = []
       for residue in five:
-        # rc.setdefault(residue.resname)
         for atom in residue.atoms():
+          res_name.append(residue.resname+residue.resseq)
           if atom.name == ' CA ':
-            rc[residue.resname] = atom
+            rc.append(atom)
       if len(rc) == 5:
+        rc.append(res_name)
         yield rc
     print('time', time.time() - t0)
 
@@ -100,51 +102,42 @@ class AEV(object):
   #       atom_elements[e].append(b)
   #   return atom_elements
 
+  def generate_AEV(self):
+    for atomlist in self.generate_ca():
+      self.center_atom = atomlist[0]
+      self.res_name = atomlist[-1][0]
+      self.BAEVs.update(self.Rpart(atomlist))
+      self.center_atom = atomlist[-2]
+      self.res_name = atomlist[-1][-1]
+      self.EAEVs.update(self.Rpart(atomlist))
+      self.center_atom = atomlist[2]
+      self.res_name = atomlist[-1][2]
+      self.MAEVs.update(self.Rpart(atomlist))
+    return 0
 
-  def Rpart(self):
+  def Rpart(self, atomlist):
     n = 4.0
     AEVs = radial_aev_class()
     atom_range = diff_class()
-    # dis = self.Atome_classify('CA')
-    for a, atom1 in self.five.items():
-      x = str(atom1.i_seq)
-      AEVs.setdefault(a + x, {})
-      atom_range.setdefault(a + x, {})
-      atom_range[a + x].setdefault('Rpart')#AEV coverage
-      # for atom2list in self.five.values():
-      AEVs[a + x].setdefault('Rpart', [])
-      for Rs in self.rs_values:
-        FGmR = 0
-        BGmR = 0
-        GmR = 0
-        F_range = 0
-        B_range = 0
-        All_range = 0
-        for atom2 in self.five.values():
-          z = str(atom2.i_seq)
-          if atom1 != atom2:
-            R = atom1.distance(atom2)
-            f = self.cutf(R)
-            if f != 0:
-              mR = math.exp(- n * ((R - Rs) ** 2)) * f
-              GmR += mR
-              All_range = All_range + 1
-              if int(z) < int(x):
-                FGmR += mR
-                F_range = F_range + 1
-              elif int(z) > int(x):
-                BGmR += mR
-                B_range = B_range + 1
-        if self.direction=='back':
-          AEVs[a+x]['Rpart'].append(BGmR)
-          atom_range[a + x]['Rpart'] = B_range
-        if self.direction=='fward':
-          AEVs[a+x]['Rpart'].append(FGmR)
-          atom_range[a + x]['Rpart'] = F_range
-        if self.direction=='all':
-          AEVs[a + x]['Rpart'].append(GmR)
-          atom_range[a + x]['Rpart'] = All_range
-    self.AEVs.update(AEVs)
+    res_name = self.res_name
+    atom_range.setdefault(res_name,{})
+    AEVs.setdefault(res_name, {})
+    atom1 = self.center_atom
+    atom_range[res_name].setdefault('Rpart')#AEV coverage
+    AEVs[res_name].setdefault('Rpart', [])
+    for Rs in self.rs_values:
+      GmR = 0
+      All_range = 0
+      for atom2 in atomlist[0:-1:1]:
+        z = str(atom2.i_seq)
+        if atom1 != atom2:
+          R = atom1.distance(atom2)
+          f = self.cutf(R)
+          if f != 0:
+            mR = math.exp(- n * ((R - Rs) ** 2)) * f
+            GmR += mR
+      AEVs[res_name]['Rpart'].append(GmR)
+      atom_range[res_name]['Rpart'] = All_range
     self.atom_range.update(atom_range)
     return AEVs
 

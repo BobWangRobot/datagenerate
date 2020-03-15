@@ -195,26 +195,33 @@ def generate_ca(filename=None, raw_records=None):
   hierarchy.reset_i_seq_if_necessary()
   for five in generate_protein_fragments(hierarchy,geometry_restraints_manager,length=5):
     rc = []
+    name = []
     for residue in five:
-      # rc.append(residue.resname + residue.resseq)
+      name.append(residue.resname + residue.resseq)
       for atom in residue.atoms():
-        print('segid%r'%dir(atom.parent.im_self))
+        # print('segid%r'%dir(atom.parent.im_self))
         # print(dir(atom))
         if atom.name==' CA ':
           rc.append(atom)
     # print(len(rc))
     if len(rc)==5:
+      rc.append(name)
       yield rc
 
 
 def main(filename=None):
-  if filename:pass
+  if filename:
+    for atoms in generate_ca(filename=filename):
+      print(atoms)
     # for five in generate_ca(filename):
     #   for atom in five:
     #     print(atom.i_seq)
   else:
-    for atom in generate_ca(raw_records=perfect_helix):
-      print(atom)
+    for atoms in generate_ca(raw_records=perfect_helix):
+      print(atoms)
+      # for atom in atoms[0:-1:1]:
+      #   print(atom)
+      # # print(atom)
     # for five in generate_ca(raw_records=perfect_helix):
     #   for atom in five:
     #     print(dir(atom))
