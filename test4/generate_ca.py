@@ -193,6 +193,7 @@ def generate_ca(filename=None, raw_records=None):
   hierarchy.reset_atom_i_seqs()
   geometry_restraints_manager = get_geometry_restraints_manager(pdb_filename=filename, raw_records=raw_records)
   hierarchy.reset_i_seq_if_necessary()
+  print(type(generate_protein_fragments(hierarchy,geometry_restraints_manager,length=5)))
   for five in generate_protein_fragments(hierarchy,geometry_restraints_manager,length=5):
     rc = []
     name = []

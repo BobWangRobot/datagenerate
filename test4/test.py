@@ -10,8 +10,8 @@ def name():
   for atom_group in hierarchy.atom_groups():
     print(atom_group.resname)
 
-def main(direction, scope, filename):
-  a = AEV(direction,scope,pdb_file_name=filename)
+def main(filename):
+  a = AEV(pdb_file_name=filename)
 
   for a.five in a.generate_ca():
 
