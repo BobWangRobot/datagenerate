@@ -1,7 +1,6 @@
 from iotbx import pdb
 import numpy as np
 import matplotlib.pyplot as plt
-import random
 import iotbx
 import math
 import collections
@@ -112,10 +111,12 @@ def data_save(datas,name):
   f.save('%s(%0.6f).xls' % (name, average))
 
 def main(filename):
+  t0 = time.time()
   a = AEV(pdb_file_name=filename)
   a.generate_AEV()
   # print(a.BAEVs, a.MAEVs, a.EAEVs)
   print(compare(a))
+  print('time', time.time()-t0)
   # data_save(com_result,name=filename.replace('.pdb',''))
 
 
