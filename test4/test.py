@@ -22,7 +22,9 @@ def test():
   b = collections.OrderedDict()
   b['a'] = 1
   b['b'] = 2
-  print(b[1])
+  for a in b.keys()[::-1]:
+    print(a)
+  # print(b[1])
 
 if __name__ == '__main__':
   # main(*tuple(sys.argv[1:]))

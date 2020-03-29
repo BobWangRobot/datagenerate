@@ -2,6 +2,7 @@ import numpy as np
 import iotbx
 import math
 import time
+import copy
 from collections import OrderedDict
 from iotbx import pdb
 from mmtbx import *
@@ -57,7 +58,6 @@ class AEV(object):
 
   # generate ca list
   def generate_ca(self):
-    t0 = time.time()
     self.hierarchy.reset_atom_i_seqs()
     self.hierarchy.reset_i_seq_if_necessary()
     for five in generate_protein_fragments(self.hierarchy,
@@ -74,7 +74,6 @@ class AEV(object):
       if len(rc) == 5:
         rc.append(res_name)
         yield rc
-    print('time', time.time() - t0)
 
   # generate a dictionary about all atome
   # def Atome_classify(self, atype):
@@ -108,13 +107,14 @@ class AEV(object):
       Fc = 0
     return Fc
 
-  def calculate(self, atomlist):
+  def calculate(self, atom_list):
     n = 4.0
     l = 8.0
     AEVs = radial_aev_class()
     res_name = self.res_name
     AEVs.setdefault(res_name, [])
     atom1 = self.center_atom
+    atomlist = copy.copy(atom_list)
     atomlist.remove(atom1)
     for Rs in self.rs_values:
       GmR = 0
@@ -127,20 +127,27 @@ class AEV(object):
       AEVs[res_name].append(GmR)
     for Rs in self.angular_rs_values:
       for zetas in self.ts_values:
+        i = 0
         GmA = 0
-        for atom2 in atomlist:
+        zeta_list = []
+        atomlist = copy.copy(atom_list)
+        atomlist.remove(atom1)
+        for atom2 in atomlist[::-1]:
           atomlist.remove(atom2)
           for atom3 in atomlist:
             Rij = atom1.distance(atom2)
             Rik = atom1.distance(atom3)
             ZETAijk = atom1.angle(atom2, atom3)
             if ZETAijk != 0:
+              i += 1
               fk = self.cutf(Rik)
               fj = self.cutf(Rij)
               if fk != 0 and fj != 0:
+                zeta_list.append(ZETAijk)
                 mA = (((1 + math.cos(ZETAijk - zetas))) ** l) * \
                      math.exp(- n * ((((Rij + Rik) / 2) - Rs) ** 2)) * fj * fk
                 GmA += mA
-        GmA = GmA * 2
-        AEVs[res_name].append(GmA)
+        GmA = GmA * (2**(1-l))
+        # print('zetalist: %s\nangular AEV: %s %s'%(zeta_list, GmA, i))
+        # AEVs[res_name].append(GmA)
     return AEVs
