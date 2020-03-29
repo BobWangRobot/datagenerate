@@ -55,6 +55,7 @@ class AEV(object):
     self.EAEVs = radial_aev_class()
     self.MAEVs = radial_aev_class()
     self.BAEVs = radial_aev_class()
+    self.center_atom = []
 
   # generate ca list
   def generate_ca(self):
@@ -65,14 +66,11 @@ class AEV(object):
                                            include_non_standard_peptides=True,
                                            length=5):
       rc = []
-      res_name = []
       for residue in five:
-        res_name.append(residue.resname + residue.resseq)
         for atom in residue.atoms():
           if atom.name == ' CA ':
             rc.append(atom)
       if len(rc) == 5:
-        rc.append(res_name)
         yield rc
 
   # generate a dictionary about all atome
@@ -89,14 +87,11 @@ class AEV(object):
   def generate_AEV(self):
     for atomlist in self.generate_ca():
       self.center_atom = atomlist[0]
-      self.res_name = atomlist[-1][0]
-      self.BAEVs.update(self.calculate(atomlist[0:-1]))
-      self.center_atom = atomlist[-2]
-      self.res_name = atomlist[-1][-1]
-      self.EAEVs.update(self.calculate(atomlist[0:-1]))
+      self.BAEVs.update(self.calculate(atomlist))
+      self.center_atom = atomlist[-3]
+      self.EAEVs.update(self.calculate(atomlist))
       self.center_atom = atomlist[2]
-      self.res_name = atomlist[-1][2]
-      self.MAEVs.update(self.calculate(atomlist[0:-1]))
+      self.MAEVs.update(self.calculate(atomlist))
     return 0
 
   # cutoff function
@@ -111,7 +106,8 @@ class AEV(object):
     n = 4.0
     l = 8.0
     AEVs = radial_aev_class()
-    res_name = self.res_name
+    res_name = self.center_atom.format_atom_record()[17:20]+'  '+\
+               self.center_atom.format_atom_record()[21:26]
     AEVs.setdefault(res_name, [])
     atom1 = self.center_atom
     atomlist = copy.copy(atom_list)

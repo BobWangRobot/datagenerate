@@ -179,6 +179,44 @@ def compare(data):
           result[key1].setdefault(key, covalue[1][0])
   return result
 
+def data_average(data):
+  for res,dir in data.items():
+    a = 0
+    for num in dir.values():
+      a += num
+    if a >= 4.0:
+      print("%s:%s"%(res,a))
+  return 0
+
+def HELIX_record(data, presion):
+  start = []
+  end = []
+  M = 0
+  i = 0
+  for key,value in data.items():
+    try:
+      if not start and value['B1'] + value['B2'] > 2 * presion :
+          start = key
+          length = 1
+      elif start and value['M'] > presion:
+        M = 1
+        length += 1
+        if value['E1'] + value['E2'] > 2 * presion:
+          end = key
+      elif start and M == 1 and value['E1'] + value['E2'] > 2 * presion:
+        end = key
+        length += 1
+      else:
+        if start and end and M ==1:
+          i += 1
+          print("HELIX   {0:>2}  {0:>2} {1:>}  {2:>}   {3:>36}".format(i, start, end, length))
+        start = []
+        end = []
+        M = 0
+    except KeyError:
+      pass
+  return 0
+
 def data_save(datas,name):
   f = xlwt.Workbook()
   sheet1 = f.add_sheet(u'sheet1', cell_overwrite_ok=True)
@@ -210,19 +248,14 @@ def data_save(datas,name):
   print(i)
   f.save('%s(%0.6f).xls' % (name, average))
 
-def main(filename):
+def main(presion,filename):
   t0 = time.time()
   a = AEV(pdb_file_name=filename)
   a.generate_AEV()
   # print(a.BAEVs, a.MAEVs, a.EAEVs)
   b = compare(a)
-  print(b)
-  for res,dir in b.items():
-    a = 0
-    for num in dir.values():
-      a += num
-    if a >= 4.0:
-      print("%s:%s"%(res,a))
+  # print(b)
+  HELIX_record(b, float(presion))
   # data_save(com_result,name=filename.replace('.pdb',''))
   print('time', time.time()-t0)
 

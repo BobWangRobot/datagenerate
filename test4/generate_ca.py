@@ -198,10 +198,12 @@ def generate_ca(filename=None, raw_records=None):
     rc = []
     name = []
     for residue in five:
+      # print(residue.parent().parent().id)
+      # print(dir(residue.parent().parent().id))
       name.append(residue.resname + residue.resseq)
       for atom in residue.atoms():
-        # print('segid%r'%dir(atom.parent.im_self))
-        # print(dir(atom))
+        print(atom.format_atom_record()[17:26])
+        # print(dir(atom.fetch_labels))
         if atom.name==' CA ':
           rc.append(atom)
     # print(len(rc))
