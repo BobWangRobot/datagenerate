@@ -1,13 +1,11 @@
-from iotbx import pdb
+import sys, os
 import numpy as np
-import matplotlib.pyplot as plt
 import iotbx
 import math
 import collections
-import os, sys
 import time
 import mmtbx
-import xlwt
+from iotbx import pdb
 from AEVclass4 import *
 
 perfect_helix_12 = """
@@ -120,26 +118,6 @@ def generate_perfect_helix():
   perfect_helix['E1'] = a.EAEVs.values()[-1]
   return perfect_helix
 
-# def sort_dic():
-#   perfect_helix_12 = collections.OrderedDict()
-#   for i in ["B1", "B2", "M", "E2", "E1"]:
-#     perfect_helix_12[i] = perfect_helix[i]
-#   return perfect_helix_12
-
-# def compare(AEV):
-#   diffs = diff_class()
-#   perfect_helix_12 = sort_dic()
-#   for ele1, item1 in AEV.items():
-#       diffs.setdefault(ele1, OrderedDict())
-#       for ele2, item2 in perfect_helix_12.items():
-#         com_list1 = []
-#         com_list2 = []
-#         for list1, list2 in zip(item1.values(), item2.values()):
-#           com_list1.extend(list1)
-#           com_list2.extend(list2)
-#         covalue = np.corrcoef(com_list1, com_list2).tolist()
-#         diffs[ele1].setdefault(ele2, covalue[1][0])
-#   return diffs
 def compare(data):
   result = diff_class()
   perfect_helix = generate_perfect_helix()
@@ -188,26 +166,27 @@ def data_average(data):
       print("%s:%s"%(res,a))
   return 0
 
-def HELIX_record(data, presion):
+def HELIX_record(data, precision):
   start = []
   end = []
   M = 0
   i = 0
+  precision = float(precision)
   for key,value in data.items():
     try:
-      if not start and value['B1'] + value['B2'] > 2 * presion :
-          start = key
-          length = 1
-      elif start and value['M'] > presion:
+      if not start and value['B1'] + value['B2'] > 2 * precision :
+        start = key
+        length = 1
+      elif start and value['M'] > precision:
         M = 1
         length += 1
-        if value['E1'] + value['E2'] > 2 * presion:
+        if value['E1'] + value['E2'] > 2 * precision:
           end = key
-      elif start and M == 1 and value['E1'] + value['E2'] > 2 * presion:
+      elif start and M == 1 and value['E1'] + value['E2'] > 2 * precision:
         end = key
         length += 1
       else:
-        if start and end and M ==1:
+        if start and end and M ==1 and length > 2:
           i += 1
           print("HELIX   {0:>2}  {0:>2} {1:>}  {2:>}   {3:>36}".format(i, start, end, length))
         start = []
@@ -217,46 +196,14 @@ def HELIX_record(data, presion):
       pass
   return 0
 
-def data_save(datas,name):
-  f = xlwt.Workbook()
-  sheet1 = f.add_sheet(u'sheet1', cell_overwrite_ok=True)
-  line_list = []
-  row_list = datas.keys()
-  #write header
-  for value in datas['%s'%row_list[0]].keys():
-    line_list.append(value)
-  for i in range(len(row_list)):
-    sheet1.write(i+1, 0, row_list[i])
-  for j in range(len(line_list)):
-    sheet1.write(0, j+1, line_list[j])
-  #write values
-  i = 1
-  all_num = 0
-  for dict2 in datas.values():
-    j = 1
-    max_num = 0
-    for value in dict2.values():
-      if value > max_num:
-        max_num = value
-      value = float('%.4f' % value)
-      sheet1.write(i, j, value)
-      j = j + 1
-    all_num += max_num
-    # print(max_num)
-    i = i + 1
-  average = all_num / (i - 1)
-  print(i)
-  f.save('%s(%0.6f).xls' % (name, average))
-
-def main(presion,filename):
+def main(filename, precision):
   t0 = time.time()
   a = AEV(pdb_file_name=filename)
   a.generate_AEV()
   # print(a.BAEVs, a.MAEVs, a.EAEVs)
   b = compare(a)
   # print(b)
-  HELIX_record(b, float(presion))
-  # data_save(com_result,name=filename.replace('.pdb',''))
+  HELIX_record(b, precision)
   print('time', time.time()-t0)
 
 

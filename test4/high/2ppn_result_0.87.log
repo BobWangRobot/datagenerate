@@ -1,0 +1,6 @@
+HELIX    1   1 LEU  A  30  GLY  A  33                                      4
+HELIX    2   2 SER  A  38  ASN  A  43                                      6
+HELIX    3   3 ILE  A  56  GLN  A  65                                     10
+HELIX    4   4 SER  A  77  TYR  A  80                                      4
+HELIX    5   5 GLY  A  83  THR  A  85                                      3
+('time', 2.2250418663024902)

@@ -45,7 +45,6 @@ class AEV(object):
     self.processed_pdb = pdb_interpretation.process(self.mon_lib_srv, self.ener_lib, file_name=pdb_file_name,
                                                     raw_records=raw_records)
     self.geometry_restraints_manager = self.processed_pdb.geometry_restraints_manager()
-    self.atom_elements = {}
     self.rs_values = [2.0, 3.8, 5.2, 5.5, 6.2, 7.0, 8.6, 10.0]
     self.Rj = [2.1, 2.2, 2.5]
     self.cutoff = 8.1
@@ -72,17 +71,6 @@ class AEV(object):
             rc.append(atom)
       if len(rc) == 5:
         yield rc
-
-  # generate a dictionary about all atome
-  # def Atome_classify(self, atype):
-  #   atom_elements = {}
-  #   for b in self.hierarchy.atoms():
-  #     #e = b.element.upper().strip()
-  #     e = b.name.strip()
-  #     if e == atype:
-  #       atom_elements.setdefault(e, [])
-  #       atom_elements[e].append(b)
-  #   return atom_elements
 
   def generate_AEV(self):
     for atomlist in self.generate_ca():
@@ -144,6 +132,5 @@ class AEV(object):
                      math.exp(- n * ((((Rij + Rik) / 2) - Rs) ** 2)) * fj * fk
                 GmA += mA
         GmA = GmA * (2**(1-l))
-        # print('zetalist: %s\nangular AEV: %s %s'%(zeta_list, GmA, i))
-        # AEVs[res_name].append(GmA)
+        AEVs[res_name].append(GmA)
     return AEVs

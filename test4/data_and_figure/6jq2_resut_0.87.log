@@ -1,0 +1,14 @@
+HELIX    1   1 ARG  A  14  LEU  A  17                                      4
+HELIX    2   2 TYR  A  27  ASP  A  30                                      4
+HELIX    3   3 ASP  A  37  ASP  A  39                                      3
+HELIX    4   4 ALA  A  49  GLU  A  55                                      7
+HELIX    5   5 PRO  A  57  ASN  A  86                                     30
+HELIX    6   6 GLY  A 104  GLY  A 107                                      4
+HELIX    7   7 ALA  A 117  GLY  A 120                                      4
+HELIX    8   8 ASN  A 127  LYS  A 131                                      5
+HELIX    9   9 ASP  A 137  ARG  A 181                                     45
+HELIX   10  10 GLU  A 254  TYR  A 256                                      3
+HELIX   11  11 HIS  A 263  LEU  A 266                                      4
+HELIX   12  12 SER  B  58  TRP  B  61                                      4
+HELIX   13  13 HIS  B  85  MET  B  88                                      4
+('time', 3.7304539680480957)

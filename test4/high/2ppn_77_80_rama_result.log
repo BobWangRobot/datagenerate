@@ -1,0 +1,6 @@
+residue:score%:phi:psi:evaluation:type
+ A  78  PRO:78.87:-55.92:-30.75:Favored:Trans-proline
+ A  79  ASP:66.81:-58.16:-30.98:Favored:General
+SUMMARY: 2 Favored, 0 Allowed, 0 Outlier out of 2 residues (altloc A where applicable)
+SUMMARY: 0.00% outliers (Goal: < 0.2%)
+SUMMARY: 100.00% favored (Goal: > 98%)
