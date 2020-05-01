@@ -76,10 +76,8 @@ class AEV(object):
     for atomlist in self.generate_ca():
       self.center_atom = atomlist[0]
       self.BAEVs.update(self.calculate(atomlist))
-      self.center_atom = atomlist[-1]
+      self.center_atom = atomlist[-3]
       self.EAEVs.update(self.calculate(atomlist))
-      # self.center_atom = atomlist[2]
-      # self.MAEVs.update(self.calculate(atomlist))
     for key in self.BAEVs.keys():
       if key in self.EAEVs.keys():
         value1 = copy.copy(self.BAEVs[key])

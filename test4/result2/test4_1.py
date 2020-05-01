@@ -190,8 +190,8 @@ def main(filename, precision):
   t0 = time.time()
   a = AEV(pdb_file_name=filename)
   a.generate_AEV()
-  # print('forward-only',a.BAEVs) # forward AEV
-  # print('all',a.MAEVs) # middle AEV
+  # print('forward-only',a.BAEVs)
+  # print('all',a.MAEVs)
   # print('backward-only',a.EAEVs)
   b = compare(a)
   # print(b)
