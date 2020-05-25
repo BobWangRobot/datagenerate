@@ -1,0 +1,9 @@
+HELIX    1   1 THR  A  20  GLY  A  23                                      4
+HELIX    2   2 ALA  A  33  LYS  A  36                                      4
+HELIX    3   3 ALA  A  40  VAL  A  45                                      6
+HELIX    4   4 SER  A 146  ALA  A 153                                      8
+HELIX    5   5 THR  A 158  ALA  A 161                                      4
+HELIX    6   6 VAL  A 185  LYS  A 188                                      4
+HELIX    7   7 ARG  A 210  ALA  A 213                                      4
+HELIX    8   8 ASP  A 216  ALA  A 226                                     12
+('time', 5.702147960662842)

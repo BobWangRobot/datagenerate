@@ -54,6 +54,7 @@ class AEV(object):
     self.EAEVs = radial_aev_class()
     self.MAEVs = radial_aev_class()
     self.BAEVs = radial_aev_class()
+    self.atomlist = {}
     self.center_atom = []
 
   # generate ca list
@@ -74,18 +75,30 @@ class AEV(object):
 
   def generate_AEV(self):
     for atomlist in self.generate_ca():
-      self.center_atom = atomlist[0]
+      for atom in atomlist:
+        self.atomlist.setdefault(atom, [])
+    self.BAEVs = copy.copy(self.atomlist)
+    self.MAEVs = copy.copy(self.atom)
+    for atomlist in self.generate_ca():
+      for atom in atomlist:
+
+      self.BAEVs = copy.copy(self.atomlist)
+      self.BAEVs[atomlist[0]].extend(atomlist[1:])
       self.BAEVs.update(self.calculate(atomlist))
       self.center_atom = atomlist[-1]
       self.EAEVs.update(self.calculate(atomlist))
-      # self.center_atom = atomlist[2]
-      # self.MAEVs.update(self.calculate(atomlist))
-    for key in self.BAEVs.keys():
-      if key in self.EAEVs.keys():
-        value1 = copy.copy(self.BAEVs[key])
-        value2 = copy.copy(self.EAEVs[key])
-        value1.extend(value2)
-        self.MAEVs.setdefault(key,value1)
+      self.All_atomlist.setdefault(atomlist[1], atomlist)
+      if atomlist[0] in self.All_atomlist.keys():
+        for atom in atomlist:
+          if atom not in self.All_atomlist[atomlist[0]]:
+            self.All_atomlist[atomlist[0]].append(atom)
+      if atomlist[-1] in self.All_atomlist.keys():
+        for atom in atomlist:
+          if atom not in self.All_atomlist[atomlist[-1]]:
+            self.All_atomlist[atomlist[-1]].append(atom)
+    for key,value in self.All_atomlist.items():
+      self.center_atom = key
+      self.MAEVs.update(self.calculate(value))
     return 0
 
   # cutoff function

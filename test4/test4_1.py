@@ -185,17 +185,25 @@ def HELIX_record(data, precision):
       end = []
       M = 0
   return 0
-
+def write_file(data,filename):
+  name = str(filename + '.log')
+  f = open(name, 'w')
+  f.write(str(data))
+  f.close()
 def main(filename, precision):
   t0 = time.time()
   a = AEV(pdb_file_name=filename)
   a.generate_AEV()
   # print('forward-only',a.BAEVs) # forward AEV
-  # print('all',a.MAEVs) # middle AEV
+  # print('all',a.MAEVs) # all AEV
   # print('backward-only',a.EAEVs)
   b = compare(a)
   # print(b)
   HELIX_record(b, precision)
+  # write_file(a.BAEVs, 'forward_AEVs')
+  # write_file(a.EAEVs,'backward_AEVs')
+  # write_file(a.MAEVs, 'All_AEVs')
+  # write_file(b, 'CCvalues')
   print('time', time.time()-t0)
 
 

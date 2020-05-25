@@ -1,0 +1,16 @@
+HELIX    1   1 TYR  A 336  VAL  A 339                                      4
+HELIX    2   2 CYS  A 395  ARG  A 398                                      4
+HELIX    3   3 THR  A 407  ASN  A 411                                      5
+HELIX    4   4 SER  A 506  SER  A 510                                      5
+HELIX    5   5 SER  A 573  GLU  A 576                                      5
+HELIX    6   6 TYR  A 587  VAL  A 590                                      4
+HELIX    7   7 ASP  A 612  GLY  A 614                                      4
+HELIX    8   8 ASN  A 674  TRP  A 678                                      5
+HELIX    9   9 TRP  A 727  LYS  A 735                                      9
+HELIX   10  10 ARG  A 772  PRO  A 775                                      4
+HELIX   11  11 SER  A 808  ILE  A 811                                      4
+HELIX   12  12 ASN  A 832  GLN  A 836                                      5
+HELIX   13  13 SER  A 847  THR  A 850                                      4
+HELIX   14  14 GLY  A 893  ASN  A 896                                      4
+('time', 10.708695888519287)
+
