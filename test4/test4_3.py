@@ -190,21 +190,31 @@ def write_file(data,filename):
   f.close()
 def main(filename, precision):
   t0 = time.time()
-  a = AEV(pdb_file_name=filename)
-  a.generate_AEV()
-  print('backward-only',a.BAEVs)
-  print('all',a.MAEVs) # all AEV
-  print('forward-only',a.EAEVs)
-  b = compare(a)
-  print(b)
-  HELIX_record(b, precision)
-  # write_file(a.BAEVs, 'backward_AEVs')
-  # write_file(a.EAEVs,'forward_AEVs')
-  # write_file(a.MAEVs, 'All_AEVs')
-  # write_file(b, 'CCvalues')
+  pdb_inp = iotbx.pdb.input(file_name=filename)
+  pdb_hierarchy = pdb_inp.construct_hierarchy()
+  chain_list = []
+  for chain in pdb_hierarchy.chains():
+    chain_list.append(chain.id)
+  chain_list = list(set(chain_list))
+  for chain in chain_list:
+    p_h = pdb_hierarchy.deep_copy()
+    asc = p_h.atom_selection_cache()
+    sel = asc.selection("chain " + chain)
+    chain_p_h = p_h.select(sel)
+    pdb_record = chain_p_h.as_pdb_string()
+    a= AEV(raw_records=pdb_record) 
+    a.generate_AEV()
+    # print('backward-only',a.BAEVs)
+    # print('all',a.MAEVs) # all AEV
+    # print('forward-only',a.EAEVs)
+    b = compare(a)
+    print(b)
+    HELIX_record(b, precision)
+    # write_file(a.BAEVs, chain + "_"+'backward_AEVs')
+    # write_file(a.EAEVs,chain + "_"+'forward_AEVs')
+    # write_file(a.MAEVs, chain + "_"+'All_AEVs')
+    # write_file(b, chain + "_"+'CCvalues')
   print('time', time.time()-t0)
-
-
 
 
 if __name__ == '__main__':
