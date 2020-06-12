@@ -10,8 +10,8 @@ from mmtbx.monomer_library import server
 from mmtbx.monomer_library import pdb_interpretation
 from mmtbx.conformation_dependent_library import generate_protein_fragments
 
-
-class radial_aev_class(OrderedDict):
+# This is format class of AEV. It makes print of AEV more clearly.
+class format_class(OrderedDict):
   def __repr__(self):
     outl = '...\n'
     for key, item in self.items():
@@ -21,17 +21,7 @@ class radial_aev_class(OrderedDict):
       outl += '\n'
     return outl
 
-class diff_class(OrderedDict):
-  def __repr__(self):
-    outl = '...\n'
-    for key, item in self.items():
-      outl += '  %s :' % (key)
-      for key1,value in item.items():
-        outl += ' %s: '%key1
-        outl += '%0.2f, ' % value
-      outl += '\n'
-    return outl
-
+# AEV class. It can generate AEV values.
 class AEV(object):
 
   def __init__(self, pdb_file_name=None, raw_records=None):
@@ -51,13 +41,13 @@ class AEV(object):
     self.ts_values = [0.392699, 1.178097, 1.963495, 2.748894]
     self.angular_rs_values = [3.8, 5.2, 5.5, 6.2]
     self.angular_zeta = 8
-    self.EAEVs = radial_aev_class()
-    self.MAEVs = radial_aev_class()
-    self.BAEVs = radial_aev_class()
+    self.EAEVs = format_class()
+    self.MAEVs = format_class()
+    self.BAEVs = format_class()
     self.center_atom = []
     self.chain_hierarchy = []
 
-  # generate ca list
+  # Select C-alpha atoms and generate an atom list.
   def generate_ca(self):
       self.hierarchy.reset_atom_i_seqs()
       self.hierarchy.reset_i_seq_if_necessary()
@@ -73,6 +63,9 @@ class AEV(object):
         if len(rc) == 5:
           yield rc
 
+  # Traversal the C-alpha atoms list and generate AEV values of every chain's every atom.
+  # Every C-alpha atom has 3 direction AEVs:forward(BAEVs), backward(EAEVs)
+  # and all direction(MAEVS)
   def generate_AEV(self):
     chain_list = []
     for chain in self.hierarchy.chains():
@@ -114,7 +107,7 @@ class AEV(object):
       self.MAEVs.update(self.calculate(end))
     return 0
 
-  # cutoff function
+  # Cutoff function. It is fomula of AEV calculation.
   def cutf(self, distance):
     if distance <= self.cutoff:
       Fc = 0.5 * math.cos(math.pi * distance / self.cutoff) + 0.5
@@ -122,10 +115,11 @@ class AEV(object):
       Fc = 0
     return Fc
 
+  # It is fomula of AEV calculation. This function include radial part and angular part.
   def calculate(self, atom_list):
     n = 4.0
     l = 8.0
-    AEVs = radial_aev_class()
+    AEVs = format_class()
     res_name = self.center_atom.format_atom_record()[17:20]+'  '+\
                self.center_atom.format_atom_record()[21:26]
     AEVs.setdefault(res_name, [])

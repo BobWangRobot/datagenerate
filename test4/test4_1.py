@@ -106,6 +106,19 @@ ATOM     94  ND2 ASN A  12     -10.926  -0.255 -26.230  1.00  0.00           N
 TER
 END"""
 
+# It is format calss of corelation coefficient values.
+class diff_class(OrderedDict):
+  def __repr__(self):
+    outl = '...\n'
+    for key, item in self.items():
+      outl += '  %s :' % (key)
+      for key1,value in item.items():
+        outl += ' %s: '%key1
+        outl += '%0.2f, ' % value
+      outl += '\n'
+    return outl
+
+# The AEV values of the perfect helix.
 def generate_perfect_helix():
   perfect_helix = OrderedDict()
   a = AEV(raw_records=perfect_helix_12)
@@ -115,6 +128,9 @@ def generate_perfect_helix():
   perfect_helix['E'] = a.EAEVs.values()[-1]
   return perfect_helix
 
+# Comparing perfect helix with a target structure and getting correlation coefficient values.
+# The result include 3 direction AEVs'Co-Co values. If the c-alpha doesn't have BAEVs or EAEVs
+# the co-co values would be 0.
 def compare(data):
   result = diff_class()
   perfect_helix = generate_perfect_helix()
@@ -148,6 +164,9 @@ def compare(data):
           result[key1].setdefault(key, 1)
   return result
 
+# Geting heliecs of target structure.
+# According to the threshold(percision), select helices of target structure.
+# If the co-co values of atoms > threshold, the atom would be considered a part of a helix.
 def data_average(data):
   for res,dir in data.items():
     a = 0
@@ -183,25 +202,23 @@ def HELIX_record(data, precision):
       end = []
       M = 0
   return 0
+# Writing results in a file.
 def write_file(data,filename):
   name = str(filename + '.log')
   f = open(name, 'w')
   f.write(str(data))
   f.close()
+
 def main(filename, precision):
   t0 = time.time()
   a = AEV(pdb_file_name=filename)
   a.generate_AEV()
-  print('backward-only',a.BAEVs)
-  print('all',a.MAEVs) # all AEV
-  print('forward-only',a.EAEVs)
-  b = compare(a)
-  print(b)
-  HELIX_record(b, precision)
-  # write_file(a.BAEVs, 'backward_AEVs')
-  # write_file(a.EAEVs,'forward_AEVs')
-  # write_file(a.MAEVs, 'All_AEVs')
-  # write_file(b, 'CCvalues')
+  print('forward-only', a.BAEVs)
+  # print('all', a.MAEVs) # all AEV
+  print('backward-only', a.EAEVs)
+  # b = compare(a)
+  # print(b)
+  # HELIX_record(b, precision)
   print('time', time.time()-t0)
 
 
