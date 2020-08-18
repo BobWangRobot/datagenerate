@@ -1,0 +1,41 @@
+DEPRECATION: Python 2.7 will reach the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 won't be maintained after that date. A future version of pip will drop support for Python 2.7. More details about Python 2 support in pip, can be found at https://pip.pypa.io/en/latest/development/release-process/#python-2-support
+Collecting pytest==4.6.5
+  Downloading https://files.pythonhosted.org/packages/97/72/d4d6d22ad216f149685f2e93ce9280df9f36cbbc87fa546641ac92f22766/pytest-4.6.5-py2.py3-none-any.whl (230kB)
+Collecting importlib-metadata>=0.12 (from pytest==4.6.5)
+  Downloading https://files.pythonhosted.org/packages/8e/58/cdea07eb51fc2b906db0968a94700866fc46249bdc75cac23f9d13168929/importlib_metadata-1.7.0-py2.py3-none-any.whl
+Requirement already satisfied: funcsigs>=1.0; python_version < "3.0" in /home/bob/Desktop/datagenerate/test4/base/lib/python2.7/site-packages (from pytest==4.6.5) (1.0.2)
+Requirement already satisfied: six>=1.10.0 in /home/bob/Desktop/datagenerate/test4/base/lib/python2.7/site-packages (from pytest==4.6.5) (1.12.0)
+Collecting attrs>=17.4.0 (from pytest==4.6.5)
+  Downloading https://files.pythonhosted.org/packages/a2/db/4313ab3be961f7a763066401fb77f7748373b6094076ae2bda2806988af6/attrs-19.3.0-py2.py3-none-any.whl
+Collecting atomicwrites>=1.0 (from pytest==4.6.5)
+  Downloading https://files.pythonhosted.org/packages/2c/a0/da5f49008ec6e9a658dbf5d7310a4debd397bce0b4db03cf8a410066bb87/atomicwrites-1.4.0-py2.py3-none-any.whl
+Collecting packaging (from pytest==4.6.5)
+  Downloading https://files.pythonhosted.org/packages/46/19/c5ab91b1b05cfe63cccd5cfc971db9214c6dd6ced54e33c30d5af1d2bc43/packaging-20.4-py2.py3-none-any.whl
+Collecting wcwidth (from pytest==4.6.5)
+  Downloading https://files.pythonhosted.org/packages/59/7c/e39aca596badaf1b78e8f547c807b04dae603a433d3e7a7e04d67f2ef3e5/wcwidth-0.2.5-py2.py3-none-any.whl
+Collecting pathlib2>=2.2.0; python_version < "3.6" (from pytest==4.6.5)
+  Downloading https://files.pythonhosted.org/packages/e9/45/9c82d3666af4ef9f221cbb954e1d77ddbb513faf552aea6df5f37f1a4859/pathlib2-2.3.5-py2.py3-none-any.whl
+Collecting pluggy<1.0,>=0.12 (from pytest==4.6.5)
+  Downloading https://files.pythonhosted.org/packages/a0/28/85c7aa31b80d150b772fbe4a229487bc6644da9ccb7e427dd8cc60cb8a62/pluggy-0.13.1-py2.py3-none-any.whl
+Collecting more-itertools<6.0.0,>=4.0.0; python_version <= "2.7" (from pytest==4.6.5)
+  Downloading https://files.pythonhosted.org/packages/2f/9d/dcfe59e213093695f108508af1214cf9cd95cc5489e46877ec5cb56369e5/more_itertools-5.0.0-py2-none-any.whl (52kB)
+Collecting py>=1.5.0 (from pytest==4.6.5)
+  Downloading https://files.pythonhosted.org/packages/68/0f/41a43535b52a81e4f29e420a151032d26f08b62206840c48d14b70e53376/py-1.9.0-py2.py3-none-any.whl (99kB)
+Collecting zipp>=0.5 (from importlib-metadata>=0.12->pytest==4.6.5)
+  Downloading https://files.pythonhosted.org/packages/96/0a/67556e9b7782df7118c1f49bdc494da5e5e429c93aa77965f33e81287c8c/zipp-1.2.0-py2.py3-none-any.whl
+Collecting configparser>=3.5; python_version < "3" (from importlib-metadata>=0.12->pytest==4.6.5)
+  Downloading https://files.pythonhosted.org/packages/7a/2a/95ed0501cf5d8709490b1d3a3f9b5cf340da6c433f896bbe9ce08dbe6785/configparser-4.0.2-py2.py3-none-any.whl
+Collecting contextlib2; python_version < "3" (from importlib-metadata>=0.12->pytest==4.6.5)
+  Downloading https://files.pythonhosted.org/packages/85/60/370352f7ef6aa96c52fb001831622f50f923c1d575427d021b8ab3311236/contextlib2-0.6.0.post1-py2.py3-none-any.whl
+Collecting pyparsing>=2.0.2 (from packaging->pytest==4.6.5)
+  Downloading https://files.pythonhosted.org/packages/8a/bb/488841f56197b13700afd5658fc279a2025a39e22449b7cf29864669b15d/pyparsing-2.4.7-py2.py3-none-any.whl (67kB)
+Collecting backports.functools-lru-cache>=1.2.1; python_version < "3.2" (from wcwidth->pytest==4.6.5)
+  Downloading https://files.pythonhosted.org/packages/da/d1/080d2bb13773803648281a49e3918f65b31b7beebf009887a529357fd44a/backports.functools_lru_cache-1.6.1-py2.py3-none-any.whl
+Collecting scandir; python_version < "3.5" (from pathlib2>=2.2.0; python_version < "3.6"->pytest==4.6.5)
+  Downloading https://files.pythonhosted.org/packages/df/f5/9c052db7bd54d0cbf1bc0bb6554362bba1012d03e5888950a4f5c5dadc4e/scandir-1.10.0.tar.gz
+Installing collected packages: contextlib2, zipp, configparser, scandir, pathlib2, importlib-metadata, attrs, atomicwrites, pyparsing, packaging, backports.functools-lru-cache, wcwidth, pluggy, more-itertools, py, pytest
+  Running setup.py install for scandir: started
+    Running setup.py install for scandir: finished with status 'done'
+Successfully installed atomicwrites-1.4.0 attrs-19.3.0 backports.functools-lru-cache-1.6.1 configparser-4.0.2 contextlib2-0.6.0.post1 importlib-metadata-1.7.0 more-itertools-5.0.0 packaging-20.4 pathlib2-2.3.5 pluggy-0.13.1 py-1.9.0 pyparsing-2.4.7 pytest-4.6.5 scandir-1.10.0 wcwidth-0.2.5 zipp-1.2.0
+WARNING: You are using pip version 19.2.3, however version 20.1.1 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.

@@ -1,0 +1,390 @@
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a thread-safe mkdir -p... /usr/bin/mkdir -p
+checking for gawk... gawk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking whether to enable maintainer-specific portions of Makefiles... no
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to accept ISO C89... none needed
+checking whether gcc understands -c and -o together... yes
+checking whether make supports the include directive... yes (GNU style)
+checking dependency style of gcc... gcc3
+checking dependency style of gcc... gcc3
+checking build system type... x86_64-pc-linux-gnu
+checking host system type... x86_64-pc-linux-gnu
+checking for a sed that does not truncate output... /usr/bin/sed
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for fgrep... /usr/bin/grep -F
+checking how to print strings... printf
+checking for ld used by gcc... /usr/bin/ld
+checking if the linker (/usr/bin/ld) is GNU ld... yes
+checking how to run the C preprocessor... gcc -E
+checking for gawk... (cached) gawk
+checking whether ln -s works... yes
+checking whether make sets $(MAKE)... (cached) yes
+checking for BSD- or MS-compatible name lister (nm)... /usr/bin/nm -B
+checking the name lister (/usr/bin/nm -B) interface... BSD nm
+checking the maximum length of command line arguments... 1572864
+checking how to convert x86_64-pc-linux-gnu file names to x86_64-pc-linux-gnu format... func_convert_file_noop
+checking how to convert x86_64-pc-linux-gnu file names to toolchain format... func_convert_file_noop
+checking for /usr/bin/ld option to reload object files... -r
+checking for objdump... objdump
+checking how to recognize dependent libraries... pass_all
+checking for dlltool... no
+checking how to associate runtime and link libraries... printf %s\n
+checking for ar... ar
+checking for archiver @FILE support... @
+checking for strip... strip
+checking for ranlib... ranlib
+checking command to parse /usr/bin/nm -B output from gcc object... ok
+checking for sysroot... no
+checking for a working dd... /usr/bin/dd
+checking how to truncate binary pipes... /usr/bin/dd bs=4096 count=1
+checking for mt... no
+checking if : is a manifest tool... no
+checking for ANSI C header files... yes
+checking for sys/types.h... yes
+checking for sys/stat.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for memory.h... yes
+checking for strings.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for unistd.h... yes
+checking for dlfcn.h... yes
+checking for objdir... .libs
+checking if gcc supports -fno-rtti -fno-exceptions... no
+checking for gcc option to produce PIC... -fPIC -DPIC
+checking if gcc PIC flag -fPIC -DPIC works... yes
+checking if gcc static flag -static works... no
+checking if gcc supports -c -o file.o... yes
+checking if gcc supports -c -o file.o... (cached) yes
+checking whether the gcc linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking whether -lc should be explicitly linked in... no
+checking dynamic linker characteristics... GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking whether stripping libraries is possible... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... yes
+checking whether to build static libraries... yes
+checking that AWK works... ok
+checking if we need to force back C standard to C89... no
+checking for ANSI C header files... (cached) yes
+checking for an ANSI C-conforming const... yes
+checking for size_t... yes
+checking whether struct tm is in sys/time.h or time.h... time.h
+checking for C/C++ restrict keyword... __restrict
+checking for working strtod... yes
+checking for pow... no
+checking for pow in -lm... yes
+checking for clock_gettime... yes
+checking for zlibVersion in -lz... yes
+checking for feenableexcept in -lm... yes
+checking for feenableexcept... yes
+checking if using Solaris linker... no
+checking if libraries can be versioned... yes
+checking for symbol prefix... 
+configure: pkgconfig directory is ${libdir}/pkgconfig
+configure: Extra options for compiler: 
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating libpng.pc
+config.status: creating libpng-config
+config.status: creating config.h
+config.status: executing depfiles commands
+config.status: executing libtool commands
+rm -f pnglibconf.c pnglibconf.tf[45]
+gawk -f ./scripts/options.awk out=pnglibconf.tf4 version=search\
+    ./pngconf.h ./scripts/pnglibconf.dfa\
+    ./pngusr.dfa  1>&2
+gawk -f ./scripts/options.awk out=pnglibconf.tf5 pnglibconf.tf4 1>&2
+rm pnglibconf.tf4
+mv pnglibconf.tf5 pnglibconf.c
+rm -f pnglibconf.out pnglibconf.tf[12]
+test -d scripts || mkdir scripts || test -d scripts
+gcc -E -DHAVE_CONFIG_H -I. \
+    -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include  -DPNGLIB_LIBNAME='PNG16_0' -DPNGLIB_VERSION='1.6.36' -DSYMBOL_PREFIX='' -DPNG_NO_USE_READ_MACROS -DPNG_BUILDING_SYMBOL_TABLE  pnglibconf.c > pnglibconf.tf1
+gawk -f "./scripts/dfn.awk" out="pnglibconf.tf2" pnglibconf.tf1 1>&2
+rm -f pnglibconf.tf1
+mv pnglibconf.tf2 pnglibconf.out
+rm -f pnglibconf.h
+cp pnglibconf.out pnglibconf.h
+make  all-am
+make[1]: Entering directory `/home/bob/Desktop/datagenerate/test4/base_tmp/libpng-1.6.36'
+depbase=`echo contrib/tools/pngfix.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT contrib/tools/pngfix.o -MD -MP -MF $depbase.Tpo -c -o contrib/tools/pngfix.o contrib/tools/pngfix.c &&\
+mv -f $depbase.Tpo $depbase.Po
+:>pngprefix.h
+depbase=`echo png.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT png.lo -MD -MP -MF $depbase.Tpo -c -o png.lo png.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT png.lo -MD -MP -MF .deps/png.Tpo -c png.c  -fPIC -DPIC -o .libs/png.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT png.lo -MD -MP -MF .deps/png.Tpo -c png.c -o png.o >/dev/null 2>&1
+depbase=`echo pngerror.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT pngerror.lo -MD -MP -MF $depbase.Tpo -c -o pngerror.lo pngerror.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngerror.lo -MD -MP -MF .deps/pngerror.Tpo -c pngerror.c  -fPIC -DPIC -o .libs/pngerror.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngerror.lo -MD -MP -MF .deps/pngerror.Tpo -c pngerror.c -o pngerror.o >/dev/null 2>&1
+depbase=`echo pngget.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT pngget.lo -MD -MP -MF $depbase.Tpo -c -o pngget.lo pngget.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngget.lo -MD -MP -MF .deps/pngget.Tpo -c pngget.c  -fPIC -DPIC -o .libs/pngget.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngget.lo -MD -MP -MF .deps/pngget.Tpo -c pngget.c -o pngget.o >/dev/null 2>&1
+depbase=`echo pngmem.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT pngmem.lo -MD -MP -MF $depbase.Tpo -c -o pngmem.lo pngmem.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngmem.lo -MD -MP -MF .deps/pngmem.Tpo -c pngmem.c  -fPIC -DPIC -o .libs/pngmem.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngmem.lo -MD -MP -MF .deps/pngmem.Tpo -c pngmem.c -o pngmem.o >/dev/null 2>&1
+depbase=`echo pngpread.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT pngpread.lo -MD -MP -MF $depbase.Tpo -c -o pngpread.lo pngpread.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngpread.lo -MD -MP -MF .deps/pngpread.Tpo -c pngpread.c  -fPIC -DPIC -o .libs/pngpread.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngpread.lo -MD -MP -MF .deps/pngpread.Tpo -c pngpread.c -o pngpread.o >/dev/null 2>&1
+depbase=`echo pngread.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT pngread.lo -MD -MP -MF $depbase.Tpo -c -o pngread.lo pngread.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngread.lo -MD -MP -MF .deps/pngread.Tpo -c pngread.c  -fPIC -DPIC -o .libs/pngread.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngread.lo -MD -MP -MF .deps/pngread.Tpo -c pngread.c -o pngread.o >/dev/null 2>&1
+depbase=`echo pngrio.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT pngrio.lo -MD -MP -MF $depbase.Tpo -c -o pngrio.lo pngrio.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngrio.lo -MD -MP -MF .deps/pngrio.Tpo -c pngrio.c  -fPIC -DPIC -o .libs/pngrio.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngrio.lo -MD -MP -MF .deps/pngrio.Tpo -c pngrio.c -o pngrio.o >/dev/null 2>&1
+depbase=`echo pngrtran.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT pngrtran.lo -MD -MP -MF $depbase.Tpo -c -o pngrtran.lo pngrtran.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngrtran.lo -MD -MP -MF .deps/pngrtran.Tpo -c pngrtran.c  -fPIC -DPIC -o .libs/pngrtran.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngrtran.lo -MD -MP -MF .deps/pngrtran.Tpo -c pngrtran.c -o pngrtran.o >/dev/null 2>&1
+depbase=`echo pngrutil.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT pngrutil.lo -MD -MP -MF $depbase.Tpo -c -o pngrutil.lo pngrutil.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngrutil.lo -MD -MP -MF .deps/pngrutil.Tpo -c pngrutil.c  -fPIC -DPIC -o .libs/pngrutil.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngrutil.lo -MD -MP -MF .deps/pngrutil.Tpo -c pngrutil.c -o pngrutil.o >/dev/null 2>&1
+depbase=`echo pngset.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT pngset.lo -MD -MP -MF $depbase.Tpo -c -o pngset.lo pngset.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngset.lo -MD -MP -MF .deps/pngset.Tpo -c pngset.c  -fPIC -DPIC -o .libs/pngset.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngset.lo -MD -MP -MF .deps/pngset.Tpo -c pngset.c -o pngset.o >/dev/null 2>&1
+depbase=`echo pngtrans.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT pngtrans.lo -MD -MP -MF $depbase.Tpo -c -o pngtrans.lo pngtrans.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngtrans.lo -MD -MP -MF .deps/pngtrans.Tpo -c pngtrans.c  -fPIC -DPIC -o .libs/pngtrans.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngtrans.lo -MD -MP -MF .deps/pngtrans.Tpo -c pngtrans.c -o pngtrans.o >/dev/null 2>&1
+depbase=`echo pngwio.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT pngwio.lo -MD -MP -MF $depbase.Tpo -c -o pngwio.lo pngwio.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngwio.lo -MD -MP -MF .deps/pngwio.Tpo -c pngwio.c  -fPIC -DPIC -o .libs/pngwio.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngwio.lo -MD -MP -MF .deps/pngwio.Tpo -c pngwio.c -o pngwio.o >/dev/null 2>&1
+depbase=`echo pngwrite.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT pngwrite.lo -MD -MP -MF $depbase.Tpo -c -o pngwrite.lo pngwrite.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngwrite.lo -MD -MP -MF .deps/pngwrite.Tpo -c pngwrite.c  -fPIC -DPIC -o .libs/pngwrite.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngwrite.lo -MD -MP -MF .deps/pngwrite.Tpo -c pngwrite.c -o pngwrite.o >/dev/null 2>&1
+depbase=`echo pngwtran.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT pngwtran.lo -MD -MP -MF $depbase.Tpo -c -o pngwtran.lo pngwtran.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngwtran.lo -MD -MP -MF .deps/pngwtran.Tpo -c pngwtran.c  -fPIC -DPIC -o .libs/pngwtran.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngwtran.lo -MD -MP -MF .deps/pngwtran.Tpo -c pngwtran.c -o pngwtran.o >/dev/null 2>&1
+depbase=`echo pngwutil.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT pngwutil.lo -MD -MP -MF $depbase.Tpo -c -o pngwutil.lo pngwutil.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngwutil.lo -MD -MP -MF .deps/pngwutil.Tpo -c pngwutil.c  -fPIC -DPIC -o .libs/pngwutil.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT pngwutil.lo -MD -MP -MF .deps/pngwutil.Tpo -c pngwutil.c -o pngwutil.o >/dev/null 2>&1
+depbase=`echo mips/mips_init.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT mips/mips_init.lo -MD -MP -MF $depbase.Tpo -c -o mips/mips_init.lo mips/mips_init.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT mips/mips_init.lo -MD -MP -MF mips/.deps/mips_init.Tpo -c mips/mips_init.c  -fPIC -DPIC -o mips/.libs/mips_init.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT mips/mips_init.lo -MD -MP -MF mips/.deps/mips_init.Tpo -c mips/mips_init.c -o mips/mips_init.o >/dev/null 2>&1
+depbase=`echo mips/filter_msa_intrinsics.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT mips/filter_msa_intrinsics.lo -MD -MP -MF $depbase.Tpo -c -o mips/filter_msa_intrinsics.lo mips/filter_msa_intrinsics.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT mips/filter_msa_intrinsics.lo -MD -MP -MF mips/.deps/filter_msa_intrinsics.Tpo -c mips/filter_msa_intrinsics.c  -fPIC -DPIC -o mips/.libs/filter_msa_intrinsics.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT mips/filter_msa_intrinsics.lo -MD -MP -MF mips/.deps/filter_msa_intrinsics.Tpo -c mips/filter_msa_intrinsics.c -o mips/filter_msa_intrinsics.o >/dev/null 2>&1
+depbase=`echo intel/intel_init.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT intel/intel_init.lo -MD -MP -MF $depbase.Tpo -c -o intel/intel_init.lo intel/intel_init.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT intel/intel_init.lo -MD -MP -MF intel/.deps/intel_init.Tpo -c intel/intel_init.c  -fPIC -DPIC -o intel/.libs/intel_init.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT intel/intel_init.lo -MD -MP -MF intel/.deps/intel_init.Tpo -c intel/intel_init.c -o intel/intel_init.o >/dev/null 2>&1
+depbase=`echo intel/filter_sse2_intrinsics.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT intel/filter_sse2_intrinsics.lo -MD -MP -MF $depbase.Tpo -c -o intel/filter_sse2_intrinsics.lo intel/filter_sse2_intrinsics.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT intel/filter_sse2_intrinsics.lo -MD -MP -MF intel/.deps/filter_sse2_intrinsics.Tpo -c intel/filter_sse2_intrinsics.c  -fPIC -DPIC -o intel/.libs/filter_sse2_intrinsics.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT intel/filter_sse2_intrinsics.lo -MD -MP -MF intel/.deps/filter_sse2_intrinsics.Tpo -c intel/filter_sse2_intrinsics.c -o intel/filter_sse2_intrinsics.o >/dev/null 2>&1
+depbase=`echo powerpc/powerpc_init.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT powerpc/powerpc_init.lo -MD -MP -MF $depbase.Tpo -c -o powerpc/powerpc_init.lo powerpc/powerpc_init.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT powerpc/powerpc_init.lo -MD -MP -MF powerpc/.deps/powerpc_init.Tpo -c powerpc/powerpc_init.c  -fPIC -DPIC -o powerpc/.libs/powerpc_init.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT powerpc/powerpc_init.lo -MD -MP -MF powerpc/.deps/powerpc_init.Tpo -c powerpc/powerpc_init.c -o powerpc/powerpc_init.o >/dev/null 2>&1
+depbase=`echo powerpc/filter_vsx_intrinsics.lo | sed 's|[^/]*$|.deps/&|;s|\.lo$||'`;\
+/bin/sh ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT powerpc/filter_vsx_intrinsics.lo -MD -MP -MF $depbase.Tpo -c -o powerpc/filter_vsx_intrinsics.lo powerpc/filter_vsx_intrinsics.c &&\
+mv -f $depbase.Tpo $depbase.Plo
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT powerpc/filter_vsx_intrinsics.lo -MD -MP -MF powerpc/.deps/filter_vsx_intrinsics.Tpo -c powerpc/filter_vsx_intrinsics.c  -fPIC -DPIC -o powerpc/.libs/filter_vsx_intrinsics.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -g -O2 -MT powerpc/filter_vsx_intrinsics.lo -MD -MP -MF powerpc/.deps/filter_vsx_intrinsics.Tpo -c powerpc/filter_vsx_intrinsics.c -o powerpc/filter_vsx_intrinsics.o >/dev/null 2>&1
+rm -f scripts/vers.out scripts/vers.tf[12]
+test -d scripts || mkdir scripts || test -d scripts
+gcc -E -DHAVE_CONFIG_H -I. \
+    -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include  -DPNGLIB_LIBNAME='PNG16_0' -DPNGLIB_VERSION='1.6.36' -DSYMBOL_PREFIX='' -DPNG_NO_USE_READ_MACROS -DPNG_BUILDING_SYMBOL_TABLE  scripts/vers.c > scripts/vers.tf1
+gawk -f "./scripts/dfn.awk" out="scripts/vers.tf2" scripts/vers.tf1 1>&2
+rm -f scripts/vers.tf1
+mv scripts/vers.tf2 scripts/vers.out
+rm -f libpng.vers
+cp scripts/vers.out libpng.vers
+/bin/sh ./libtool  --tag=CC   --mode=link gcc  -g -O2 -no-undefined -export-dynamic -version-number 16:36:0  -Wl,--version-script=libpng.vers  -L/home/bob/Desktop/datagenerate/test4/base/lib  -o libpng16.la -rpath /home/bob/Desktop/datagenerate/test4/base/lib png.lo pngerror.lo pngget.lo pngmem.lo pngpread.lo pngread.lo pngrio.lo pngrtran.lo pngrutil.lo pngset.lo pngtrans.lo pngwio.lo pngwrite.lo pngwtran.lo pngwutil.lo  mips/mips_init.lo mips/filter_msa_intrinsics.lo intel/intel_init.lo intel/filter_sse2_intrinsics.lo powerpc/powerpc_init.lo powerpc/filter_vsx_intrinsics.lo   -lm -lz -lm 
+libtool: link: gcc -shared  -fPIC -DPIC  .libs/png.o .libs/pngerror.o .libs/pngget.o .libs/pngmem.o .libs/pngpread.o .libs/pngread.o .libs/pngrio.o .libs/pngrtran.o .libs/pngrutil.o .libs/pngset.o .libs/pngtrans.o .libs/pngwio.o .libs/pngwrite.o .libs/pngwtran.o .libs/pngwutil.o mips/.libs/mips_init.o mips/.libs/filter_msa_intrinsics.o intel/.libs/intel_init.o intel/.libs/filter_sse2_intrinsics.o powerpc/.libs/powerpc_init.o powerpc/.libs/filter_vsx_intrinsics.o   -L/home/bob/Desktop/datagenerate/test4/base/lib -lz -lm  -g -O2 -Wl,--version-script=libpng.vers   -Wl,-soname -Wl,libpng16.so.16 -o .libs/libpng16.so.16.36.0
+libtool: link: (cd ".libs" && rm -f "libpng16.so.16" && ln -s "libpng16.so.16.36.0" "libpng16.so.16")
+libtool: link: (cd ".libs" && rm -f "libpng16.so" && ln -s "libpng16.so.16.36.0" "libpng16.so")
+libtool: link: ar cru .libs/libpng16.a  png.o pngerror.o pngget.o pngmem.o pngpread.o pngread.o pngrio.o pngrtran.o pngrutil.o pngset.o pngtrans.o pngwio.o pngwrite.o pngwtran.o pngwutil.o mips/mips_init.o mips/filter_msa_intrinsics.o intel/intel_init.o intel/filter_sse2_intrinsics.o powerpc/powerpc_init.o powerpc/filter_vsx_intrinsics.o
+libtool: link: ranlib .libs/libpng16.a
+libtool: link: ( cd ".libs" && rm -f "libpng16.la" && ln -s "../libpng16.la" "libpng16.la" )
+/bin/sh ./libtool  --tag=CC   --mode=link gcc  -g -O2  -L/home/bob/Desktop/datagenerate/test4/base/lib  -o pngfix contrib/tools/pngfix.o libpng16.la -lm -lz -lm 
+libtool: link: gcc -g -O2 -o .libs/pngfix contrib/tools/pngfix.o  -L/home/bob/Desktop/datagenerate/test4/base/lib ./.libs/libpng16.so -lz -lm -Wl,-rpath -Wl,/home/bob/Desktop/datagenerate/test4/base/lib
+depbase=`echo contrib/tools/png-fix-itxt.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT contrib/tools/png-fix-itxt.o -MD -MP -MF $depbase.Tpo -c -o contrib/tools/png-fix-itxt.o contrib/tools/png-fix-itxt.c &&\
+mv -f $depbase.Tpo $depbase.Po
+/bin/sh ./libtool  --tag=CC   --mode=link gcc  -g -O2  -L/home/bob/Desktop/datagenerate/test4/base/lib  -o png-fix-itxt contrib/tools/png-fix-itxt.o  -lm -lz -lm 
+libtool: link: gcc -g -O2 -o png-fix-itxt contrib/tools/png-fix-itxt.o  -L/home/bob/Desktop/datagenerate/test4/base/lib -lz -lm
+cp libpng-config libpng16-config
+cp libpng.pc libpng16.pc
+depbase=`echo pngtest.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT pngtest.o -MD -MP -MF $depbase.Tpo -c -o pngtest.o pngtest.c &&\
+mv -f $depbase.Tpo $depbase.Po
+/bin/sh ./libtool  --tag=CC   --mode=link gcc  -g -O2  -L/home/bob/Desktop/datagenerate/test4/base/lib  -o pngtest pngtest.o libpng16.la -lm -lz -lm 
+libtool: link: gcc -g -O2 -o .libs/pngtest pngtest.o  -L/home/bob/Desktop/datagenerate/test4/base/lib ./.libs/libpng16.so -lz -lm -Wl,-rpath -Wl,/home/bob/Desktop/datagenerate/test4/base/lib
+depbase=`echo contrib/libtests/pngunknown.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT contrib/libtests/pngunknown.o -MD -MP -MF $depbase.Tpo -c -o contrib/libtests/pngunknown.o contrib/libtests/pngunknown.c &&\
+mv -f $depbase.Tpo $depbase.Po
+/bin/sh ./libtool  --tag=CC   --mode=link gcc  -g -O2  -L/home/bob/Desktop/datagenerate/test4/base/lib  -o pngunknown contrib/libtests/pngunknown.o libpng16.la -lm -lz -lm 
+libtool: link: gcc -g -O2 -o .libs/pngunknown contrib/libtests/pngunknown.o  -L/home/bob/Desktop/datagenerate/test4/base/lib ./.libs/libpng16.so -lz -lm -Wl,-rpath -Wl,/home/bob/Desktop/datagenerate/test4/base/lib
+depbase=`echo contrib/libtests/pngstest.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT contrib/libtests/pngstest.o -MD -MP -MF $depbase.Tpo -c -o contrib/libtests/pngstest.o contrib/libtests/pngstest.c &&\
+mv -f $depbase.Tpo $depbase.Po
+/bin/sh ./libtool  --tag=CC   --mode=link gcc  -g -O2  -L/home/bob/Desktop/datagenerate/test4/base/lib  -o pngstest contrib/libtests/pngstest.o libpng16.la -lm -lz -lm 
+libtool: link: gcc -g -O2 -o .libs/pngstest contrib/libtests/pngstest.o  -L/home/bob/Desktop/datagenerate/test4/base/lib ./.libs/libpng16.so -lz -lm -Wl,-rpath -Wl,/home/bob/Desktop/datagenerate/test4/base/lib
+depbase=`echo contrib/libtests/pngvalid.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT contrib/libtests/pngvalid.o -MD -MP -MF $depbase.Tpo -c -o contrib/libtests/pngvalid.o contrib/libtests/pngvalid.c &&\
+mv -f $depbase.Tpo $depbase.Po
+/bin/sh ./libtool  --tag=CC   --mode=link gcc  -g -O2  -L/home/bob/Desktop/datagenerate/test4/base/lib  -o pngvalid contrib/libtests/pngvalid.o libpng16.la -lm -lz -lm 
+libtool: link: gcc -g -O2 -o .libs/pngvalid contrib/libtests/pngvalid.o  -L/home/bob/Desktop/datagenerate/test4/base/lib ./.libs/libpng16.so -lz -lm -Wl,-rpath -Wl,/home/bob/Desktop/datagenerate/test4/base/lib
+depbase=`echo contrib/libtests/pngimage.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT contrib/libtests/pngimage.o -MD -MP -MF $depbase.Tpo -c -o contrib/libtests/pngimage.o contrib/libtests/pngimage.c &&\
+mv -f $depbase.Tpo $depbase.Po
+/bin/sh ./libtool  --tag=CC   --mode=link gcc  -g -O2  -L/home/bob/Desktop/datagenerate/test4/base/lib  -o pngimage contrib/libtests/pngimage.o libpng16.la -lm -lz -lm 
+libtool: link: gcc -g -O2 -o .libs/pngimage contrib/libtests/pngimage.o  -L/home/bob/Desktop/datagenerate/test4/base/lib ./.libs/libpng16.so -lz -lm -Wl,-rpath -Wl,/home/bob/Desktop/datagenerate/test4/base/lib
+depbase=`echo contrib/tools/pngcp.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT contrib/tools/pngcp.o -MD -MP -MF $depbase.Tpo -c -o contrib/tools/pngcp.o contrib/tools/pngcp.c &&\
+mv -f $depbase.Tpo $depbase.Po
+/bin/sh ./libtool  --tag=CC   --mode=link gcc  -g -O2  -L/home/bob/Desktop/datagenerate/test4/base/lib  -o pngcp contrib/tools/pngcp.o libpng16.la -lm -lz -lm 
+libtool: link: gcc -g -O2 -o .libs/pngcp contrib/tools/pngcp.o  -L/home/bob/Desktop/datagenerate/test4/base/lib ./.libs/libpng16.so -lz -lm -Wl,-rpath -Wl,/home/bob/Desktop/datagenerate/test4/base/lib
+depbase=`echo contrib/libtests/timepng.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+gcc -DHAVE_CONFIG_H -I.   -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include   -g -O2 -MT contrib/libtests/timepng.o -MD -MP -MF $depbase.Tpo -c -o contrib/libtests/timepng.o contrib/libtests/timepng.c &&\
+mv -f $depbase.Tpo $depbase.Po
+/bin/sh ./libtool  --tag=CC   --mode=link gcc  -g -O2  -L/home/bob/Desktop/datagenerate/test4/base/lib  -o timepng contrib/libtests/timepng.o libpng16.la -lm -lz -lm 
+libtool: link: gcc -g -O2 -o .libs/timepng contrib/libtests/timepng.o  -L/home/bob/Desktop/datagenerate/test4/base/lib ./.libs/libpng16.so -lz -lm -Wl,-rpath -Wl,/home/bob/Desktop/datagenerate/test4/base/lib
+make[1]: Leaving directory `/home/bob/Desktop/datagenerate/test4/base_tmp/libpng-1.6.36'
+make  install-am
+make[1]: Entering directory `/home/bob/Desktop/datagenerate/test4/base_tmp/libpng-1.6.36'
+make[2]: Entering directory `/home/bob/Desktop/datagenerate/test4/base_tmp/libpng-1.6.36'
+ /usr/bin/mkdir -p '/home/bob/Desktop/datagenerate/test4/base/lib'
+ /bin/sh ./libtool   --mode=install /usr/bin/install -c   libpng16.la '/home/bob/Desktop/datagenerate/test4/base/lib'
+libtool: install: /usr/bin/install -c .libs/libpng16.so.16.36.0 /home/bob/Desktop/datagenerate/test4/base/lib/libpng16.so.16.36.0
+libtool: install: (cd /home/bob/Desktop/datagenerate/test4/base/lib && { ln -s -f libpng16.so.16.36.0 libpng16.so.16 || { rm -f libpng16.so.16 && ln -s libpng16.so.16.36.0 libpng16.so.16; }; })
+libtool: install: (cd /home/bob/Desktop/datagenerate/test4/base/lib && { ln -s -f libpng16.so.16.36.0 libpng16.so || { rm -f libpng16.so && ln -s libpng16.so.16.36.0 libpng16.so; }; })
+libtool: install: /usr/bin/install -c .libs/libpng16.lai /home/bob/Desktop/datagenerate/test4/base/lib/libpng16.la
+libtool: install: /usr/bin/install -c .libs/libpng16.a /home/bob/Desktop/datagenerate/test4/base/lib/libpng16.a
+libtool: install: chmod 644 /home/bob/Desktop/datagenerate/test4/base/lib/libpng16.a
+libtool: install: ranlib /home/bob/Desktop/datagenerate/test4/base/lib/libpng16.a
+libtool: finish: PATH="/home/bob/Desktop/datagenerate/test4/base/bin:/usr/local/phenix-1.17.1-3660/build/bin:/usr/lib64/qt-3.3/bin:/home/bob/perl5/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/home/bob/Downloads/pymol/bin:/usr/local/src/coot-Linux-x86_64-debian-gnu-linux-8-gtk2-python/bin:/home/bob/.local/bin:/home/bob/bin:/home/bob/Downloads/pymol/bin:/usr/local/src/coot-Linux-x86_64-debian-gnu-linux-8-gtk2-python/bin:/sbin" ldconfig -n /home/bob/Desktop/datagenerate/test4/base/lib
+----------------------------------------------------------------------
+Libraries have been installed in:
+   /home/bob/Desktop/datagenerate/test4/base/lib
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the '-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the 'LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the 'LD_RUN_PATH' environment variable
+     during linking
+   - use the '-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to '/etc/ld.so.conf'
+
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+ /usr/bin/mkdir -p '/home/bob/Desktop/datagenerate/test4/base/bin'
+  /bin/sh ./libtool   --mode=install /usr/bin/install -c pngfix png-fix-itxt '/home/bob/Desktop/datagenerate/test4/base/bin'
+libtool: install: /usr/bin/install -c .libs/pngfix /home/bob/Desktop/datagenerate/test4/base/bin/pngfix
+libtool: install: /usr/bin/install -c png-fix-itxt /home/bob/Desktop/datagenerate/test4/base/bin/png-fix-itxt
+ /usr/bin/mkdir -p '/home/bob/Desktop/datagenerate/test4/base/bin'
+ /usr/bin/install -c libpng16-config '/home/bob/Desktop/datagenerate/test4/base/bin'
+make  install-exec-hook
+make[3]: Entering directory `/home/bob/Desktop/datagenerate/test4/base_tmp/libpng-1.6.36'
++ cd /home/bob/Desktop/datagenerate/test4/base/lib
++ for ext in a dll.a so so.16.36 la sl dylib
++ rm -f libpng.a
++ test -f libpng16.a
++ ln -s libpng16.a libpng.a
++ for ext in a dll.a so so.16.36 la sl dylib
++ rm -f libpng.dll.a
++ test -f libpng16.dll.a
++ for ext in a dll.a so so.16.36 la sl dylib
++ rm -f libpng.so
++ test -f libpng16.so
++ ln -s libpng16.so libpng.so
++ for ext in a dll.a so so.16.36 la sl dylib
++ rm -f libpng.so.16.36
++ test -f libpng16.so.16.36
++ for ext in a dll.a so so.16.36 la sl dylib
++ rm -f libpng.la
++ test -f libpng16.la
++ ln -s libpng16.la libpng.la
++ for ext in a dll.a so so.16.36 la sl dylib
++ rm -f libpng.sl
++ test -f libpng16.sl
++ for ext in a dll.a so so.16.36 la sl dylib
++ rm -f libpng.dylib
++ test -f libpng16.dylib
++ cd /home/bob/Desktop/datagenerate/test4/base/bin
++ rm -f libpng-config
++ ln -s libpng16-config libpng-config
+make[3]: Leaving directory `/home/bob/Desktop/datagenerate/test4/base_tmp/libpng-1.6.36'
+ /usr/bin/mkdir -p '/home/bob/Desktop/datagenerate/test4/base/share/man/man3'
+ /usr/bin/install -c -m 644 libpng.3 libpngpf.3 '/home/bob/Desktop/datagenerate/test4/base/share/man/man3'
+ /usr/bin/mkdir -p '/home/bob/Desktop/datagenerate/test4/base/share/man/man5'
+ /usr/bin/install -c -m 644 png.5 '/home/bob/Desktop/datagenerate/test4/base/share/man/man5'
+ /usr/bin/mkdir -p '/home/bob/Desktop/datagenerate/test4/base/include/libpng16'
+ /usr/bin/install -c -m 644 pnglibconf.h '/home/bob/Desktop/datagenerate/test4/base/include/libpng16'
+ /usr/bin/mkdir -p '/home/bob/Desktop/datagenerate/test4/base/lib/pkgconfig'
+ /usr/bin/install -c -m 644 libpng16.pc '/home/bob/Desktop/datagenerate/test4/base/lib/pkgconfig'
+ /usr/bin/mkdir -p '/home/bob/Desktop/datagenerate/test4/base/include/libpng16'
+ /usr/bin/install -c -m 644 png.h pngconf.h '/home/bob/Desktop/datagenerate/test4/base/include/libpng16'
+make  install-data-hook
+make[3]: Entering directory `/home/bob/Desktop/datagenerate/test4/base_tmp/libpng-1.6.36'
++ cd /home/bob/Desktop/datagenerate/test4/base/include
++ for f in pnglibconf.h png.h pngconf.h
++ rm -f pnglibconf.h
++ ln -s libpng16/pnglibconf.h pnglibconf.h
++ for f in pnglibconf.h png.h pngconf.h
++ rm -f png.h
++ ln -s libpng16/png.h png.h
++ for f in pnglibconf.h png.h pngconf.h
++ rm -f pngconf.h
++ ln -s libpng16/pngconf.h pngconf.h
++ cd /home/bob/Desktop/datagenerate/test4/base/lib/pkgconfig
++ rm -f libpng.pc
++ ln -s libpng16.pc libpng.pc
+make[3]: Leaving directory `/home/bob/Desktop/datagenerate/test4/base_tmp/libpng-1.6.36'
+make[2]: Leaving directory `/home/bob/Desktop/datagenerate/test4/base_tmp/libpng-1.6.36'
+make[1]: Leaving directory `/home/bob/Desktop/datagenerate/test4/base_tmp/libpng-1.6.36'

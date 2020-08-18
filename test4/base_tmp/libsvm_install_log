@@ -1,0 +1,24 @@
+running build
+running build_py
+creating build
+creating build/lib.linux-x86_64-2.7
+copying python/svm.py -> build/lib.linux-x86_64-2.7
+copying python/svmutil.py -> build/lib.linux-x86_64-2.7
+running build_ext
+building 'libsvm' extension
+creating build/temp.linux-x86_64-2.7
+gcc -pthread -fno-strict-aliasing -g -O2 -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include -fPIC -I/home/bob/Desktop/datagenerate/test4/base/include/python2.7 -c svm.cpp -o build/temp.linux-x86_64-2.7/svm.o
+cc1plus: warning: command line option ‘-Wstrict-prototypes’ is valid for C/ObjC but not for C++ [enabled by default]
+g++ -pthread -shared -Wl,-rpath=$ORIGIN/../lib -L/home/bob/Desktop/datagenerate/test4/base/lib -I/home/bob/Desktop/datagenerate/test4/base/include/openssl -I/home/bob/Desktop/datagenerate/test4/base/include build/temp.linux-x86_64-2.7/svm.o -L/home/bob/Desktop/datagenerate/test4/base/lib -lpython2.7 -o build/lib.linux-x86_64-2.7/libsvm.so
+running install
+running build
+running build_py
+running build_ext
+running install_lib
+copying build/lib.linux-x86_64-2.7/svm.py -> /home/bob/Desktop/datagenerate/test4/base/lib/python2.7/site-packages
+copying build/lib.linux-x86_64-2.7/svmutil.py -> /home/bob/Desktop/datagenerate/test4/base/lib/python2.7/site-packages
+copying build/lib.linux-x86_64-2.7/libsvm.so -> /home/bob/Desktop/datagenerate/test4/base/lib/python2.7/site-packages
+byte-compiling /home/bob/Desktop/datagenerate/test4/base/lib/python2.7/site-packages/svm.py to svm.pyc
+byte-compiling /home/bob/Desktop/datagenerate/test4/base/lib/python2.7/site-packages/svmutil.py to svmutil.pyc
+running install_egg_info
+Writing /home/bob/Desktop/datagenerate/test4/base/lib/python2.7/site-packages/libsvm-3.17-py2.7.egg-info

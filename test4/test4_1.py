@@ -167,15 +167,6 @@ def compare(data):
 # Geting heliecs of target structure.
 # According to the threshold(percision), select helices of target structure.
 # If the co-co values of atoms > threshold, the atom would be considered a part of a helix.
-def data_average(data):
-  for res,dir in data.items():
-    a = 0
-    for num in dir.values():
-      a += num
-    if a >= 4.0:
-      print("%s:%s"%(res,a))
-  return 0
-
 def HELIX_record(data, precision):
   start = []
   end = []
@@ -209,16 +200,18 @@ def write_file(data,filename):
   f.write(str(data))
   f.close()
 
-def main(filename, precision):
+def main(filename, precision=0.9, display_AEV=False, display_coco=False):
   t0 = time.time()
   a = AEV(pdb_file_name=filename)
   a.generate_AEV()
-  print('forward-only', a.BAEVs)
-  # print('all', a.MAEVs) # all AEV
-  print('backward-only', a.EAEVs)
-  # b = compare(a)
-  # print(b)
-  # HELIX_record(b, precision)
+  if display_AEV:
+    print('forward-only', a.BAEVs)
+    print('all', a.MAEVs) # all AEV
+    print('backward-only', a.EAEVs)
+  b = compare(a)
+  if display_coco:
+    print(b)
+  HELIX_record(b, precision)
   print('time', time.time()-t0)
 
 

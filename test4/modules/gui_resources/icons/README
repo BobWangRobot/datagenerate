@@ -1,0 +1,30 @@
+
+This software includes icons distributed under open-source licenses.
+Except as noted by an asterisk (*), these icons have not been modified from
+the originals.  Images derived from these sources may be redistributed
+under the original license terms.
+
+We gratefully acknowledge the original artists for creating and freely
+distributing these images.
+
+----
+Many icons (and derived images) were obtained from the Crystal Icons
+project, which is distributed under the LGPL.  The original directory
+structure has been preserved, but only icons actually used in PHENIX have
+been included (in the 'crystal_project' subdirectory).
+
+URL for Crystal project:
+http://www.everaldo.com/crystal/
+
+The Crystal project is now part of the Open Icon Library (devel-0.11) under
+the directory, open_icon_library-devel/icons/crystal
+
+URL for Open Icon Library:
+https://sourceforge.net/projects/openiconlibrary/
+
+License (LGPL):
+http://www.everaldo.com/crystal/?action=license
+
+Many of the icons created specifically for PHENIX incorporate elements of
+several of the Crystal Icons; therefore, these are also licensed under the
+LGPL.
