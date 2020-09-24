@@ -6,6 +6,7 @@ from libtbx import easy_run
 from libtbx.utils import null_out
 import __init__ as aev
 import os
+import sys
 import matplotlib.pyplot as plt
 
 
@@ -61,6 +62,8 @@ def compute(data):
   for number in data.values():
     i += 1
     for key, value in number.items():
+      if value == None:
+        value = 0
       if Min > value:
         Min = value
       if Max < value:
@@ -74,16 +77,15 @@ def compute(data):
   B_mean = B_mean / i
   E_mean = E_mean / i
   M_mean = M_mean / i
-  print("mean of forward:", B_mean)
-  print("mean of backward:", E_mean)
-  print("mean of middle:", M_mean)
-  print("Min value:%r  Max value:%r"%(Min, Max))
+  # print("mean of forward:", B_mean)
+  # print("mean of backward:", E_mean)
+  # print("mean of middle:", M_mean)
+  # print("Min value:%r  Max value:%r"%(Min, Max))
   return B_mean, E_mean, M_mean, Min, Max
 
-def plot(B,E,M,Min,Max):
-
+def plot(B,E,M,Min,Max,RMSD):
   x = range(len(B))
-  plt.title("Per1-Per50 figure")
+  plt.title("RMSD=%r figure"%float(RMSD))
   plt.xlabel("Perture structrue number")
   plt.ylabel("value")
   plt.plot(x, B, 'r', label='backward_means')
@@ -91,34 +93,47 @@ def plot(B,E,M,Min,Max):
   plt.plot(x, M, 'b', label='middle_means')
   plt.plot(x, Min, 'y', label='Min value')
   plt.plot(x, Max, 'm', label='max value')
-  plt.legend()
-  plt.show()
+  plt.legend(bbox_to_anchor=(0.95, 0.1), loc=4)
+  plt.savefig("New_RMSD=%r.jpg"%float(RMSD))
+  plt.clf()
+  # plt.show()
 
 
-def run():
+def run(num):
+  path = '/home/bob/Desktop/datagenerate/test6/per_structure/per%s/'%num
+  of = open("".join([path, "INDEX"]), "r")
+  files = ["".join(f).strip() for f in of.readlines()]
+  RMSD = files[0][54:57]
   B_mean = []
   E_mean = []
   M_mean = []
   Min = []
   Max = []
-  pdb_inp = iotbx.pdb.input(file_name='1.pdb')
-  model = mmtbx.model.manager(
-    model_input=pdb_inp,
-    build_grm=True,
-    log=null_out())
-  # for smodel in model.models():
-  a = aev.AEV(model = model)
-  b = aev.compare(a,1)
-  print(b)
-  #   list = compute(b)
-  B_mean.append(list[0])
-  E_mean.append(list[1])
-  M_mean.append(list[2])
-  Min.append(list[3])
-  Max.append(list[4])
-  #   if not os.path.exists(f):
-  #     files.remove(f)
-  plot(B_mean, E_mean, M_mean, Min, Max)
+  j = 0
+  for f in files:
+    j += 1
+    sys.stdout.write("process:%s"%(j) +'%' + '\r')
+    sys.stdout.flush()
+    pdb_inp = iotbx.pdb.input(file_name=f)
+    model = mmtbx.model.manager(
+      model_input=pdb_inp,
+      build_grm=True,
+      log=null_out())
+    a = aev.AEV(model = model)
+    b = aev.compare(a)
+    list = compute(b)
+    B_mean.append(list[0])
+    E_mean.append(list[1])
+    M_mean.append(list[2])
+    Min.append(list[3])
+    Max.append(list[4])
+    if not os.path.exists(f):
+      files.remove(f)
+  print('\n')
+  of.close()
+  plot(B_mean, E_mean, M_mean, Min, Max, RMSD)
 
 if __name__ == '__main__':
-  run()
+  for i in range(0, 51, 5):
+    if i != 0:
+      run(i/10)
