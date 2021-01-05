@@ -6,7 +6,7 @@ import collections
 import time
 import mmtbx
 from iotbx import pdb
-from AEVclass4 import *
+from AEVclass import *
 
 perfect_helix_12 = """
 ATOM      1  N   ALA A   1      -5.606  -2.251 -12.878  1.00  0.00           N
@@ -204,12 +204,12 @@ def main(filename, precision):
   t0 = time.time()
   a = AEV(pdb_file_name=filename)
   a.generate_AEV()
-  print('forward-only', a.BAEVs)
+  # print('forward-only', a.BAEVs)
   # print('all', a.MAEVs) # all AEV
-  print('backward-only', a.EAEVs)
-  # b = compare(a)
+  # print('backward-only', a.EAEVs)
+  b = compare(a)
   # print(b)
-  # HELIX_record(b, precision)
+  HELIX_record(b, precision)
   print('time', time.time()-t0)
 
 

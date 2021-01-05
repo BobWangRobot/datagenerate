@@ -251,7 +251,7 @@ class AEV(object):
     """
     Formula (3) and (4), page 3194
     """
-    n = 4.0
+    n = 26.0
     l = 8.0
     AEVs = format_class()
     res_name = self.center_atom.format_atom_record()[17:20]+'  '+\
