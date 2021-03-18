@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 from AEVclass import AEV, radial_aev_class
-#compare CCC and generate a matrix
+#compare CC and generate a matrix
 
 CCCC_pdb = '''REMARK  99 electronic Ligand Builder and Optimisation Workbench (eLBOW)
 REMARK  99   - a module of PHENIX version dev-svn-
