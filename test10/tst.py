@@ -1,42 +1,58 @@
-from __future__ import absolute_import, division, print_function
-# LIBTBX_SET_DISPATCHER_NAME mmtbx.development.aev
-import sys
+import json
 import time
 import mmtbx
 import iotbx.pdb
 import mmtbx.model
-import copy
 import os
+import sys
+import copy
 from libtbx.utils import null_out
 from scitbx.array_family import flex
 import __init__ as aev
 
-def run(filename):
-  i = 0
-  t0 = time.time()
-  pdb_inp = iotbx.pdb.input(file_name = filename)
-  model = mmtbx.model.manager(
-    model_input   = pdb_inp,
-    log           = null_out())
-  a = aev.AEV(model=model)
-  b = aev.compare(a)
-  recs = aev.format_HELIX_records_from_AEV(b)
-  for pro_list in recs[1]:
-    model1 = copy.copy(model)
-    chain, num1, num2 = pro_list
-    string1 = "chain " + chain +" and resseq " + str(num1) +":"+str(num2)
-    print(string1)
-    sel = model1.selection(string=string1)
-    model1 = model1.select(selection=sel)
-    pdbname = str(os.path.basename(filename))[:-4]+"_"+str(i) + ".pdb"
-    model1.get_hierarchy().write_pdb_file(file_name='/home/bob/Project/datagenerate/test9/pdb/'+pdbname)
-    i += 1
-  print(i)
-  print("\n".join(recs[0]))
-  print('time', time.time()-t0)
+def run():
+  with open("index", "r") as f:
+    for line in f.readlines():
+      data = json.loads(line)
+      for key, value in data.items():
+        result = []
+        print(key)
+        filename = key
+        pdb_inp = iotbx.pdb.input(file_name=filename)
+        model = mmtbx.model.manager(
+          model_input=pdb_inp,
+          log=null_out())
+        a = aev.AEV(model=model)
+        b = aev.compare(a)
+        recs = aev.format_HELIX_records_from_AEV(b)
+        for key1, value1 in value.items():
+          for item in recs:
+            min1 = 100
+            min2 = 100
+            recod_list = item.split()
+            if key1 == recod_list[4]:
+              for i in value1:
+                num1 = abs(int(recod_list[5])-i[0])
+                num2 = abs(int(recod_list[8])-i[1])
+                if num1 < min1:
+                  min1 = num1
+                if num2 < min2:
+                  min2 = num2
+            if min1 < 6 and min2 < 6:
+              fmt = "{0:>}  {1:>2}  {2:>2}  {3:>}  {4:>}  {5:>3}({6:>4}) {7:>}  {8:>}  {9:>3}" \
+                    "({10:>4})  {11:>30} "
+              result.append(fmt.format(recod_list[0],recod_list[1],recod_list[2],recod_list[3],recod_list[4],
+                                       recod_list[5],min1,recod_list[6],recod_list[7],recod_list[8],min2,recod_list[9]))
+            else:
+              fmt = "{0:>}  {1:>2}  {2:>2}  {3:>}  {4:>}  {5:>3}({6:>4}) {7:>}  {8:>}  {9:>3}" \
+                    "({10:>4})  {11:>30} "
+              result.append(fmt.format(recod_list[0], recod_list[1], recod_list[2], recod_list[3], recod_list[4],
+                                       recod_list[5], None, recod_list[6], recod_list[7], recod_list[8], None,
+                                       recod_list[9]))
 
+      print('\n'.join(result))
 if __name__ == '__main__':
-  for arg, res, err_str in easy_mp.multi_core_run(run(*tuple(sys.argv[1:])), args, nproc):
-    if err_str:
-      print(err_str)
+  run()
+
+
 

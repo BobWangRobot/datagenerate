@@ -8,26 +8,6 @@ from scitbx.array_family import flex
 from mmtbx.conformation_dependent_library import generate_protein_fragments
 from mmtbx.secondary_structure.build import ss_idealization as ssb
 
-# def format_HELIX_records_from_AEV(aev_values_dict):
-#   """
-#   Geting HELIX records for target model using AEV values and specified cutoff.
-#   """
-#   def rule():
-#     pass
-#   threshold1 = [2.48, 0.9, 4]
-#   threshold2 = [2.38, 0.9, 4]
-#   threshold3 = [2.28, 0.85, 2]
-#   cut_num = threshold1
-#   result = []
-#   for key, value in aev_values_dict.items():
-#     if value['all'] > cut_num[0]:
-#       rule()
-#     elif None in value:
-#       rule()
-#     else:
-#       pass
-#     return result
-
 def format_HELIX_records_from_AEV(aev_values_dict):
   """
   Geting HELIX records for target model using AEV values and specified cutoff.
@@ -41,19 +21,19 @@ def format_HELIX_records_from_AEV(aev_values_dict):
   start = []
   middle = []
   end = []
-  Pro = 0
-  Prolist = []
-  for key, value in aev_values_dict.items():
+  for key,value in aev_values_dict.items():
     if value['all'] > cut_num[0]:
       resi = str(key.split()[0])
       # exclude Proline
       if resi == 'PRO':
-        Pro = 1
-      if start == [] and end == [] and value['B'] > cut_num[1]:
+        start = []
+        middle = []
+        end = []
+      elif start == [] and value['B'] > cut_num[1]:
         start = key
-      elif start and end==[] and value['M'] >= value['E']:
+      elif start and value['M'] >= value['E']:
         middle = key
-      elif start and middle and value['E'] > cut_num[1] and value['B'] < cut_num[1] * 0.89:
+      elif start and middle and value['E'] > cut_num[1]:
         end = key
       elif start and end:
         length = int(end.split()[-1]) - int(start.split()[-1]) + 1
@@ -61,8 +41,6 @@ def format_HELIX_records_from_AEV(aev_values_dict):
           i += 1
           fmt = "HELIX   {0:>2}  {0:>2} {1:>}  {2:>}   {3:>36}"
           result.append(fmt.format(i, start, end, length))
-          if Pro == 1:
-            Prolist.append([start.split()[-2], int(start.split()[-1]), int(end.split()[-1])])
         if value['B'] > cut_num[1]:
           # next start
           start = key
@@ -70,11 +48,8 @@ def format_HELIX_records_from_AEV(aev_values_dict):
           start = []
         middle = []
         end = []
-        Pro = 0
     elif value['all'] < cut_num[0]:
       resi = str(key.split()[0])
-      if resi == 'PRO':
-        Pro = 1
       if start and middle and value['E'] > cut_num[1]:
         end = key
       if value['E'] == None or value['B'] == None:
@@ -91,8 +66,6 @@ def format_HELIX_records_from_AEV(aev_values_dict):
             i += 1
             fmt = "HELIX   {0:>2}  {0:>2} {1:>}  {2:>}   {3:>36}"
             result.append(fmt.format(i, start, end, length))
-            if Pro == 1:
-              Prolist.append([start.split()[-2], int(start.split()[-1]), int(end.split()[-1])])
           if value['B'] > cut_num[1] and resi != 'PRO':
             # next start
             start = key
@@ -100,15 +73,12 @@ def format_HELIX_records_from_AEV(aev_values_dict):
             start = []
           middle = []
           end = []
-          Pro = 0
       elif start and end:
         length = int(end.split()[-1]) - int(start.split()[-1]) + 1
         if length > cut_num[2]:
           i += 1
           fmt = "HELIX   {0:>2}  {0:>2} {1:>}  {2:>}   {3:>36}"
           result.append(fmt.format(i, start, end, length))
-          if Pro == 1:
-            Prolist.append([start.split()[-2], int(start.split()[-1]), int(end.split()[-1])])
         if value['B'] > cut_num[1] and resi != "PRO":
           # next start
           start = key
@@ -116,20 +86,15 @@ def format_HELIX_records_from_AEV(aev_values_dict):
           start = []
         middle = []
         end = []
-        Pro = 0
       else:
         start = []
         middle = []
         end = []
-        Pro = 0
     else:
       start = []
       middle = []
       end = []
-      Pro = 0
-  # fmt = "PRO-Helix {0:>}"
-  # result.append(fmt.format((Prolist)))
-  return result, Prolist
+  return result
 
 
 def generate_perfect_helix(rs_values,
@@ -181,6 +146,18 @@ def compare(aev_values_dict):
     for i in v:
       outl += ' %0.3f' % i
     return outl
+
+  def cosin(value1, value2):
+    assert len(value1) == len(value2)
+    sum1 = 0
+    sum2 = 0
+    sum3 = 0
+    for num in range(len(value1)):
+      sum1 += value1[num] * value2[num]
+      sum2 += value1[num] ** 2
+      sum3 += value2[num] ** 2
+    result = sum1 / ((sum2 ** 0.5) * (sum3 ** 0.5))
+    return result
 
   def set_vals(result, d, verbose=False):
     for key1, value1 in d.items():
@@ -259,11 +236,6 @@ class AEV(object):
                 angular_zeta = 8,
                 # parameters for probe angles
                 ):
-    try:
-      sel = model.selection(string="protein")
-      model = model.select(selection=sel)
-    except:
-      model = model
     self.hierarchy = model.get_hierarchy()
     self.geometry_restraints_manager = model.get_restraints_manager().geometry
     self.rs_values = rs_values
@@ -289,20 +261,34 @@ class AEV(object):
 
   def empty_dict(self):
     results = OrderedDict()
-    hierarchy = self.hierarchy
-    for chain in hierarchy.chains():
-      con = chain.conformers()[0]
-      for atom in con.atoms():
-        if atom.name == ' CA ':
-          res_name = atom.format_atom_record()[17:20] + '  ' + atom.format_atom_record()[21:26]
-          results.setdefault(res_name, [])
-        self.BAEVs.update(results)
-        self.MAEVs.update(results)
-        self.EAEVs.update(results)
+    for atom in self.hierarchy.atoms():
+      if atom.name == ' CA ':
+        res_name = atom.format_atom_record()[17:20] + '  ' + atom.format_atom_record()[21:26]
+        results.setdefault(res_name, [])
+      self.BAEVs.update(results)
+      self.MAEVs.update(results)
+      self.EAEVs.update(results)
     return 0
 
-
-  # Geting all C-alpha atoms from an whole pdb file.
+  # def generate_ca(self, length=5):
+  #   """
+  #   Geting all C-alpha atoms from an whole pdb file.
+  #   """
+  #   # faster with atom selection to CA re CJW update
+  #   protain_fragments = generate_protein_fragments(
+  #     hierarchy = self.chain_hierarchy,
+  #     geometry = self.geometry_restraints_manager,
+  #     include_non_linked=True,
+  #     include_non_standard_peptides=True,
+  #     length=length)
+  #   for five in protain_fragments:
+  #     rc = []
+  #     for residue in five:
+  #       for atom in residue.atoms():
+  #         if atom.name == ' CA ':
+  #           rc.append(atom)
+  #     if len(rc) == length:
+  #       yield rc
   def generate_ca(self, length = 5):
     hierarchy = self.chain_hierarchy
     for chain in hierarchy.chains():
