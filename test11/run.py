@@ -14,6 +14,7 @@ def get_ss(hierarchy, sec_str_from_pdb_file=None, params=None):
     log                   = null_out())
   print("-"*79)
   print(ssm.records_for_pdb_file())
+  print(len(list(ssm.helix_selection())))
   print("-"*79)
   alpha = ssm.helix_selection()
   beta  = ssm.beta_selection()

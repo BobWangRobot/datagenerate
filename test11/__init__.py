@@ -9,31 +9,46 @@ from scitbx.array_family import flex
 from mmtbx.conformation_dependent_library import generate_protein_fragments
 from mmtbx.secondary_structure.build import ss_idealization as ssb
 
-def format_HELIX_records_from_AEV(aev_values_dict):
-  threshold1 = [2.48, 0.9, 4]
-  threshold2 = [2.38, 0.9, 4]
-  threshold3 = [2.28, 0.85, 2]
+def format_HELIX_records_from_AEV(aev_values_dict,cut_num=None):
+  threshold1 = [0.9, 4]
+  threshold2 = [0.9, 4]
+  threshold3 = [0.85, 2]
   helix_num = 1
   helix_list = [[], [], [], []]
   result = []
-  cut_num = threshold1
+  if cut_num == None:
+    cut_num = threshold1
+  input_list = flex.double(int(len(aev_values_dict)), 0)
+
+  def add_helix(param1, param2, list1):
+    if param1[1]=="A":
+      begin_num = int(copy.deepcopy(param1[2]))
+      end_num = int(copy.deepcopy(param2[2])) + 1
+      for i in range(begin_num, end_num):
+        list1[i-1] = 1
+    elif param1[1]=="B":
+      begin_num = int(len(list1)/2) + int(copy.deepcopy(param1[2]))
+      end_num = int(len(list1)/2) + int(copy.deepcopy(param2[2])) + 1
+      for i in range(begin_num, end_num):
+        list1[i-1] = 1
+    return list1
   #This is select rules.This function judges if this atom is a B,M or E?
-  def select(value, cut_num, residue, judge_list):
+  def select(value, cut, residue, judge_list):
     #Is this atom a B?
-    if value['B']>=value['M'] and value['B']>=value['E'] and value['B']>=cut_num:
+    if value['B']>value['M'] and value['B']>value['E'] and value['B']>cut:
       if judge_list[0]==[]:
         judge_list[0] = residue
       elif judge_list[1]!=[] and judge_list[2]!=[] and judge_list[3]==[]:
         judge_list[3] = residue
         judge_list[1] = residue
     # Is this atom a M
-    elif value['M']>=value['E'] and value['M']>=cut_num:
+    elif value['M']>value['E'] and value['M']>cut:
       if judge_list[0]!=[]:
         judge_list[1] = residue
       elif judge_list[1]!=[] and judge_list[2]!=[] and judge_list[3]==[]:
         judge_list[3] = residue
     # Is this atom a E?
-    elif value['E']>=value['B'] and value['E']>=value['M'] and value['E']>=cut_num:
+    elif value['E']>value['B'] and value['E']>value['M'] and value['E']>cut:
       if judge_list[0]!=[] and judge_list[1]!=[] :
         judge_list[2] = residue
     else:
@@ -45,28 +60,29 @@ def format_HELIX_records_from_AEV(aev_values_dict):
     return judge_list
   #Judge all atoms
   for key, value in aev_values_dict.items():
-    if value['all'] >= cut_num[0]:
-      helix_list = select(value, cut_num[1], key, helix_list)
-    elif value['all'] < cut_num[0]:
-      if NaN in value:
-        helix_list = select(value, cut_num[1], key, helix_list)
-      else:
-        helix_list = select(value, cut_num[1], key, helix_list)
+    helix_list = select(value, cut_num[0], key, helix_list)
     # helices records input
     if not [] in helix_list:
       length = int(helix_list[2].split()[-1]) - int(helix_list[0].split()[-1]) + 1
-      if length > cut_num[2]:
+      if length > cut_num[1]:
         if helix_list[1]==helix_list[3]:
+          num1 = helix_list[0].split()
+          num2 = helix_list[2].split()
+          input_list = add_helix(num1,num2,input_list)
           fmt = "HELIX   {0:>2}  {0:>2} {1:>}  {2:>}   {3:>36}"
           result.append(fmt.format(helix_num, helix_list[0], helix_list[2], length))
           start = copy.copy(helix_list[3])
           helix_list = [start, [], [], []]
         else:
+          num1 = helix_list[0].split()
+          num2 = helix_list[2].split()
+          input_list = add_helix(num1, num2, input_list)
           fmt = "HELIX   {0:>2}  {0:>2} {1:>}  {2:>}   {3:>36}"
           result.append(fmt.format(helix_num, helix_list[0], helix_list[2], length))
           helix_list = [[], [], [], []]
         helix_num += 1
-  return result
+  print('\n'.join(result))
+  return input_list
 
 def generate_perfect_helix(rs_values,
                            ts_values,
@@ -120,19 +136,6 @@ def compare(aev_values_dict):
     for i in v:
       outl += ' %0.3f' % i
     return outl
-
-  def cosin(value1, value2):
-    assert len(value1) == len(value2)
-    sum1 = 0
-    sum2 = 0
-    sum3 = 0
-    for num in range(len(value1)):
-      sum1 += value1[num] * value2[num]
-      sum2 += value1[num] ** 2
-      sum3 += value2[num] ** 2
-    result = sum1 / ((sum2 ** 0.5) * (sum3 ** 0.5))
-    return result
-
   def set_vals(result, d, verbose=False):
     for key1, value1 in d.items():
       result.setdefault(key1, OrderedDict())
