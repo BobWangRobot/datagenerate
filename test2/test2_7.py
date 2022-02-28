@@ -207,9 +207,9 @@ def main(filename1=None, filename2=None):
     a = AEV(pdb_file_name=filename1)
     b = AEV(pdb_file_name=filename2)
     for a.five in a.generate_ca():
-      a.get_AEVs()
+      a.get_AEVs('all')
     for b.five in b.generate_ca():
-      b.get_AEVs()
+      b.get_AEVs('all')
     for key1,value1 in a.AEVs.items():
       name1.append(key1)
       for v1 in value1.values():
@@ -229,15 +229,15 @@ def main(filename1=None, filename2=None):
     plt.plot(x2, y2, 'g', label='%s' % filename2.replace('.pdb', ''))
     plt.xticks(x1[::16], (a_name+b_name for a_name, b_name in zip(name1, name2)))
     plt.legend()
-    plt.savefig('./difference/%s all.jpg' % (filename1.replace('.pdb','')+filename2.replace('.pdb','')))
+    plt.savefig('%s all.jpg' % (filename1.replace('.pdb','')+filename2.replace('.pdb','')))
     plt.show()
   else:
     a = AEV(raw_records=helix1)
     b = AEV(raw_records=helix2)
     for a.five in a.generate_ca():
-      a.Rpart()
+      a.Rpart('all')
     for b.five in b.generate_ca():
-      b.Rpart()
+      b.Rpart('all')
     for key1,value1 in a.AEVs.items():
       name1.append(key1)
       for v1 in value1.values():

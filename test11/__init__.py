@@ -9,28 +9,28 @@ from scitbx.array_family import flex
 from mmtbx.conformation_dependent_library import generate_protein_fragments
 from mmtbx.secondary_structure.build import ss_idealization as ssb
 
-def format_HELIX_records_from_AEV(aev_values_dict,cut_num=None):
-  threshold1 = [0.9, 4]
-  threshold2 = [0.9, 4]
-  threshold3 = [0.85, 2]
+def format_HELIX_records_from_AEV(aev_values_dict, cut_num=None):
+  threshold1 = [0.9, 5]
   helix_num = 1
   helix_list = [[], [], [], []]
   result = []
+  check_num = 0
   if cut_num == None:
     cut_num = threshold1
   input_list = flex.double(int(len(aev_values_dict)), 0)
-
-  def add_helix(param1, param2, list1):
+# add helix records to comparing list(if a residue is a part of helix, change the num to 1)
+  def add_helix(param1, param2, list1, check_num):
+    check_num = check_num - 1
     if param1[1]=="A":
-      begin_num = int(copy.deepcopy(param1[2]))
-      end_num = int(copy.deepcopy(param2[2])) + 1
+      begin_num = int(copy.deepcopy(param1[2])) - int(check_num)
+      end_num = int(copy.deepcopy(param2[2])) + 1 - int(check_num)
       for i in range(begin_num, end_num):
         list1[i-1] = 1
     elif param1[1]=="B":
-      begin_num = int(len(list1)/2) + int(copy.deepcopy(param1[2]))
-      end_num = int(len(list1)/2) + int(copy.deepcopy(param2[2])) + 1
+      begin_num = int(len(list1)/2) + int(copy.deepcopy(param1[2])) - int(check_num)
+      end_num = int(len(list1)/2) + int(copy.deepcopy(param2[2])) + 1 - int(check_num)
       for i in range(begin_num, end_num):
-        list1[i-1] = 1
+        list1[i - 1] = 1
     return list1
   #This is select rules.This function judges if this atom is a B,M or E?
   def select(value, cut, residue, judge_list):
@@ -60,6 +60,11 @@ def format_HELIX_records_from_AEV(aev_values_dict,cut_num=None):
     return judge_list
   #Judge all atoms
   for key, value in aev_values_dict.items():
+    if check_num == 0:
+      if check_num + 1 != key.split()[-1]:
+        check_num = int(key.split()[-1])
+      else:
+        check_num = 1
     helix_list = select(value, cut_num[0], key, helix_list)
     # helices records input
     if not [] in helix_list:
@@ -68,7 +73,7 @@ def format_HELIX_records_from_AEV(aev_values_dict,cut_num=None):
         if helix_list[1]==helix_list[3]:
           num1 = helix_list[0].split()
           num2 = helix_list[2].split()
-          input_list = add_helix(num1,num2,input_list)
+          input_list = add_helix(num1, num2, input_list, check_num)
           fmt = "HELIX   {0:>2}  {0:>2} {1:>}  {2:>}   {3:>36}"
           result.append(fmt.format(helix_num, helix_list[0], helix_list[2], length))
           start = copy.copy(helix_list[3])
@@ -76,7 +81,7 @@ def format_HELIX_records_from_AEV(aev_values_dict,cut_num=None):
         else:
           num1 = helix_list[0].split()
           num2 = helix_list[2].split()
-          input_list = add_helix(num1, num2, input_list)
+          input_list = add_helix(num1, num2, input_list, check_num)
           fmt = "HELIX   {0:>2}  {0:>2} {1:>}  {2:>}   {3:>36}"
           result.append(fmt.format(helix_num, helix_list[0], helix_list[2], length))
           helix_list = [[], [], [], []]
@@ -239,7 +244,8 @@ class AEV(object):
     results = OrderedDict()
     for atom in self.hierarchy.atoms():
       if atom.name == ' CA ':
-        res_name = atom.format_atom_record()[17:20] + '  ' + atom.format_atom_record()[21:26]
+        res_name = atom.format_atom_record()[17:20] + ' ' + atom.format_atom_record()[21] + \
+                   ' ' + atom.format_atom_record()[22:26]
         results.setdefault(res_name, [])
       self.BAEVs.update(results)
       self.MAEVs.update(results)
@@ -303,8 +309,9 @@ class AEV(object):
     assert  self.radial_eta==self.angular_eta
     l = self.angular_zeta
     AEVs = format_class()
-    res_name = self.center_atom.format_atom_record()[17:20]+'  '+\
-               self.center_atom.format_atom_record()[21:26]
+    res_name = self.center_atom.format_atom_record()[17:20]+' '+ \
+               self.center_atom.format_atom_record()[21] + ' ' + \
+               self.center_atom.format_atom_record()[22:26]
     AEVs.setdefault(res_name, [])
     if atom_list != []:
       atom1 = self.center_atom

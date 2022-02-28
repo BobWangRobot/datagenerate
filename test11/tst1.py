@@ -49,53 +49,65 @@ def get_AEV_result(pdb_inp,cut_num):
   model.crystal_symmetry()
   a = aev.AEV(model=model)
   CC_value = aev.compare(a)
-  recs = aev.format_HELIX_records_from_AEV(CC_value,cut_num)
+  recs = aev.format_HELIX_records_from_AEV(CC_value, cut_num)
   return recs
 
-def cal_and_plot(filename):
-  filename = filename[0]
-  fig_name = filename.split('/')[-1].split('.')[0]
+def cal(filename):
   pdb_inp = iotbx.pdb.input(file_name = filename)
   hierarchy = pdb_inp.construct_hierarchy()
   hierarchy.remove_alt_confs(always_keep_one_conformer=True)
   ase = hierarchy.atom_selection_cache().selection('protein')
   pdb_hierarchy = hierarchy.select(ase)
-  from_ca = []
-  ksdssp = []
-  cablam = []
-  x = []
-  # v1 = get_AEV_result(pdb_inp, cut_num=[0.9, 4])
+  v1 = get_ss(
+    hierarchy=pdb_hierarchy,
+    sec_str_from_pdb_file=pdb_inp.extract_secondary_structure())
   v2 = get_ss(hierarchy=pdb_hierarchy, method="from_ca")
   v3 = get_ss(hierarchy=pdb_hierarchy, method="ksdssp")
   v4 = get_ss(hierarchy=pdb_hierarchy, method="cablam")
-  for i in range(73, 100):
-    thre = i/100
-    x.append(thre)
-    v1 = get_AEV_result(pdb_inp, cut_num=[thre, 4])
-    from_ca.append(flex.linear_correlation(x=v1, y=v2).coefficient())
-    ksdssp.append(flex.linear_correlation(x=v1, y=v3).coefficient())
-    cablam.append(flex.linear_correlation(x=v1, y=v4).coefficient())
-  plt.title("%s figure"%fig_name)
-  plt.xlabel("threshold number")
-  plt.ylabel("CC values")
-  plt.plot(x, from_ca, 'r', label='from_ca')
-  plt.plot(x, ksdssp, 'g', label='ksdssp')
-  plt.plot(x, cablam, 'b', label='cablam')
-  plt.legend()
-  plt.savefig('/home/bob/datagenerate/test11/figure/%s.png' % fig_name)
-  plt.clf()
+  v5 = get_AEV_result(pdb_inp, cut_num=[0.96, 5])
+  value1 = flex.linear_correlation(x=v5, y=v2).coefficient()
+  value2 = flex.linear_correlation(x=v5, y=v3).coefficient()
+  value3 = flex.linear_correlation(x=v5, y=v4).coefficient()
+  value4 = flex.linear_correlation(x=v1, y=v5).coefficient()
+  return value1, value2, value3, value4
+
 
 def run():
+  from_ca = []
+  cablam = []
+  ksdssp=[]
+  AEV_method = []
+  x = []
   t0 = time.time()
-  path = '/home/bob/datagenerate/test11/tst_pdb'
+  # path = '/home/bob/datagenerate/test11/tst_pdb'
+  path = '/home/bob/datagenerate/test11/oringal'
+
   for root, dirs, files in os.walk(path):
     for file in files:
       print(file)
       filename = str(os.path.join(root, file))
-      if 'pdb' in file:
-        cal_and_plot(filename)
+      if 'pdb' in filename:
+        result = cal(filename)
+        from_ca.append(result[0])
+        ksdssp.append(result[1])
+        cablam.append(result[2])
+        AEV_method.append(result[3])
+        x.append(file.split('/')[-1].split('.')[0])
+    fig_title = "0.96 AEV figure"
+    plt.title(fig_title)
+    plt.xlabel("pdb name")
+    plt.ylabel("CC values")
+    plt.ylim((-0.2, 1))
+    plt.plot(x, from_ca, 'r', label='from_ca')
+    plt.plot(x, ksdssp, 'g', label='ksdssp')
+    plt.plot(x, cablam, 'b', label='cablam')
+    plt.plot(x, AEV_method, 'y', label='Standard')
+    plt.legend()
+    plt.show()
+    # plt.savefig('/home/bob/datagenerate/test11/figure/%s.png' % fig_title)
+    plt.clf()
   print('time', time.time()-t0)
 
 
 if __name__ == '__main__':
-  cal_and_plot(filename=sys.argv[1:])
+  run()

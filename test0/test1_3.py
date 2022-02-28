@@ -26,6 +26,7 @@ def plotvalue(pdb1, pdb2, elename):
   name = []
   aev1 = AEV(pdb1).merge(AEV(pdb2).get_items())
   aev2 = AEV(pdb2).merge(AEV(pdb1).get_items())
+  print(aev1, aev2)
   for ele, values in aev1.items():
     if elename in ele:
       for r_or_a, value in values.items():
@@ -39,14 +40,14 @@ def plotvalue(pdb1, pdb2, elename):
         for list2 in value:
           y2.append(list2)
   x = range(len(y1))
-  plt.title("%s AEV difference with two %s atom" %(pdb2.replace('.pdb',''), elename))
+  plt.title("AEV of C element between %s and %s" % (pdb1.replace('.pdb',''), pdb2.replace('.pdb','')))
   plt.xlabel("radial or angular of %s atom" % elename)
-  plt.ylabel("value")
+  plt.ylabel("AEV value")
   plt.plot(x, y1, 'r', label='%s' % pdb1.replace('.pdb', ''))
   plt.plot(x, y2, 'g', label='%s' % pdb2.replace('.pdb', ''))
   plt.xticks(x[::8], name)
   plt.legend()
-  plt.savefig('./difference/%s.jpg' % pdb2.replace('.pdb','%s'%elename))
+  # plt.savefig('./difference/%s.jpg' % pdb2.replace('.pdb','%s'%elename))
   plt.show()
 
 def plotcompare(diff,ele,pdb_filename):

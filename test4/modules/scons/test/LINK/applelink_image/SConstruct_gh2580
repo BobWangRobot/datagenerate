@@ -1,8 +1,0 @@
-DefaultEnvironment(tools=[])
-env = Environment(PLATFORM='darwin')
-env.Object(
-	target = '#foo.o',
-	source = ['foo.c'],
-	FRAMEWORKS = ['Ogre'],
-	FRAMEWORKPATH = ['#frameworks']
-)

@@ -2,9 +2,9 @@ from iotbx import pdb
 import numpy as np
 import iotbx
 import math
-import collections
+from collections import OrderedDict
 
-class radial_aev_class(collections.OrderedDict):
+class radial_aev_class(OrderedDict):
   def __repr__(self):
     outl = '...\n'
     for key, item in self.items():
@@ -61,7 +61,7 @@ class AEV(AEV_base):
     for atom1 in self.hierarchy.atoms():
       x = str(atom1.i_seq)
       a = atom1.element.upper().strip()
-      AEVs.setdefault(a+x, {})
+      AEVs.setdefault(a+x, OrderedDict())
       for b, atom2list in self.Atome_classify().items():
         for Rs in self.rs_values:
           AEVs[a+x].setdefault(b, [])
@@ -86,7 +86,7 @@ class AEV(AEV_base):
     for atom1 in self.hierarchy.atoms():
       x = str(atom1.i_seq)
       a = atom1.element.upper().strip()
-      AEVs.setdefault(a+x, {})
+      AEVs.setdefault(a+x, OrderedDict())
       f = self.Atome_classify()
       for b, atom2list in f.items():
         for c, atom3list in f.items():

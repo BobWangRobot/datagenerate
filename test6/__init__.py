@@ -40,13 +40,14 @@ def format_HELIX_records_from_AEV(aev_values_dict, cc_cutoff):
       M = 0
   return result
 
-def generate_perfect_helix(n_residues=10, residue_code="G"):
+def generate_perfect_helix(crystal_symmetry, n_residues=10, residue_code="G"):
   """
   Compute AEV values for the perfect helix.
   """
   perfect_helix_ph = ssb.secondary_structure_from_sequence(ssb.alpha_helix_str,
     residue_code*n_residues)
   model = mmtbx.model.manager(
+    crystal_symmetry = crystal_symmetry, 
     model_input   = None,
     pdb_hierarchy = perfect_helix_ph,
     build_grm     = True,
@@ -62,7 +63,7 @@ def compare(aev_values_dict):
   workbook = xlwt.Workbook(encoding = 'utf-8')
   worksheet = workbook.add_sheet('cc value')
   result = diff_class()
-  perfect_helix = generate_perfect_helix()
+  perfect_helix = generate_perfect_helix(aev_values_dict.crystal_symmetry)
   def pretty_aev(v):
     outl = 'AEV'
     for i in v:
@@ -158,6 +159,7 @@ class AEV(object):
     self.ts_values = ts_values
     self.angular_rs_values = angular_rs_values
     self.angular_zeta = angular_zeta
+    self.crystal_symmetry = model.crystal_symmetry()
     self.EAEVs = format_class(length_of_radial=len(self.rs_values))
     self.MAEVs = format_class(length_of_radial=len(self.rs_values))
     self.BAEVs = format_class(length_of_radial=len(self.rs_values))
@@ -167,9 +169,9 @@ class AEV(object):
 
   def get_values(self):
     result = OrderedDict()
-    result['B'] = self.BAEVs.values()[0]
-    result['M'] = self.MAEVs.values()[5]
-    result['E'] = self.EAEVs.values()[-1]
+    result['B'] = list(self.BAEVs.values())[0]
+    result['M'] = list(self.MAEVs.values())[5]
+    result['E'] = list(self.EAEVs.values())[-1]
     return result
 
   def generate_ca(self, length=5):

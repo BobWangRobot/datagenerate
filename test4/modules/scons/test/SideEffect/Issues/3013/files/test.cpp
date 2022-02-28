@@ -1,2 +1,0 @@
-void some_function() {}
-

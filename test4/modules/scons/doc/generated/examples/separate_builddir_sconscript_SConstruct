@@ -1,4 +1,0 @@
-
-VariantDir('build', 'src')
-SConscript('build/SConscript')
-      

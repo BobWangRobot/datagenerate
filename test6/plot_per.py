@@ -87,7 +87,7 @@ def plot(B,E,M,Min,Max,RMSD):
   x = range(len(B))
   plt.title("RMSD=%r figure"%float(RMSD))
   plt.xlabel("Perture structrue number")
-  plt.ylabel("value")
+  plt.ylabel("CC value")
   plt.plot(x, B, 'r', label='backward_means')
   plt.plot(x, E, 'g', label='forward_means')
   plt.plot(x, M, 'b', label='middle_means')
@@ -100,10 +100,10 @@ def plot(B,E,M,Min,Max,RMSD):
 
 
 def run(num):
-  path = '/home/bob/Desktop/datagenerate/test6/per_structure/per%s/'%num
+  path = '/home/bob/datagenerate/test6/per_structure/per%s/'%num
   of = open("".join([path, "INDEX"]), "r")
   files = ["".join(f).strip() for f in of.readlines()]
-  RMSD = files[0][54:57]
+  RMSD = files[0][46:49]
   B_mean = []
   E_mean = []
   M_mean = []

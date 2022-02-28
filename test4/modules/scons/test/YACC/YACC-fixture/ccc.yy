@@ -1,2 +1,0 @@
-ccc.yacc
-YACC

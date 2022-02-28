@@ -22,8 +22,8 @@ def main(filename1=None, filename2=None):
     b.five = next(b.generate_ca())
     #a.Rpart()
     #b.Rpart()
-    aev1 = a.Rpart()
-    aev2 = b.Rpart()
+    aev1 = a.Rpart('all')
+    aev2 = b.Rpart('all')
     print(aev1,aev2)
     for ele, values in aev1.items():
       for r_or_a, value in values.items():
@@ -42,7 +42,7 @@ def main(filename1=None, filename2=None):
     plt.plot(x, y2, 'g', label='%s' % filename2.replace('.pdb', ''))
     plt.xticks(x[::8], name)
     plt.legend()
-    plt.savefig('./difference/%s.jpg' % filename2.replace('.pdb', '%s' % ele))
+    # plt.savefig('./difference/%s.jpg' % filename2.replace('.pdb', '%s' % ele))
     plt.show()
   else:
     a = AEV(pdb_file_name=filename1)

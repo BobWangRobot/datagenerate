@@ -3,8 +3,8 @@ import os
 
 
 def index_path(num):
-  workdir = "/home/bob/Desktop/datagenerate/test6/per_structure/per%s"%num
-  indexpath = "/home/bob/Desktop/datagenerate/test6/per_structure/per%s/INDEX"%num
+  workdir = "/home/bob/datagenerate/test6/per_structure/per%s"%num
+  indexpath = "/home/bob/datagenerate/test6/per_structure/per%s/INDEX"%num
   for root,dirs,files in os.walk(workdir):
     sorted(files)
     for file in files:

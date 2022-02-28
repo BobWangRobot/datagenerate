@@ -1,5 +1,0 @@
-
-Import('env')
-obj = env.Object('foo.c')
-Return('obj')
-        

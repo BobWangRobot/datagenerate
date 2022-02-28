@@ -11,7 +11,7 @@ from mmtbx.secondary_structure.build import ss_idealization as ssb
 
 def format_HELIX_records_from_AEV(aev_values_dict):
   threshold1 = [2.48, 0.9, 4]
-  threshold2 = [2.38, 0.9, 4]
+  threshold2 = [2.38, 0.9, 5]
   threshold3 = [2.28, 0.85, 2]
   helix_num = 1
   helix_list = [[], [], [], []]

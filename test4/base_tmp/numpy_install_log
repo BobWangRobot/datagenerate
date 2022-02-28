@@ -1,7 +1,0 @@
-DEPRECATION: Python 2.7 will reach the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 won't be maintained after that date. A future version of pip will drop support for Python 2.7. More details about Python 2 support in pip, can be found at https://pip.pypa.io/en/latest/development/release-process/#python-2-support
-Collecting numpy==1.15.4
-  Downloading https://files.pythonhosted.org/packages/e9/fc/f9c48983b3f6337e8f8178af33f4f036f0ca9e1dfa4d8d0e3bd6309638e3/numpy-1.15.4-cp27-cp27m-manylinux1_x86_64.whl (13.8MB)
-Installing collected packages: numpy
-Successfully installed numpy-1.15.4
-WARNING: You are using pip version 19.2.3, however version 20.1.1 is available.
-You should consider upgrading via the 'pip install --upgrade pip' command.
